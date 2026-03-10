@@ -3,9 +3,18 @@ body, html {
     padding: 0;
     width: 100%;
     overflow-x: hidden;
-    background-color: #000000;
     color: #FFFFFF;
     font-family: 'Helvetica Neue', sans-serif;
+
+    /* --- Technical Grid Background --- */
+    background-color: #000000; /* Fallback for older browsers */
+    background-image: repeating-linear-gradient(
+        150deg,
+        #0d0d0dfb,
+        #0d0d0dfb 2px,
+        #000000 2px,
+        #000000 8px
+    );
 }
 
 #background-layers {
