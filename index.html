@@ -9,33 +9,96 @@
 <body>
 
     <div id="background-layers">
-        <div class="layer" id="layer-estamparia" style="background-color: #c9a46a;" data-section="estamparia"></div>
-        <div class="layer" id="layer-laser" style="background-color: #444c54;" data-section="laser"></div>
-        <div class="layer" id="layer-acrilico" style="background-color: #00d4ff;" data-section="acrilico"></div>
+        <!-- ... Camadas de fundo ... -->
     </div>
 
     <main id="scroll-container">
-        <section id="estamparia" class="fullscreen-section">
+        <section id="estampagem" class="fullscreen-section">
             <div class="content">
-                <h1>Estamparia</h1>
+                <h1>Estampagem</h1>
                 <p>Impacto e precisão que moldam o metal.</p>
+                <button class="details-btn" data-service="estampagem">Saber Mais</button>
             </div>
         </section>
-        <section id="laser" class="fullscreen-section">
+        <section id="corte-laser" class="fullscreen-section">
             <canvas id="laser-canvas"></canvas>
             <div class="content">
-                <h1>Laser de Fibra</h1>
-                <p>A erosão metálica elevada à arte.</p>
+                <h1>Corte de Laser</h1>
+                <p>Precisão milimétrica para formas complexas.</p>
+                <button class="details-btn" data-service="corte-laser">Saber Mais</button>
             </div>
         </section>
-        <section id="acrilico" class="fullscreen-section">
+        <section id="gravacao-laser" class="fullscreen-section">
             <div class="glass-effect"></div>
             <div class="content">
-                <h1>Acrílico Premium</h1>
-                <p>Transparência que redefine a forma.</p>
+                <h1>Gravação a Laser</h1>
+                <p>Detalhes permanentes em diversas superfícies.</p>
+                <button class="details-btn" data-service="gravacao-laser">Saber Mais</button>
+            </div>
+        </section>
+        <section id="impressao-uv" class="fullscreen-section">
+            <div class="content">
+                <h1>Impressão UV</h1>
+                <p>Cores vibrantes com cura instantânea.</p>
+                <button class="details-btn" data-service="impressao-uv">Saber Mais</button>
+            </div>
+        </section>
+        <section id="impressao-3d" class="fullscreen-section">
+            <div class="content">
+                <h1>Impressão 3D</h1>
+                <p>Do digital ao tangível, camada por camada.</p>
+                <button class="details-btn" data-service="impressao-3d">Saber Mais</button>
+            </div>
+        </section>
+        <section id="modelacao-3d" class="fullscreen-section">
+            <div class="content">
+                <h1>Modelação 3D</h1>
+                <p>Criando as fundações digitais para a sua visão.</p>
+                <button class="details-btn" data-service="modelacao-3d">Saber Mais</button>
+            </div>
+        </section>
+        <section id="maquinacao-cnc" class="fullscreen-section">
+            <div class="content">
+                <h1>Maquinação CNC</h1>
+                <p>A robustez do metal esculpida por computador.</p>
+                <button class="details-btn" data-service="maquinacao-cnc">Saber Mais</button>
+            </div>
+        </section>
+        <section id="torneamento" class="fullscreen-section">
+            <div class="content">
+                <h1>Torneamento</h1>
+                <p>Formas de revolução com acabamento perfeito.</p>
+                <button class="details-btn" data-service="torneamento">Saber Mais</button>
+            </div>
+        </section>
+        <section id="repuxamento" class="fullscreen-section">
+            <div class="content">
+                <h1>Repuxamento</h1>
+                <p>Moldando chapas de metal em formas ocas e simétricas.</p>
+                <button class="details-btn" data-service="repuxamento">Saber Mais</button>
+            </div>
+        </section>
+        <section id="galvanizacao" class="fullscreen-section">
+            <div class="content">
+                <h1>Galvanização</h1>
+                <p>Proteção e acabamento metálico para as suas peças.</p>
+                <button class="details-btn" data-service="galvanizacao">Saber Mais</button>
             </div>
         </section>
     </main>
+
+    <!-- Modal Structure -->
+    <div id="details-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2 id="modal-title"></h2>
+            <div id="modal-body">
+                <p id="modal-description"></p>
+                <h3>Materiais</h3>
+                <ul id="modal-materials"></ul>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
