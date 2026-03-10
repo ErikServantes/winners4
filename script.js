@@ -59,7 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Animações Genéricas de Conteúdo ---
     const allSections = gsap.utils.toArray('.fullscreen-section');
-    const serviceSections = allSections.filter(section => section.id !== '4winners');
+    // Filtra usando o novo ID correto que começa com uma letra
+    const serviceSections = allSections.filter(section => section.id !== 'hero-4winners');
     
     serviceSections.forEach((section) => {
         const textElements = gsap.utils.toArray(section.querySelectorAll('.content h1, .content p'));
@@ -94,5 +95,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    console.log("Navigation implemented. Silky smooth jumps enabled.");
+    console.log("Navigation fully operational.");
 });

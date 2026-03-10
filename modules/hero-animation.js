@@ -1,5 +1,6 @@
 export function initializeHeroAnimation() {
-    const heroSection = document.getElementById('4winners');
+    // Procura o novo ID
+    const heroSection = document.getElementById('hero-4winners');
     if (!heroSection) return;
 
     const title = heroSection.querySelector('h1');
@@ -31,7 +32,6 @@ export function initializeHeroAnimation() {
     }
 
     // --- ANIMAÇÃO DE CARREGAMENTO (Montagem) ---
-    // Esta timeline corre sozinha quando a página abre.
     const buildTl = gsap.timeline();
     
     buildTl.fromTo(chars, 
@@ -62,7 +62,7 @@ export function initializeHeroAnimation() {
         buildTl.fromTo(subtitle, 
             { opacity: 0, y: 30 },
             { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
-            "-=0.8" // O subtítulo entra ligeiramente antes de o título acabar de montar
+            "-=0.8" 
         ); 
     }
 
@@ -76,9 +76,6 @@ export function initializeHeroAnimation() {
         }
     });
 
-    // O SEGREDO: Usar fromTo com immediateRender: false
-    // Isto diz ao GSAP para forçar as letras e o subtítulo a estarem no sítio PERFEITO 
-    // antes de começar a destruí-las no scroll, e garante o regresso exato.
     scrollTl.fromTo(chars, 
         {
             opacity: 1, x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotationZ: 0
@@ -92,19 +89,19 @@ export function initializeHeroAnimation() {
             rotationZ: (index, target) => parseFloat(target.dataset.targetRotZ),
             opacity: 0,
             ease: "none", 
-            immediateRender: false, // <--- CRUCIAL: Previne conflitos com a animação de carregamento
+            immediateRender: false, 
             stagger: {
                 amount: 0.2, 
                 from: "random" 
             }
         }, 
-        0 // Inicia no tempo 0 da timeline de scroll
+        0 
     ); 
 
     if (subtitle) {
         scrollTl.fromTo(subtitle, 
-            { opacity: 1, y: 0 }, // Estado inicial forçado (perfeito)
-            { opacity: 0, y: -50, ease: "none", immediateRender: false }, // <--- CRUCIAL
+            { opacity: 1, y: 0 }, 
+            { opacity: 0, y: -50, ease: "none", immediateRender: false }, 
             0
         ); 
     }
