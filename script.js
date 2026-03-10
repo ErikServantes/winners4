@@ -15,9 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeLaserAnimation();
     initializeGlassEffect();
 
-    // --- Animações Genéricas de Conteúdo ---
-    // Esta lógica é simples e partilhada, por isso pode ficar aqui.
-    // Se crescer, podemos também movê-la para o seu próprio módulo.
+    /*
+    // --- DIAGNOSTIC MODE: Generic Content Animation Deactivated ---
     const sections = gsap.utils.toArray('.fullscreen-section');
     
     ScrollTrigger.matchMedia({
@@ -36,9 +35,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
 
-                tl.from(heading, { opacity: 0, y: 50, duration: 0.8, ease: 'power3.out' })
-                  .from(paragraph, { opacity: 0, y: 30, duration: 0.6, ease: 'power3.out' }, "-=0.6")
-                  .from(button, { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out' }, "-=0.4");
+                // Adiciona animações APENAS se os elementos existirem
+                if (heading) {
+                    tl.from(heading, { opacity: 0, y: 50, duration: 0.8, ease: 'power3.out' });
+                }
+                if (paragraph) {
+                    tl.from(paragraph, { opacity: 0, y: 30, duration: 0.6, ease: 'power3.out' }, "-=0.6");
+                }
+                if (button) {
+                    tl.from(button, { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out' }, "-=0.4");
+                }
             });
         },
 
@@ -57,12 +63,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
 
-                tl.from(heading, { opacity: 0, y: 30, duration: 0.7, ease: 'power3.out' })
-                  .from(paragraph, { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out' }, "-=0.5")
-                  .from(button, { opacity: 0, y: 10, duration: 0.4, ease: 'power3.out' }, "-=0.3");
+                // Adiciona animações APENAS se os elementos existirem
+                if (heading) {
+                    tl.from(heading, { opacity: 0, y: 30, duration: 0.7, ease: 'power3.out' });
+                }
+                if (paragraph) {
+                    tl.from(paragraph, { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out' }, "-=0.5");
+                }
+                if (button) {
+                    tl.from(button, { opacity: 0, y: 10, duration: 0.4, ease: 'power3.out' }, "-=0.3");
+                }
             });
         }
     });
+    */
 
-    console.log("Project successfully modularized. Ready to scale!");
+    console.log("DIAGNOSTIC MODE: Generic content animations are off. Checking button visibility.");
 });
