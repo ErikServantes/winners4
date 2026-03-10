@@ -43,15 +43,16 @@ body, html {
 .fullscreen-section {
     position: relative; /* Ensure the section can be a positioning context */
     width: 100vw;
-    height: 75vh; /* CHANGED FROM 100vh TO 75vh */
+    height: 75vh; /* Services sections are a bit shorter for faster scrolling */
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
 }
 
-/* Specific adjustment for the very first section so it still feels like a full landing screen */
-#4winners.fullscreen-section {
+/* Specific adjustment for the very first and last section so they feel like full screens */
+#4winners.fullscreen-section,
+#contacto.fullscreen-section {
     height: 100vh;
 }
 
