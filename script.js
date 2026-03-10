@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Regista o plugin ScrollTrigger do GSAP
     gsap.registerPlugin(ScrollTrigger);
 
-    // Inicializa o Smooth Scroll primeiro!
+    // Inicializa o Smooth Scroll (Lenis)
     initializeSmoothScroll();
 
     // Inicializa os restantes módulos
@@ -21,12 +21,44 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeGlassEffect();
     initializeHeroAnimation();
 
-    // --- Animações Genéricas de Conteúdo (Versão Exclusiva para Serviços) ---
-    // Encontra TODAS as secções primeiro
-    const allSections = gsap.utils.toArray('.fullscreen-section');
+    // --- Navegação Inteligente (Header e Side Nav) ---
     
-    // Filtra para remover a secção inicial (ID: 4winners) usando JS puro, 
-    // evitando erros de seletores CSS com IDs que começam por números.
+    // 1. Scroll Suave para Links Internos
+    // O Lenis trata do scroll, mas precisamos de intercetar os cliques
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                // Usa o motor Lenis (que está disponível globalmente através do módulo smooth-scroll)
+                // para fazer o scroll suave até ao destino
+                window.lenis?.scrollTo(targetElement);
+            }
+        });
+    });
+
+    // 2. Indicador Ativo na Side Nav
+    const dots = document.querySelectorAll('#side-nav .dot');
+    const sections = gsap.utils.toArray('.fullscreen-section');
+
+    sections.forEach((section, i) => {
+        ScrollTrigger.create({
+            trigger: section,
+            start: 'top center',
+            end: 'bottom center',
+            onToggle: self => {
+                if (self.isActive) {
+                    dots.forEach(dot => dot.classList.remove('active'));
+                    dots[i].classList.add('active');
+                }
+            }
+        });
+    });
+
+    // --- Animações Genéricas de Conteúdo ---
+    const allSections = gsap.utils.toArray('.fullscreen-section');
     const serviceSections = allSections.filter(section => section.id !== '4winners');
     
     serviceSections.forEach((section) => {
@@ -39,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleActions: 'play none none none',
         };
 
-        // Anima os elementos de texto (h1 e p)
         if (textElements.length > 0) {
             gsap.to(textElements, {
                 scrollTrigger: commonScrollTrigger,
@@ -51,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Anima o botão separadamente, se ele existir
         if (buttonElement) {
             gsap.to(buttonElement, {
                 scrollTrigger: commonScrollTrigger,
@@ -59,10 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 y: 0,
                 duration: 0.8,
                 ease: 'power3.out',
-                delay: 0.4, // Aparece ligeiramente depois do texto para um efeito escalonado
+                delay: 0.4,
             });
         }
     });
 
-    console.log("Smooth scroll implemented. Enjoy the silky navigation.");
+    console.log("Navigation implemented. Silky smooth jumps enabled.");
 });

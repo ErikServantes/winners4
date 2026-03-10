@@ -17,6 +17,93 @@ body, html {
     );
 }
 
+/* --- Fixed Header Minimalista --- */
+#main-header {
+    position: fixed;
+    top: 40px;
+    right: 50px;
+    z-index: 9999; /* Forçado para o topo absoluto (abaixo apenas do modal) */
+}
+
+.nav-contact-link {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 0.85rem; 
+    letter-spacing: 5px;
+    font-weight: bold; 
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5); 
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-contact-link:hover {
+    color: #00d4ff;
+    border-bottom-color: #00d4ff;
+}
+
+/* --- Side Navigation (Rebites) --- */
+#side-nav {
+    position: fixed;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9998; /* Forçado para a frente, logo abaixo do header */
+}
+
+#side-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.dot {
+    display: block;
+    width: 8px; 
+    height: 8px; 
+    background-color: rgba(255, 255, 255, 0.3); 
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer; 
+}
+
+.dot:hover, .dot.active {
+    background-color: #ffffff;
+    transform: scale(1.5);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); 
+}
+
+.contact-dot.active, .contact-dot:hover {
+    background-color: #00d4ff;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.8); 
+}
+
+/* Tooltip subtil para os pontos */
+.dot::after {
+    content: attr(data-name);
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffffff;
+    font-size: 0.7rem; 
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
+}
+
+.dot:hover::after {
+    opacity: 1; 
+}
+
 #background-layers {
     position: fixed;
     top: 0;
@@ -41,16 +128,15 @@ body, html {
 }
 
 .fullscreen-section {
-    position: relative; /* Ensure the section can be a positioning context */
+    position: relative; 
     width: 100vw;
-    height: 75vh; /* Services sections are a bit shorter for faster scrolling */
+    height: 75vh; 
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
 }
 
-/* Specific adjustment for the very first and last section so they feel like full screens */
 #4winners.fullscreen-section,
 #contacto.fullscreen-section {
     height: 100vh;
@@ -62,11 +148,11 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0; /* Position behind the content */
+    z-index: 0; 
 }
 
 .content {
-    position: relative; /* Ensure content is on top of the canvas */
+    position: relative; 
     z-index: 1;
     max-width: 800px;
     padding: 20px;
@@ -95,13 +181,13 @@ body, html {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 120%; /* Make it larger to allow for rotation */
+    width: 120%; 
     height: 120%;
     transform: translate(-50%, -50%) rotate(45deg);
-    z-index: 0; /* Position behind the content */
+    z-index: 0; 
     background-color: rgba(0, 212, 255, 0.1);
     backdrop-filter: blur(10px) saturate(120%);
-    -webkit-backdrop-filter: blur(10px) saturate(120%); /* For Safari */
+    -webkit-backdrop-filter: blur(10px) saturate(120%); 
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -111,13 +197,27 @@ body, html {
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
+    #side-nav {
+        display: none; /* Esconde APENAS os rebites laterais no mobile */
+    }
+
+    #main-header {
+        /* Ajusta o link de contacto para ecrãs pequenos */
+        top: 20px;
+        right: 20px;
+    }
+
+    .nav-contact-link {
+        font-size: 0.75rem; /* Um pouco menor para caber melhor */
+    }
+
     .content h1 {
-        font-size: 2.5rem; /* Smaller font size for mobile */
+        font-size: 2.5rem; 
         letter-spacing: 2px;
     }
 
     .content p {
-        font-size: 1.2rem; /* Smaller font size for mobile */
+        font-size: 1.2rem; 
     }
 }
 
@@ -149,7 +249,7 @@ body, html {
     color: #000;
     font-weight: bold;
     text-align: center;
-    width: calc(100% - 40px); /* Adjust width to account for padding */
+    width: calc(100% - 40px); 
 }
 
 .cta-btn:hover {
@@ -165,11 +265,11 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.85); 
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 10000; 
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.4s ease, visibility 0.4s ease;
@@ -205,6 +305,7 @@ body, html {
     font-size: 2rem;
     cursor: pointer;
     line-height: 1;
+    z-index: 10001;
 }
 
 #modal-title {
