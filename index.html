@@ -9,10 +9,26 @@
 <body>
 
     <div id="background-layers">
-        <!-- ... Camadas de fundo ... -->
+        <div class="layer" id="layer-4winners" style="background-color: #1a1a1a;" data-section="4winners"></div>
+        <div class="layer" id="layer-estampagem" style="background-color: #c9a46a;" data-section="estampagem"></div>
+        <div class="layer" id="layer-corte-laser" style="background-color: #444c54;" data-section="corte-laser"></div>
+        <div class="layer" id="layer-gravacao-laser" style="background-color: #00d4ff;" data-section="gravacao-laser"></div>
+        <div class="layer" id="layer-impressao-uv" style="background-color: #b3b3b3;" data-section="impressao-uv"></div>
+        <div class="layer" id="layer-impressao-3d" style="background-color: #ffffff;" data-section="impressao-3d"></div>
+        <div class="layer" id="layer-modelacao-3d" style="background-color: #eeeeee;" data-section="modelacao-3d"></div>
+        <div class="layer" id="layer-maquinacao-cnc" style="background-color: #8c8c8c;" data-section="maquinacao-cnc"></div>
+        <div class="layer" id="layer-torneamento" style="background-color: #a0a0a0;" data-section="torneamento"></div>
+        <div class="layer" id="layer-repuxamento" style="background-color: #d4af37;" data-section="repuxamento"></div>
+        <div class="layer" id="layer-galvanizacao" style="background-color: #e5e4e2;" data-section="galvanizacao"></div>
     </div>
 
     <main id="scroll-container">
+        <section id="4winners" class="fullscreen-section">
+            <div class="content">
+                <h1>4WINNERS</h1>
+                <p>Excelência em prémios e brindes.</p>
+            </div>
+        </section>
         <section id="estampagem" class="fullscreen-section">
             <div class="content">
                 <h1>Estampagem</h1>
@@ -102,6 +118,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
