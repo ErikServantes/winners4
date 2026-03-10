@@ -3,6 +3,7 @@ import { initializeScrollytelling } from './modules/scrollytelling.js';
 import { initializeModal } from './modules/modal.js';
 import { initializeLaserAnimation } from './modules/laser-animation.js';
 import { initializeGlassEffect } from './modules/glass-effect.js';
+import { initializeHeroAnimation } from './modules/hero-animation.js';
 
 // Espera que o DOM esteja completamente carregado para executar o código
 document.addEventListener('DOMContentLoaded', function() {
@@ -14,11 +15,17 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeModal();
     initializeLaserAnimation();
     initializeGlassEffect();
+    initializeHeroAnimation();
 
-    // --- Animações Genéricas de Conteúdo (Versão Explícita e Final) ---
-    const sections = gsap.utils.toArray('.fullscreen-section');
+    // --- Animações Genéricas de Conteúdo (Versão Exclusiva para Serviços) ---
+    // Encontra TODAS as secções primeiro
+    const allSections = gsap.utils.toArray('.fullscreen-section');
     
-    sections.forEach((section) => {
+    // Filtra para remover a secção inicial (ID: 4winners) usando JS puro, 
+    // evitando erros de seletores CSS com IDs que começam por números.
+    const serviceSections = allSections.filter(section => section.id !== '4winners');
+    
+    serviceSections.forEach((section) => {
         const textElements = gsap.utils.toArray(section.querySelectorAll('.content h1, .content p'));
         const buttonElement = section.querySelector('.content .details-btn');
 
@@ -53,5 +60,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    console.log("Final, explicit content animations are now active.");
+    console.log("Hero animation added. Final content animations active on services.");
 });
