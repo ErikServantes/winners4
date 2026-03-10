@@ -1,4 +1,5 @@
 // Importa as funções dos módulos que criámos
+import { initializeSmoothScroll } from './modules/smooth-scroll.js';
 import { initializeScrollytelling } from './modules/scrollytelling.js';
 import { initializeModal } from './modules/modal.js';
 import { initializeLaserAnimation } from './modules/laser-animation.js';
@@ -10,7 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Regista o plugin ScrollTrigger do GSAP
     gsap.registerPlugin(ScrollTrigger);
 
-    // Inicializa cada módulo individualmente
+    // Inicializa o Smooth Scroll primeiro!
+    initializeSmoothScroll();
+
+    // Inicializa os restantes módulos
     initializeScrollytelling();
     initializeModal();
     initializeLaserAnimation();
@@ -60,5 +64,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    console.log("Hero animation added. Final content animations active on services.");
+    console.log("Smooth scroll implemented. Enjoy the silky navigation.");
 });
