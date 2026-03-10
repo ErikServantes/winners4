@@ -15,68 +15,43 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeLaserAnimation();
     initializeGlassEffect();
 
-    /*
-    // --- DIAGNOSTIC MODE: Generic Content Animation Deactivated ---
+    // --- Animações Genéricas de Conteúdo (Versão Explícita e Final) ---
     const sections = gsap.utils.toArray('.fullscreen-section');
     
-    ScrollTrigger.matchMedia({
-        // Animações para Desktop
-        "(min-width: 769px)": function() {
-            sections.forEach((section) => {
-                const heading = section.querySelector('h1');
-                const paragraph = section.querySelector('p');
-                const button = section.querySelector('.details-btn');
+    sections.forEach((section) => {
+        const textElements = gsap.utils.toArray(section.querySelectorAll('.content h1, .content p'));
+        const buttonElement = section.querySelector('.content .details-btn');
 
-                const tl = gsap.timeline({ 
-                    scrollTrigger: { 
-                        trigger: section, 
-                        start: 'top 70%', 
-                        toggleActions: 'play none none none' 
-                    }
-                });
+        const commonScrollTrigger = {
+            trigger: section,
+            start: 'top 70%',
+            toggleActions: 'play none none none',
+        };
 
-                // Adiciona animações APENAS se os elementos existirem
-                if (heading) {
-                    tl.from(heading, { opacity: 0, y: 50, duration: 0.8, ease: 'power3.out' });
-                }
-                if (paragraph) {
-                    tl.from(paragraph, { opacity: 0, y: 30, duration: 0.6, ease: 'power3.out' }, "-=0.6");
-                }
-                if (button) {
-                    tl.from(button, { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out' }, "-=0.4");
-                }
+        // Anima os elementos de texto (h1 e p)
+        if (textElements.length > 0) {
+            gsap.to(textElements, {
+                scrollTrigger: commonScrollTrigger,
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                stagger: 0.2,
             });
-        },
+        }
 
-        // Animações para Mobile
-        "(max-width: 768px)": function() {
-             sections.forEach((section) => {
-                const heading = section.querySelector('h1');
-                const paragraph = section.querySelector('p');
-                const button = section.querySelector('.details-btn');
-
-                const tl = gsap.timeline({ 
-                    scrollTrigger: { 
-                        trigger: section, 
-                        start: 'top 80%', 
-                        toggleActions: 'play none none none' 
-                    }
-                });
-
-                // Adiciona animações APENAS se os elementos existirem
-                if (heading) {
-                    tl.from(heading, { opacity: 0, y: 30, duration: 0.7, ease: 'power3.out' });
-                }
-                if (paragraph) {
-                    tl.from(paragraph, { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out' }, "-=0.5");
-                }
-                if (button) {
-                    tl.from(button, { opacity: 0, y: 10, duration: 0.4, ease: 'power3.out' }, "-=0.3");
-                }
+        // Anima o botão separadamente, se ele existir
+        if (buttonElement) {
+            gsap.to(buttonElement, {
+                scrollTrigger: commonScrollTrigger,
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                delay: 0.4, // Aparece ligeiramente depois do texto para um efeito escalonado
             });
         }
     });
-    */
 
-    console.log("DIAGNOSTIC MODE: Generic content animations are off. Checking button visibility.");
+    console.log("Final, explicit content animations are now active.");
 });
