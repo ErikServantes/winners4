@@ -10,8 +10,8 @@ body, html {
     background-color: #000000; /* Fallback for older browsers */
     background-image: repeating-linear-gradient(
         150deg,
-        #0d0d0dfb,
-        #0d0d0dfb 2px,
+        #0D0D0D,
+        #0D0D0D 2px,
         #000000 2px,
         #000000 8px
     );
@@ -115,8 +115,9 @@ body, html {
     }
 }
 
-/* --- Details Button --- */
+/* --- Details Button & CTA --- */
 .details-btn {
+    display: inline-block;
     background-color: transparent;
     border: 1px solid #fff;
     color: #fff;
@@ -127,11 +128,28 @@ body, html {
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .details-btn:hover {
     background-color: #fff;
     color: #000;
+}
+
+.cta-btn {
+    margin-top: 40px;
+    background-color: #00d4ff;
+    border-color: #00d4ff;
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+    width: calc(100% - 40px); /* Adjust width to account for padding */
+}
+
+.cta-btn:hover {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
 }
 
 /* --- Modal Styles --- */
@@ -186,6 +204,13 @@ body, html {
 #modal-title {
     margin-top: 0;
     text-transform: uppercase;
+    margin-bottom: 30px;
+}
+
+/* Modal Body Content */
+.modal-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
 }
 
 #modal-body h3 {
@@ -203,4 +228,41 @@ body, html {
 
 #modal-body li {
     margin-bottom: 5px;
+}
+
+/* Contact Info inside Modal */
+.contact-modal-info {
+    text-align: left;
+}
+
+.contact-item {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+.contact-item strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #b3b3b3;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.contact-item a {
+    color: #FFFFFF;
+    text-decoration: none;
+    border-bottom: 1px dotted #ffffff;
+    transition: color 0.3s ease, border-bottom-color 0.3s ease;
+}
+
+.contact-item a:hover {
+    color: #00d4ff;
+    border-bottom-color: #00d4ff;
+}
+
+.schedule {
+    display: flex;
+    flex-direction: column;
 }

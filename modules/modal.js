@@ -48,41 +48,100 @@ const serviceData = {
         title: 'Galvanização',
         description: 'A galvanização é um processo eletroquímico que reveste uma peça metálica com uma fina camada de outro metal. Serve para melhorar a aparência, a resistência à corrosão e a condutividade.',
         materials: ['Latonagem', 'Niquelagem', 'Cobreagem']
+    },
+    'contacto': {
+        title: 'Entre em Contacto',
+        address: 'Rua do Barqueiro 754, 4805-016 Barco',
+        address_link: 'https://www.google.com/maps/search/?api=1&query=Rua+do+Barqueiro+754,+4805-016+Barco',
+        phone: '253 576 251',
+        phone_link: 'tel:+351253576251',
+        email: 'geral@4winners.pt',
+        schedule: [
+            'Segunda a Sexta: 08:30 – 18:30',
+            'Sábado: 09:00 – 12:30',
+            'Domingo: Encerrado'
+        ]
     }
 };
 
 export function initializeModal() {
+    // Procura o modal e os seus elementos principais uma vez
     const modal = document.getElementById('details-modal');
     if (!modal) return;
 
-    const modalCloseBtn = modal.querySelector('.modal-close');
-    const detailBtns = document.querySelectorAll('.details-btn');
     const modalTitle = document.getElementById('modal-title');
-    const modalDescription = document.getElementById('modal-description');
-    const modalMaterialsList = document.getElementById('modal-materials');
-    const modalMaterialsTitle = modal.querySelector('#modal-body h3');
+    const modalBody = document.getElementById('modal-body');
+    const modalCloseBtn = modal.querySelector('.modal-close');
+    
+    // Se a estrutura base do modal não existir, não continua
+    if (!modalTitle || !modalBody || !modalCloseBtn) {
+        console.error("Modal structure is incomplete in HTML");
+        return;
+    }
+
+    const detailBtns = document.querySelectorAll('.details-btn');
 
     detailBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
+            // Se o botão for um link <a> (como na secção de contactos original), não navega
+            if (btn.tagName === 'A') {
+                e.preventDefault();
+            }
+
             const service = btn.dataset.service;
             const data = serviceData[service];
 
             if (data) {
+                // Atualiza o título
                 modalTitle.textContent = data.title;
-                modalDescription.textContent = data.description;
                 
-                modalMaterialsList.innerHTML = '';
-                if (data.materials && data.materials.length > 0) {
-                    data.materials.forEach(material => {
-                        const li = document.createElement('li');
-                        li.textContent = material;
-                        modalMaterialsList.appendChild(li);
-                    });
-                    modalMaterialsTitle.style.display = 'block';
+                // Limpa o corpo do modal
+                modalBody.innerHTML = ''; 
+
+                if (service === 'contacto') {
+                    // Constrói o HTML para o modal de contactos
+                    modalBody.innerHTML = `
+                        <div class="contact-modal-info">
+                            <div class="contact-item">
+                                <strong>Morada:</strong>
+                                <a href="${data.address_link}" target="_blank">${data.address}</a>
+                            </div>
+                            <div class="contact-item">
+                                <strong>Email:</strong>
+                                <a href="mailto:${data.email}">${data.email}</a>
+                            </div>
+                            <div class="contact-item">
+                                <strong>Telefone:</strong>
+                                <a href="${data.phone_link}">${data.phone}</a>
+                            </div>
+                            <div class="contact-item">
+                                <strong>Horário:</strong>
+                                <div class="schedule">
+                                    ${data.schedule.map(line => `<span>${line}</span>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        <a href="${data.phone_link}" class="details-btn cta-btn">Ligar Agora</a>
+                    `;
                 } else {
-                    modalMaterialsTitle.style.display = 'none';
+                    // Constrói o HTML padrão para os serviços
+                    let materialsHTML = '';
+                    if (data.materials && data.materials.length > 0) {
+                        materialsHTML = `
+                            <h3>Materiais</h3>
+                            <ul class="modal-materials">
+                                ${data.materials.map(material => `<li>${material}</li>`).join('')}
+                            </ul>
+                        `;
+                    }
+
+                    modalBody.innerHTML = `
+                        <p class="modal-description">${data.description}</p>
+                        ${materialsHTML}
+                    `;
                 }
 
+                // Mostra o modal
                 modal.classList.add('visible');
             }
         });
@@ -93,6 +152,8 @@ export function initializeModal() {
     }
 
     modalCloseBtn.addEventListener('click', closeModal);
+    
+    // Fecha o modal ao clicar fora dele
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             closeModal();

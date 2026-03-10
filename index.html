@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Industrial-Chic Landing Page</title>
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <link rel="stylesheet" href="style.css?v=1.4">
 </head>
 <body>
 
@@ -20,6 +20,7 @@
         <div class="layer" id="layer-torneamento" style="background-color: #a0a0a0;" data-section="torneamento"></div>
         <div class="layer" id="layer-repuxamento" style="background-color: #d4af37;" data-section="repuxamento"></div>
         <div class="layer" id="layer-galvanizacao" style="background-color: #e5e4e2;" data-section="galvanizacao"></div>
+        <div class="layer" id="layer-contacto" style="background-color: #2a2a2a;" data-section="contacto"></div>
     </div>
 
     <main id="scroll-container">
@@ -101,23 +102,27 @@
                 <button class="details-btn" data-service="galvanizacao">Saber Mais</button>
             </div>
         </section>
+        <!-- Contact Section -->
+        <section id="contacto" class="fullscreen-section">
+            <div class="content">
+                <h1>Fale Connosco</h1>
+                <p>Estamos prontos para transformar a sua ideia em realidade.</p>
+                <button class="details-btn" data-service="contacto">Ver Detalhes</button>
+            </div>
+        </section>
     </main>
 
-    <!-- Modal Structure -->
+    <!-- Modal Structure (now a generic container) -->
     <div id="details-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close">&times;</button>
             <h2 id="modal-title"></h2>
-            <div id="modal-body">
-                <p id="modal-description"></p>
-                <h3>Materiais</h3>
-                <ul id="modal-materials"></ul>
-            </div>
+            <div id="modal-body"></div>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script type="module" src="script.js?v=1.1"></script>
+    <script type="module" src="script.js?v=1.4"></script>
 </body>
 </html>
