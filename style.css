@@ -274,6 +274,15 @@ section[class*="theme-glass"] .details-btn:hover {
     height: 100vh;
 }
 
+#laser-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; 
+}
+
 .content {
     position: relative; 
     z-index: 1;
@@ -362,14 +371,14 @@ section:not([class*="theme-"]) .details-btn:hover {
     color: #000000;
 }
 
-/* --- Modal Styles --- */
+/* --- Modal Styles (HYBRID SPLIT LAYOUT) --- */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.85); 
+    background-color: rgba(0, 0, 0, 0.9); /* Um pouco mais escuro para destacar as imagens */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -377,6 +386,7 @@ section:not([class*="theme-"]) .details-btn:hover {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.4s ease, visibility 0.4s ease;
+    backdrop-filter: blur(10px); /* Foca a atenção no modal */
 }
 
 .modal-overlay.visible {
@@ -385,14 +395,19 @@ section:not([class*="theme-"]) .details-btn:hover {
 }
 
 .modal-content {
-    background-color: #1a1a1a;
-    padding: 40px;
-    border-radius: 5px;
+    background-color: #111111;
+    border: 1px solid #333;
+    border-radius: 8px;
     position: relative;
-    max-width: 600px;
-    width: 90%;
+    /* O modal agora é muito mais largo para suportar o ecrã dividido */
+    max-width: 1000px;
+    width: 95%;
+    /* Removemos o padding geral do .modal-content, vamos geri-lo dentro do layout */
+    padding: 0; 
     transform: translateY(20px);
     transition: transform 0.4s ease;
+    overflow: hidden; /* Garante que a imagem não sai dos cantos arredondados */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
 }
 
 .modal-overlay.visible .modal-content {
@@ -401,45 +416,114 @@ section:not([class*="theme-"]) .details-btn:hover {
 
 .modal-close {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
+    /* O botão de fechar flutua sobre a imagem ou o texto no topo direito */
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.2);
     color: #fff;
-    font-size: 2rem;
+    font-size: 1.5rem;
     cursor: pointer;
-    line-height: 1;
     z-index: 10001;
+    transition: all 0.3s ease;
 }
+
+.modal-close:hover {
+    background: #fff;
+    color: #000;
+}
+
+/* --- Layout de Ecrã Dividido (Split Layout) --- */
+.modal-layout-container {
+    display: flex;
+    flex-direction: row;
+    min-height: 500px; /* Garante uma altura mínima elegante mesmo sem muito texto */
+}
+
+/* Secção da Imagem/Media (Lado Esquerdo) */
+.modal-media-wrapper {
+    flex: 0 0 50%; /* Ocupa exatamente 50% da largura */
+    background-color: #000;
+    position: relative;
+    border-right: 1px solid #333;
+}
+
+.modal-media-wrapper img,
+.modal-media-wrapper video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* A imagem preenche o espaço sem distorcer (corta as pontas se necessário) */
+}
+
+/* Secção do Texto (Lado Direito) */
+.modal-text-section {
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra o texto verticalmente */
+}
+
+.modal-text-section.split-width {
+    flex: 0 0 50%; /* Se houver imagem, ocupa os outros 50% */
+}
+
+.modal-text-section.full-width {
+    flex: 1 1 100%; /* Se não houver imagem (ex: Contactos), ocupa tudo */
+}
+
 
 #modal-title {
     margin-top: 0;
     text-transform: uppercase;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: #d4af37; /* Usa a cor dourada premium */
 }
 
 .modal-description {
     font-size: 1.1rem;
     line-height: 1.7;
+    color: #cccccc;
 }
 
 #modal-body h3 {
     margin-top: 30px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-size: 1rem;
+    font-size: 0.9rem;
+    color: #888;
 }
 
 #modal-body ul {
     list-style-type: none;
     padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
+/* Estilo tipo 'Tags' para os materiais */
 #modal-body li {
-    margin-bottom: 5px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #fff;
 }
 
+/* Contact Info inside Modal */
 .contact-modal-info {
     text-align: left;
 }
@@ -453,7 +537,7 @@ section:not([class*="theme-"]) .details-btn:hover {
 .contact-item strong {
     display: block;
     margin-bottom: 5px;
-    color: #b3b3b3;
+    color: #888;
     text-transform: uppercase;
     font-size: 0.9rem;
     letter-spacing: 1px;
@@ -467,11 +551,35 @@ section:not([class*="theme-"]) .details-btn:hover {
 }
 
 .contact-item a:hover {
-    color: #00d4ff;
-    border-bottom-color: #00d4ff;
+    color: #d4af37;
+    border-bottom-color: #d4af37;
 }
 
 .schedule {
     display: flex;
     flex-direction: column;
+    color: #ccc;
+}
+
+/* Ajustes Responsive para o Modal Híbrido */
+@media (max-width: 768px) {
+    .modal-layout-container {
+        flex-direction: column; /* Em mobile, a imagem fica em cima, o texto em baixo */
+    }
+
+    .modal-media-wrapper {
+        flex: none;
+        width: 100%;
+        height: 300px; /* Define uma altura fixa para a imagem no telemóvel */
+        border-right: none;
+        border-bottom: 1px solid #333;
+    }
+
+    .modal-text-section {
+        padding: 30px 20px;
+    }
+    
+    #modal-title {
+        font-size: 1.5rem;
+    }
 }
