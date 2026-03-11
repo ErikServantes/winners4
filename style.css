@@ -56,10 +56,27 @@ body, html {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    /* Removemos o gap completamente para não haver espaços mortos invisíveis */
+    gap: 0; 
     align-items: flex-end;
 }
 
+/* A tag 'a' é agora um contentor invisível que ocupa todo o espaço (a verdadeira hitbox) */
+#side-nav ul li a {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    /* 
+       Recriamos o espaçamento visual do antigo gap usando padding.
+       Se o antigo gap era 15px, damos 7.5px acima e 7.5px abaixo.
+       Isto cria blocos de ~23px de altura (7.5 + 8 da bola + 7.5) que se encostam perfeitamente.
+    */
+    padding: 7.5px 0 7.5px 30px; /* O padding-left de 30px aumenta a largura clicável para a esquerda (interior do ecrã) */
+    text-decoration: none;
+    position: relative;
+}
+
+/* A tag span com classe .dot é agora puramente a representação visual da bolinha */
 .dot {
     display: block;
     width: 8px; 
@@ -67,26 +84,29 @@ body, html {
     background-color: rgba(255, 255, 255, 0.3); 
     border-radius: 50%;
     transition: all 0.3s ease;
-    position: relative;
+    /* Cursor pointer já é herdado da tag A, mas mantemos por segurança */
     cursor: pointer; 
 }
 
-.dot:hover, .dot.active {
+/* Efeitos Hover e Ativo - Detetados pelo contentor A, aplicados à bolinha .dot */
+#side-nav ul li a:hover .dot, 
+#side-nav ul li a.active .dot {
     background-color: #ffffff;
     transform: scale(1.5);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); 
 }
 
-.contact-dot.active, .contact-dot:hover {
+#side-nav ul li a.active .contact-dot, 
+#side-nav ul li a:hover .contact-dot {
     background-color: #00d4ff;
     box-shadow: 0 0 10px rgba(0, 212, 255, 0.8); 
 }
 
-/* Tooltip subtil para os pontos */
-.dot::after {
+/* Tooltip subtil para os pontos - Detetada pelo contentor A */
+#side-nav ul li a::after {
     content: attr(data-name);
     position: absolute;
-    right: 25px;
+    right: 20px; /* Distância a partir da borda direita da hitbox */
     top: 50%;
     transform: translateY(-50%);
     color: #ffffff;
@@ -100,7 +120,7 @@ body, html {
     text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
 }
 
-.dot:hover::after {
+#side-nav ul li a:hover::after {
     opacity: 1; 
 }
 
