@@ -5,8 +5,34 @@ body, html {
     overflow-x: hidden;
     color: #FFFFFF;
     font-family: 'Helvetica Neue', sans-serif;
+    /* Evita scroll horizontal causado pelos canvas */
+    overflow-y: scroll;
+}
 
-    /* --- Technical Grid Background --- */
+/* --- PARTÍCULAS GLOBAIS (3D Depth) --- */
+#particles-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2; /* Atrás de todos os vidros e fundos */
+    pointer-events: none; /* Deixa o rato passar através */
+}
+
+#particles-fg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9997; /* À frente de tudo, mas atrás da navegação e modais */
+    pointer-events: none;
+}
+
+
+/* --- Technical Grid Background --- */
+body {
     background-color: #000000; /* Fallback for older browsers */
     background-image: repeating-linear-gradient(
         150deg,
@@ -170,26 +196,16 @@ body, html {
 /* --- MARCA DE ÁGUA TÉCNICA (SÍMBOLOS) --- */
 /* Injetamos o valor de `--service-icon` como Material Symbol no fundo do cartão */
 .theme-glass .glass-panel::after {
-    /* Usa a variável que tem o nome do ícone do Google Fonts */
     content: var(--service-icon);
-    /* Força a usar a fonte Material Symbols Outlined */
     font-family: 'Material Symbols Outlined';
-    
     position: absolute;
-    /* Alinhamento para que a imagem corte na borda direita do vidro */
     top: 50%;
     right: -20px;
     transform: translateY(-50%);
-    
-    /* Tamanho gigantesco para servir de textura de fundo */
     font-size: 20rem;
     line-height: 1;
-    
-    /* A cor assume o tema, mas com opacidade super baixa (5% a 8%) */
     color: var(--theme-color);
     opacity: 0.08;
-    
-    /* Impede interações */
     user-select: none;
     pointer-events: none;
     z-index: -1; 
@@ -226,7 +242,7 @@ section[class*="theme-glass"] .details-btn:hover {
     left: 0;
     width: 100%;
     height: 100vh;
-    z-index: -1;
+    z-index: -3; /* Atrás de tudo, inclusive das partículas */
 }
 
 .layer {
@@ -256,15 +272,6 @@ section[class*="theme-glass"] .details-btn:hover {
 #4winners.fullscreen-section,
 #contacto.fullscreen-section {
     height: 100vh;
-}
-
-#laser-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0; 
 }
 
 .content {
