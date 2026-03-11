@@ -466,6 +466,8 @@ section:not([class*="theme-"]) .details-btn:hover {
 
 /* Secção do Texto (Lado Direito) */
 .modal-text-section {
+    /* Box-sizing previne que o padding se some aos 50% de largura no Flexbox, que causava o corte de texto */
+    box-sizing: border-box; 
     padding: 50px 40px;
     display: flex;
     flex-direction: column;
