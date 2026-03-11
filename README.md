@@ -1,78 +1,80 @@
 # Landing Page Industrial-Chic - Scrollytelling
 
-Este projeto é uma Single Page Application (SPA) estática com foco em uma experiência de scrollytelling fluida e visualmente impactante, seguindo uma estética "Industrial-Chic".
+Este projeto é uma Single Page Application (SPA) estática com foco em uma experiência de scrollytelling fluida e visualmente impactante, seguindo uma estética "Industrial-Chic" premium.
 
 ## DNA Visual (The Master Style)
 
-- **Background:** Preto Obsidiana Infinito (`#000000`)
-- **Iluminação:** Chiaroscuro com Rim Lighting
-- **Paleta Temática:** 
-  - Laser (Azul Néon: `#00d4ff`)
-  - 3D (Laranja: `#ff6b00`)
-  - CNC/Estampa (Azul Cinza: `#5d7b93`)
-  - Quin/Caland (Vermelho: `#e63946`)
-  - Repux/Torn (Verde: `#2a9d8f`)
-  - Galv/UV (Amarelo: `#e9c46a`)
-- **Assets:** Imagens Ultra-Wide 21:9 geradas por IA
+- **Background:** Preto Obsidiana Infinito (`#000000`) com grelha técnica a 150º.
+- **Iluminação:** Chiaroscuro com Rim Lighting.
+- **Paleta Temática:** Dourado Premium (`#d4af37`) unificado em todo o site.
+- **Elementos Físicos:** Painéis de vidro fumado translúcidos (Glasmorphism) com cortes de luz oblíquos a 150º.
+- **Iconografia:** Marcas de água gigantes de símbolos técnicos (Material Symbols).
+- **Ambiente:** Sistema global de partículas 3D em parallax (Brasas industriais lentas ao fundo, Bokeh rápido na frente).
 
 ---
 
 ## Arquitetura de Animação: O Padrão "Absolute Scroll"
 
-Para garantir que animações complexas baseadas em scroll (Scrollytelling) funcionam sem falhas independentemente de refreshes, direção do scroll ou velocidade, implementámos o paradigma de **Absolute Scroll Sync**:
+Para garantir que animações complexas baseadas em scroll funcionam sem falhas, implementámos o paradigma de **Absolute Scroll Sync**:
 
-1.  **Lenis RAF Sync:** O motor de smooth scroll (Lenis) não corre no seu próprio loop de *requestAnimationFrame*. Ele está diretamente acoplado à *ticker* interna do GSAP. Isto significa que quando o GSAP calcula uma animação (ex: o título a explodir), usa exatamente o mesmo valor de pixel sub-frame que o Lenis calculou. Zero desfasamento ou *jitter*.
-2.  **`lagSmoothing(0)`:** Desativado no GSAP. Se o browser tiver um solavanco de performance, a animação vai "saltar" para a posição matemática correta (absoluta) do scroll, em vez de tentar animar suavemente até lá (o que arruinaria o efeito de scrollytelling amarrado à posição física).
-3.  **A Regra do `.fromTo` + `scrub: true`:** Animações complexas ligadas ao scroll **NÃO DEVEM** usar `gsap.to()` ou `gsap.from()`, pois estes herdam o estado do ecrã no momento da inicialização (que é imprevisível em refreshes a meio da página). Usa sempre `.fromTo()` para definir rigidamente o estado `0%` e o estado `100%` da animação, com `scrub: true` no ScrollTrigger para atar a cabeça de leitura ao scroll.
-4.  **Isolamento de Estado Inicial:** Se uma secção tem uma animação de "Montagem" no carregamento inicial da página e também reage ao scroll, elas devem ser isoladas. Se o refresh for feito fora do topo da página, a animação de "Montagem" é cancelada via JavaScript e apenas o estado do ScrollTrigger (`.fromTo`) assume o controlo da geometria dos elementos baseada na posição exata da barra de scroll.
+1.  **Lenis RAF Sync:** O motor de smooth scroll (Lenis) está diretamente acoplado à *ticker* interna do GSAP para zero desfasamento sub-frame.
+2.  **Inércia Luxuosa no Desktop:** O Lenis está afinado com `duration: 2.5` e `mouseMultiplier: 1.5`. Isto substitui o frustrante "Scroll Snap" por uma física pesada e amanteigada. Um rodar de rato desliza o ecrã longamente até à próxima secção, mantendo o controlo na mão do utilizador.
+3.  **A Regra do `.fromTo` + `scrub: true`:** Animações ligadas ao scroll usam sempre `.fromTo()` para definir rigidamente estados (em vez de herdar estados atuais, o que quebra em refreshes).
+4.  **Isolamento de Estado Inicial:** Animações de carregamento (ex: montagem do título) são canceladas se a página for carregada abaixo do topo, entregando o controlo puramente à linha de scroll.
 
 ---
 
-## Estratégia de Cores em Pares (Em Teste A/B)
+## Plano de Integração de Mídia Mista nos Modais (Pop-ups)
 
-Para agrupar os serviços visualmente e manter o design minimalista, implementámos um sistema de temas por pares, injetado via variáveis CSS (`--theme-color`).
+A estrutura atual dos modais (`modules/modal.js`) suporta texto dinâmico. Para o futuro, onde cada serviço precisará de um "Showcase" visual quando aberto, o modal deve ser adaptado para suportar **Mídia Híbrida**.
 
-Atualmente o site está dividido em duas abordagens para avaliar qual se encaixa melhor no estilo Industrial-Chic:
+### Estratégia de Arquitetura (A Implementar)
+O objeto de dados `modalData` no JS deixará de ter apenas `description` e passará a ter uma chave genérica de `media`. O script lerá o tipo de mídia e injetará o HTML correspondente no `#modal-media-container` (que criaremos dentro do modal).
 
-**Fase 1 (Secções Iniciais - Metade 1): AURA DE LUZ**
-- O agrupamento de serviços (ex: Laser, 3D) partilha a mesma cor temática.
-- A cor manifesta-se através de um *glow* subtil na interface (títulos, hover de botões) e um gradiente radial gigante, extremamente ténue (10% opacidade) no fundo, como se houvesse um holofote de estúdio colorido atrás da secção. O fundo contínua maioritariamente negro.
+**1. Imagens de Destaque (Alta Resolução)**
+*   **Formato nos Dados:** `{ mediaType: 'image', mediaSrc: 'assets/cnc-highres.webp' }`
+*   **Renderização:** Uma tag `<img loading="lazy">` com `object-fit: cover` para preencher o topo do modal.
+*   **Otimização:** Uso estrito de `.webp` para manter o site rápido.
 
-**Fase 2 (Secções Finais - Metade 2): VIDRO FUMADO (GLASMORPHISM)**
-- O fundo é mantido 100% escuro e técnico (Grid de pontos/linhas).
-- A distinção visual acontece envolvendo o conteúdo da secção num painel de vidro escuro (`backdrop-filter`) com bordas e reflexos suaves pintados com a `--theme-color` do par atual. Confere uma sensação tátil e premium de profundidade.
+**2. Vídeos (B-Roll e Processo de Fabrico)**
+*   **Formato nos Dados:** `{ mediaType: 'video', mediaSrc: 'assets/laser-cut.mp4' }`
+*   **Renderização:** Tag `<video autoplay loop muted playsinline>` (Crucial: sem som e autoplay para agir como um GIF de altíssima qualidade).
+*   **UX:** O vídeo dá vida imediata ao processo industrial assim que o cartão abre.
+
+**3. Modelos 3D (Inspeção Interativa)**
+*   **Formato nos Dados:** `{ mediaType: '3d', mediaSrc: 'assets/medal-model.glb' }`
+*   **Renderização:** Uso do web component `<model-viewer>` (do Google).
+*   **Vantagem:** Permite ao cliente rodar a peça 3D com o rato/dedo diretamente dentro do modal, suportando inclusivamente Realidade Aumentada (AR) em telemóveis.
+
+**Layout do Modal Futuro:**
+O modal deixará de ser apenas um quadrado de texto. Passará a ter um layout "Split" (Desktop) ou "Stack" (Mobile): Metade esquerda com o Showcase visual (Imagem/Vídeo/3D), metade direita com as especificações técnicas, tolerâncias de maquinagem e o texto atual.
 
 ---
 
 ## Implementado até agora
 
-1.  **Estrutura do Projeto:**
-    *   `index.html`: Estrutura semântica com 3 seções principais (Estamparia, Laser, Acrílico) e um contentor para as camadas de fundo.
-    *   `style.css`: Estilização base com o fundo preto, seções de ecrã inteiro e a lógica visual para as camadas de fundo.
-    *   `script.js`: Orquestrador central com Absolute Scroll Sync.
+1.  **Estrutura e Estilo:**
+    *   Arquitetura SPA baseada em Secções de Altura Total (100vh).
+    *   Painéis de Vidro (`backdrop-filter`) com textura diagonal (150º) a simular chapa cortada.
+    *   Marcas de água tipográficas através da fonte "Material Symbols Outlined" gigante a 5% de opacidade.
+    *   Hitboxes de navegação lateral contínuas para zero frustração de clique.
 
-2.  **Ambiente de Desenvolvimento (no `.idx/dev.nix`):
-    *   Servidor web Python (`dev.nix`) configurado.
+2.  **Animação e Partículas:**
+    *   `global-particles.js`: 2 Telas de partículas (fundo lento com blur refrativo, ecrã frontal com Bokeh rápido) atadas à inércia do scroll Lenis.
+    *   Fragmentação condicional do título Hero ("4WINNERS").
 
-3.  **Mecanismo de Scrollytelling:**
-    *   GSAP e ScrollTrigger instalados. Lenis Smooth Scroll calibrado para *Absolute Sync*.
-    *   **Título 4winners (`hero-animation.js`):** Implementado o sistema de fragmentação condicional (Resolve o bug de refresh).
-    *   **Transição de Fundo:** Sincroniza a opacidade das camadas de fundo com a posição do scroll.
-    *   **Estamparia:** Animação de escala (simulação de prensa).
-    *   **Laser de Fibra:** Sistema de partículas dinâmico (`laser-animation.js`).
-    *   **Acrílico Premium:** Efeito de refração de vidro (`glass-effect.js`).
+3.  **Ambiente de Desenvolvimento:**
+    *   Servidor web Python via Nix e IDX (`dev.nix`).
 
 ---
 
 ## Próximos Passos (A Implementar)
 
 - [ ] **Efeitos Visuais Específicos:**
-    - [ ] **Montagem de Medalhas:** Animar a vista explodida dos componentes a unirem-se com o scroll, utilizando o paradigma `fromTo + scrub: true` rigoroso para evitar sobreposição de estados.
+    - [ ] **Montagem de Medalhas:** Animar a vista explodida dos componentes a unirem-se com o scroll.
 
-- [ ] **Assets e Otimização:**
-    - [ ] Substituir as cores de fundo placeholder pelas imagens Ultra-Wide 21:9 finais.
-    - [ ] Implementar *lazy loading* para as imagens para otimizar o tempo de carregamento inicial da página.
+- [ ] **Evolução dos Modais (Details):**
+    - [ ] Injetar `<model-viewer>` e estrutura híbrida de vídeos/imagens detalhada na seção de Estratégia acima.
 
 - [ ] **Finalização e Deploy:**
-    - [ ] Refinar a paleta de cores e a tipografia no `style.css` para alinhar perfeitamente com o DNA visual.
-    - [ ] Configurar o Firebase Hosting e fazer o deploy do site.
+    - [ ] Configurar Firebase Hosting para Testes Q/A.
