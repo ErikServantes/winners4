@@ -113,57 +113,61 @@ body, html {
     opacity: 1; 
 }
 
-/* --- THEME SYSTEM A/B TESTING --- */
-/* The variables are passed inline on the HTML elements */
-
-/* Opc 1: Aura Glow */
-.theme-aura .aura-glow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 150vw;
-    height: 150vh;
-    /* Um gradiente suave desde o centro com a cor do tema, desvanecendo para transparente */
-    background: radial-gradient(circle, var(--theme-color) 0%, transparent 60%);
-    opacity: 0.08; /* Super subtil */
-    z-index: 0;
-    pointer-events: none;
-}
-
-.theme-aura .content h1 {
-    /* Toque de luz no texto */
-    text-shadow: 0 0 40px var(--theme-color);
-}
-
-.theme-aura .details-btn:hover {
-    background-color: var(--theme-color);
-    border-color: var(--theme-color);
-    color: #000;
-    box-shadow: 0 0 20px var(--theme-color);
-}
-
-
-/* Opc 3: Vidro Fumado (Glass Panel) */
-.theme-glass .glass-panel {
-    background-color: rgba(10, 10, 10, 0.4); /* Fundo quase preto translúcido */
-    backdrop-filter: blur(12px) saturate(120%);
-    -webkit-backdrop-filter: blur(12px) saturate(120%);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    /* Borda superior e esquerda com a cor do tema para simular refração de luz direcional */
-    border-top: 1px solid color-mix(in srgb, var(--theme-color) 40%, transparent);
-    border-left: 1px solid color-mix(in srgb, var(--theme-color) 20%, transparent);
+/* --- THEME SYSTEM: CORTE DE CHAPA DUPLA A 150º --- */
+/* Base partilhada para todos os painéis de vidro */
+.glass-panel {
+    position: relative;
+    /* Fundo base neutro para garantir o efeito vidro */
+    background-color: rgba(10, 10, 10, 0.3); 
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
     border-radius: 8px;
     padding: 60px 40px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
-                inset 0 0 80px color-mix(in srgb, var(--theme-color) 5%, transparent); /* Reflexo interior na cor do tema */
+    /* Sombras partilhadas para dar elevação do fundo */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+    /* Esconde elementos que transbordem os cantos arredondados (necessário para pseudo-elementos) */
+    overflow: hidden; 
 }
 
-.theme-glass .details-btn {
-    border-color: color-mix(in srgb, var(--theme-color) 50%, transparent);
+.theme-glass .glass-panel {
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.theme-glass .details-btn:hover {
+.theme-glass .glass-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    /* Uma barra rígida desenhada a 150 graus que atravessa o cartão */
+    background: repeating-linear-gradient(
+        150deg,
+        transparent,
+        transparent 30%,
+        color-mix(in srgb, var(--theme-color) 15%, transparent) 30%,
+        color-mix(in srgb, var(--theme-color) 15%, transparent) 30.5%, /* Apenas uma linha de 0.5% de espessura (vinco) */
+        transparent 30.5%,
+        transparent 60%
+    );
+    z-index: -1; /* Fica atrás do texto, mas à frente do vidro */
+}
+
+
+/* --- Detalhes dos Botões Comuns a todas as opções de Glass --- */
+.details-btn {
+    display: inline-block;
+    background-color: transparent;
+    border: 1px solid color-mix(in srgb, var(--theme-color) 50%, #fff); /* Herdará a cor da secção */
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+section[class*="theme-glass"] .details-btn:hover {
     background-color: var(--theme-color);
     border-color: var(--theme-color);
     color: #000;
@@ -222,6 +226,7 @@ body, html {
     position: relative; 
     z-index: 1;
     max-width: 800px;
+    width: 80%; /* Garante que os cartões têm uma largura consistente */
     padding: 20px;
 }
 
@@ -267,29 +272,18 @@ body, html {
         font-size: 1.2rem; 
     }
     
-    .theme-glass .glass-panel {
+    .glass-panel {
         padding: 30px 20px;
+        width: 90%;
     }
 }
 
-/* --- Details Button & CTA --- */
-.details-btn {
-    display: inline-block;
-    background-color: transparent;
-    border: 1px solid #fff;
-    color: #fff;
-    padding: 10px 20px;
-    margin-top: 30px;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
 
-/* Hover default (se não houver tema) */
-section:not(.theme-aura):not(.theme-glass) .details-btn:hover {
+/* Fallback Botões (ex: Secção Contacto se perder tema) */
+section:not([class*="theme-"]) .details-btn {
+    border-color: #fff;
+}
+section:not([class*="theme-"]) .details-btn:hover {
     background-color: #fff;
     color: #000;
 }

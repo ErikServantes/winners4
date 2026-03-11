@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Industrial-Chic Landing Page</title>
-    <link rel="stylesheet" href="style.css?v=1.10">
+    <link rel="stylesheet" href="style.css?v=1.13">
 </head>
 <body>
 
@@ -31,9 +31,7 @@
         </ul>
     </nav>
 
-    <!-- Fundo base unificado escuro. As cores passam a vir dos radial-gradients no estilo -->
     <div id="background-layers">
-        <!-- Mantém-se o controlo de opacidade por JS, mas usamos cores muito escuras como base antes das imagens -->
         <div class="layer" id="layer-hero-4winners" style="background-color: #000000;" data-section="hero-4winners"></div>
         <div class="layer" id="layer-corte-laser" style="background-color: #050505;" data-section="corte-laser"></div>
         <div class="layer" id="layer-gravacao-laser" style="background-color: #050505;" data-section="gravacao-laser"></div>
@@ -58,21 +56,17 @@
             </div>
         </section>
 
-        <!-- FASE 1: TESTE "AURA DE LUZ" (radial-glow) -->
         <!-- Par 1: Azul -->
-        <section id="corte-laser" class="fullscreen-section theme-aura" style="--theme-color: #00d4ff;">
-            <div class="aura-glow"></div>
+        <section id="corte-laser" class="fullscreen-section theme-glass" style="--theme-color: #00d4ff;">
             <canvas id="laser-canvas"></canvas>
-            <div class="content">
+            <div class="content glass-panel">
                 <h1>Corte de Laser</h1>
                 <p>Precisão milimétrica para formas complexas.</p>
                 <button class="details-btn" data-service="corte-laser">Saber Mais</button>
             </div>
         </section>
-        <section id="gravacao-laser" class="fullscreen-section theme-aura" style="--theme-color: #00d4ff;">
-            <div class="aura-glow"></div>
-            <!-- Removido o class="glass-effect" antigo daqui para limpar -->
-            <div class="content">
+        <section id="gravacao-laser" class="fullscreen-section theme-glass" style="--theme-color: #00d4ff;">
+            <div class="content glass-panel">
                 <h1>Gravação a Laser</h1>
                 <p>Detalhes permanentes em diversas superfícies.</p>
                 <button class="details-btn" data-service="gravacao-laser">Saber Mais</button>
@@ -80,17 +74,15 @@
         </section>
 
         <!-- Par 2: Laranja -->
-        <section id="modelacao-3d" class="fullscreen-section theme-aura" style="--theme-color: #ff6b00;">
-            <div class="aura-glow"></div>
-            <div class="content">
+        <section id="modelacao-3d" class="fullscreen-section theme-glass" style="--theme-color: #ff6b00;">
+            <div class="content glass-panel">
                 <h1>Modelação 3D</h1>
                 <p>Criando as fundações digitais para a sua visão.</p>
                 <button class="details-btn" data-service="modelacao-3d">Saber Mais</button>
             </div>
         </section>
-        <section id="impressao-3d" class="fullscreen-section theme-aura" style="--theme-color: #ff6b00;">
-            <div class="aura-glow"></div>
-            <div class="content">
+        <section id="impressao-3d" class="fullscreen-section theme-glass" style="--theme-color: #ff6b00;">
+            <div class="content glass-panel">
                 <h1>Impressão 3D</h1>
                 <p>Do digital ao tangível, camada por camada.</p>
                 <button class="details-btn" data-service="impressao-3d">Saber Mais</button>
@@ -98,24 +90,21 @@
         </section>
 
         <!-- Par 3: Azul Cinza -->
-        <section id="maquinacao-cnc" class="fullscreen-section theme-aura" style="--theme-color: #5d7b93;">
-            <div class="aura-glow"></div>
-            <div class="content">
+        <section id="maquinacao-cnc" class="fullscreen-section theme-glass" style="--theme-color: #5d7b93;">
+            <div class="content glass-panel">
                 <h1>Maquinação CNC</h1>
                 <p>A robustez do metal esculpida por computador.</p>
                 <button class="details-btn" data-service="maquinacao-cnc">Saber Mais</button>
             </div>
         </section>
-        <section id="estampagem" class="fullscreen-section theme-aura" style="--theme-color: #5d7b93;">
-            <div class="aura-glow"></div>
-            <div class="content">
+        <section id="estampagem" class="fullscreen-section theme-glass" style="--theme-color: #5d7b93;">
+            <div class="content glass-panel">
                 <h1>Estampagem</h1>
                 <p>Impacto e precisão que moldam o metal.</p>
                 <button class="details-btn" data-service="estampagem">Saber Mais</button>
             </div>
         </section>
 
-        <!-- FASE 2: TESTE "VIDRO FUMADO" (theme-glass) -->
         <!-- Par 4: Vermelho -->
         <section id="quinagem" class="fullscreen-section theme-glass" style="--theme-color: #e63946;">
             <div class="content glass-panel">
@@ -164,8 +153,9 @@
             </div>
         </section>
 
-        <section id="contacto" class="fullscreen-section">
-            <div class="content">
+        <!-- Contacto com tema cinza neutro -->
+        <section id="contacto" class="fullscreen-section theme-glass" style="--theme-color: #a0a0a0;">
+            <div class="content glass-panel">
                 <h1>Fale Connosco</h1>
                 <p>Estamos prontos para transformar a sua ideia em realidade.</p>
                 <button class="details-btn" data-service="contacto">Ver Detalhes</button>
@@ -192,6 +182,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     
     <!-- Custom Script -->
-    <script type="module" src="script.js?v=1.10"></script>
+    <script type="module" src="script.js?v=1.13"></script>
 </body>
 </html>
