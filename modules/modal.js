@@ -7,7 +7,9 @@ const serviceData = {
     'corte-laser': {
         title: 'Corte de Laser',
         description: 'Utilizando um feixe de laser de alta potência, este processo corta materiais com uma precisão excecional, permitindo a criação de geometrias complexas e acabamentos limpos sem contacto físico com a peça.',
-        materials: ['Metal', 'Acrílico', 'Madeira']
+        materials: ['Metal', 'Acrílico', 'Madeira'],
+        mediaType: 'image',
+        mediaSrc: 'assets/CORTE_LASER.webp' // Imagem Temporária adicionada
     },
     'gravacao-laser': {
         title: 'Gravação a Laser',
@@ -76,25 +78,14 @@ const serviceData = {
 };
 
 export function initializeModal() {
-    // Procura o modal e os seus elementos principais uma vez
     const modal = document.getElementById('details-modal');
     if (!modal) return;
 
-    const modalTitle = document.getElementById('modal-title');
-    const modalBody = document.getElementById('modal-body');
-    const modalCloseBtn = modal.querySelector('.modal-close');
-    
-    // Se a estrutura base do modal não existir, não continua
-    if (!modalTitle || !modalBody || !modalCloseBtn) {
-        console.error("Modal structure is incomplete in HTML");
-        return;
-    }
-
+    // A estrutura do modal vai mudar. Em vez de usar variáveis soltas, injetamos tudo dinamicamente.
     const detailBtns = document.querySelectorAll('.details-btn');
 
     detailBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            // Se o botão for um link <a> (como na secção de contactos original), não navega
             if (btn.tagName === 'A') {
                 e.preventDefault();
             }
@@ -103,54 +94,103 @@ export function initializeModal() {
             const data = serviceData[service];
 
             if (data) {
-                // Atualiza o título
-                modalTitle.textContent = data.title;
-                
-                // Limpa o corpo do modal
-                modalBody.innerHTML = ''; 
+                // Prepara a Divisão de Media (Imagem/Vídeo/3D)
+                let mediaHTML = '';
+                if (data.mediaType === 'image' && data.mediaSrc) {
+                    mediaHTML = `
+                        <div class="modal-media-wrapper">
+                            <img src="${data.mediaSrc}" alt="${data.title}" loading="lazy">
+                        </div>
+                    `;
+                } else if (data.mediaType === 'video' && data.mediaSrc) {
+                    mediaHTML = `
+                        <div class="modal-media-wrapper">
+                            <video autoplay loop muted playsinline>
+                                <source src="${data.mediaSrc}" type="video/mp4">
+                            </video>
+                        </div>
+                    `;
+                } else if (data.mediaType === '3d' && data.mediaSrc) {
+                    // Prepara o terreno para o <model-viewer> no futuro
+                    mediaHTML = `
+                        <div class="modal-media-wrapper">
+                            <model-viewer src="${data.mediaSrc}" auto-rotate camera-controls shadow-intensity="1"></model-viewer>
+                        </div>
+                    `;
+                }
+                // Se não houver media, o HTML fica vazio e o CSS cuida de alargar a secção de texto
+
+                // --- GERA O HTML INTERNO DO MODAL (NOVO SPLIT LAYOUT) ---
+                let contentHTML = '';
 
                 if (service === 'contacto') {
-                    // Constrói o HTML para o modal de contactos
-                    modalBody.innerHTML = `
-                        <div class="contact-modal-info">
-                            <div class="contact-item">
-                                <strong>Morada:</strong>
-                                <a href="${data.address_link}" target="_blank">${data.address}</a>
-                            </div>
-                            <div class="contact-item">
-                                <strong>Email:</strong>
-                                <a href="mailto:${data.email}">${data.email}</a>
-                            </div>
-                            <div class="contact-item">
-                                <strong>Telefone:</strong>
-                                <a href="${data.phone_link}">${data.phone}</a>
-                            </div>
-                            <div class="contact-item">
-                                <strong>Horário:</strong>
-                                <div class="schedule">
-                                    ${data.schedule.map(line => `<span>${line}</span>`).join('')}
+                    // Layout Especial para Contacto (Sem Media)
+                    contentHTML = `
+                        <div class="modal-text-section full-width">
+                            <h2 id="modal-title">${data.title}</h2>
+                            <div id="modal-body">
+                                <div class="contact-modal-info">
+                                    <div class="contact-item">
+                                        <strong>Morada:</strong>
+                                        <a href="${data.address_link}" target="_blank">${data.address}</a>
+                                    </div>
+                                    <div class="contact-item">
+                                        <strong>Email:</strong>
+                                        <a href="mailto:${data.email}">${data.email}</a>
+                                    </div>
+                                    <div class="contact-item">
+                                        <strong>Telefone:</strong>
+                                        <a href="${data.phone_link}">${data.phone}</a>
+                                    </div>
+                                    <div class="contact-item">
+                                        <strong>Horário:</strong>
+                                        <div class="schedule">
+                                            ${data.schedule.map(line => `<span>${line}</span>`).join('')}
+                                        </div>
+                                    </div>
                                 </div>
+                                <a href="${data.phone_link}" class="details-btn cta-btn">Ligar Agora</a>
                             </div>
                         </div>
-                        <a href="${data.phone_link}" class="details-btn cta-btn">Ligar Agora</a>
                     `;
                 } else {
-                    // Constrói o HTML padrão para os serviços
+                    // Layout Genérico para Serviços (Com ou Sem Media)
                     let materialsHTML = '';
                     if (data.materials && data.materials.length > 0) {
                         materialsHTML = `
-                            <h3>Materiais</h3>
+                            <h3>Materiais Trabalhados</h3>
                             <ul class="modal-materials">
                                 ${data.materials.map(material => `<li>${material}</li>`).join('')}
                             </ul>
                         `;
                     }
 
-                    modalBody.innerHTML = `
-                        <p class="modal-description">${data.description}</p>
-                        ${materialsHTML}
+                    // Se houver media, usamos o CSS para dividir o ecrã. Caso contrário, a classe full-width expande o texto
+                    const textClass = mediaHTML ? 'modal-text-section split-width' : 'modal-text-section full-width';
+
+                    contentHTML = `
+                        ${mediaHTML}
+                        <div class="${textClass}">
+                            <h2 id="modal-title">${data.title}</h2>
+                            <div id="modal-body">
+                                <p class="modal-description">${data.description}</p>
+                                ${materialsHTML}
+                            </div>
+                        </div>
                     `;
                 }
+
+                // Injeta tudo no modal-content (apagando o antigo e mantendo apenas o botão de fechar)
+                const modalContent = modal.querySelector('.modal-content');
+                modalContent.innerHTML = `
+                    <button class="modal-close">&times;</button>
+                    <div class="modal-layout-container">
+                        ${contentHTML}
+                    </div>
+                `;
+
+                // Re-anexa o event listener ao botão de fechar (pois foi recriado)
+                modalContent.querySelector('.modal-close').addEventListener('click', closeModal);
 
                 // Mostra o modal
                 modal.classList.add('visible');
@@ -162,8 +202,6 @@ export function initializeModal() {
         modal.classList.remove('visible');
     }
 
-    modalCloseBtn.addEventListener('click', closeModal);
-    
     // Fecha o modal ao clicar fora dele
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
