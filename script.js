@@ -11,8 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Regista o plugin ScrollTrigger do GSAP
     gsap.registerPlugin(ScrollTrigger);
 
-    // Inicializa o Smooth Scroll (Lenis)
+    // Inicializa o Smooth Scroll (Lenis) e garante sincronização com GSAP
     initializeSmoothScroll();
+
+    // Quando usamos "Absolute Scroll", é prudente forçar o ScrollTrigger a recalcular as suas
+    // âncoras (start/end) após o Lenis e o DOM estabilizarem, especialmente em refreshes a meio da página.
+    setTimeout(() => {
+        ScrollTrigger.refresh();
+    }, 100);
 
     // Inicializa os restantes módulos
     initializeScrollytelling();
@@ -69,10 +75,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const commonScrollTrigger = {
             trigger: section,
             start: 'top 70%',
-            toggleActions: 'play none none none',
+            // Mesmo para animações simples, é mais seguro atrelar aos estados do viewport
+            // em vez de "play once" para garantir coerência se o user fizer refresh num scroll profundo.
+            toggleActions: 'play reverse play reverse',
         };
 
+        // NOTA: Para animações simples (fade-in), .to() com estados iniciais no CSS é aceitável,
+        // mas as animações complexas ("Scrollytelling") DEVEM usar o paradigma Absolute Scroll (.fromTo + scrub)
         if (textElements.length > 0) {
+            // Estado inicial garantido antes de animar (previne flashes em refreshes a meio da página)
+            gsap.set(textElements, { opacity: 0, y: 30 });
+            
             gsap.to(textElements, {
                 scrollTrigger: commonScrollTrigger,
                 opacity: 1,
@@ -84,6 +97,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (buttonElement) {
+            gsap.set(buttonElement, { opacity: 0, y: 30 });
+
             gsap.to(buttonElement, {
                 scrollTrigger: commonScrollTrigger,
                 opacity: 1,
@@ -95,5 +110,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    console.log("Navigation fully operational.");
+    console.log("Navigation & Absolute Scroll Sync fully operational.");
 });

@@ -11,32 +11,41 @@ Este projeto é uma Single Page Application (SPA) estática com foco em uma expe
 
 ---
 
+## Arquitetura de Animação: O Padrão "Absolute Scroll"
+
+Para garantir que animações complexas baseadas em scroll (Scrollytelling) funcionam sem falhas independentemente de refreshes, direção do scroll ou velocidade, implementámos o paradigma de **Absolute Scroll Sync**:
+
+1.  **Lenis RAF Sync:** O motor de smooth scroll (Lenis) não corre no seu próprio loop de *requestAnimationFrame*. Ele está diretamente acoplado à *ticker* interna do GSAP. Isto significa que quando o GSAP calcula uma animação (ex: o título a explodir), usa exatamente o mesmo valor de pixel sub-frame que o Lenis calculou. Zero desfasamento ou *jitter*.
+2.  **`lagSmoothing(0)`:** Desativado no GSAP. Se o browser tiver um solavanco de performance, a animação vai "saltar" para a posição matemática correta (absoluta) do scroll, em vez de tentar animar suavemente até lá (o que arruinaria o efeito de scrollytelling amarrado à posição física).
+3.  **A Regra do `.fromTo` + `scrub: true`:** Animações complexas ligadas ao scroll **NÃO DEVEM** usar `gsap.to()` ou `gsap.from()`, pois estes herdam o estado do ecrã no momento da inicialização (que é imprevisível em refreshes a meio da página). Usa sempre `.fromTo()` para definir rigidamente o estado `0%` e o estado `100%` da animação, com `scrub: true` no ScrollTrigger para atar a cabeça de leitura ao scroll.
+4.  **Isolamento de Estado Inicial:** Se uma secção tem uma animação de "Montagem" no carregamento inicial da página e também reage ao scroll, elas devem ser isoladas. Se o refresh for feito fora do topo da página, a animação de "Montagem" é cancelada via JavaScript e apenas o estado do ScrollTrigger (`.fromTo`) assume o controlo da geometria dos elementos baseada na posição exata da barra de scroll.
+
+---
+
 ## Implementado até agora
 
 1.  **Estrutura do Projeto:**
     *   `index.html`: Estrutura semântica com 3 seções principais (Estamparia, Laser, Acrílico) e um contentor para as camadas de fundo.
-    *   `style.css`: Estilização base com o fundo preto, seções de ecrã inteiro e a lógica visual para as camadas de fundo (com cores placeholder).
-    *   `script.js`: Onde a interatividade do scrollytelling é implementada.
+    *   `style.css`: Estilização base com o fundo preto, seções de ecrã inteiro e a lógica visual para as camadas de fundo.
+    *   `script.js`: Orquestrador central com Absolute Scroll Sync.
 
 2.  **Ambiente de Desenvolvimento (no `.idx/dev.nix`):
-    *   **Servidor de Pré-visualização:** Um servidor web Python foi configurado para iniciar automaticamente, permitindo a pré-visualização em tempo real do site.
-    *   **Configuração do IDX:** O ambiente está configurado para abrir os ficheiros `index.html`, `style.css` e `script.js` por defeito, agilizando o desenvolvimento.
+    *   Servidor web Python (`dev.nix`) configurado.
 
-3.  **Mecanismo de Scrollytelling (com GSAP):
-    *   **Inclusão do GSAP:** A biblioteca de animação GreenSock (GSAP) e o seu plugin `ScrollTrigger` foram adicionados ao projeto via CDN.
-    *   **Transição de Fundo:** O `script.js` foi reescrito para usar o `ScrollTrigger`. Ele agora sincroniza a opacidade das camadas de fundo com a posição do scroll, criando um efeito de transição suave e de alta performance à medida que o utilizador navega verticalmente pelas seções.
-    *   **Animação de Conteúdo:** Animações de "fade-in" e "slide-in" para os títulos e parágrafos de cada seção foram implementadas com o `ScrollTrigger`.
-    *   **Efeitos Visuais Específicos:**
-        *   **Estamparia:** Foi adicionada uma animação de escala específica para a seção "Estamparia" para simular um efeito de "prensa" ou "impacto".
-        *   **Laser de Fibra:** Foi desenvolvido um sistema de partículas em JavaScript/Canvas para simular as faíscas de corte em tempo real, ativado pelo `ScrollTrigger`.
-        *   **Acrílico Premium:** Efeito de vidro com `backdrop-filter` e rotação animada para simular refração de luz.
+3.  **Mecanismo de Scrollytelling:**
+    *   GSAP e ScrollTrigger instalados. Lenis Smooth Scroll calibrado para *Absolute Sync*.
+    *   **Título 4winners (`hero-animation.js`):** Implementado o sistema de fragmentação condicional (Resolve o bug de refresh).
+    *   **Transição de Fundo:** Sincroniza a opacidade das camadas de fundo com a posição do scroll.
+    *   **Estamparia:** Animação de escala (simulação de prensa).
+    *   **Laser de Fibra:** Sistema de partículas dinâmico (`laser-animation.js`).
+    *   **Acrílico Premium:** Efeito de refração de vidro (`glass-effect.js`).
 
 ---
 
 ## Próximos Passos (A Implementar)
 
 - [ ] **Efeitos Visuais Específicos:**
-    - [ ] **Montagem de Medalhas:** Animar a vista explodida dos componentes a unirem-se com o scroll.
+    - [ ] **Montagem de Medalhas:** Animar a vista explodida dos componentes a unirem-se com o scroll, utilizando o paradigma `fromTo + scrub: true` rigoroso para evitar sobreposição de estados.
 
 - [ ] **Assets e Otimização:**
     - [ ] Substituir as cores de fundo placeholder pelas imagens Ultra-Wide 21:9 finais.
@@ -44,4 +53,4 @@ Este projeto é uma Single Page Application (SPA) estática com foco em uma expe
 
 - [ ] **Finalização e Deploy:**
     - [ ] Refinar a paleta de cores e a tipografia no `style.css` para alinhar perfeitamente com o DNA visual.
-    - [ ] Configurar o Firebase Hosting e fazer o deploy do site para testes em múltiplos dispositivos.
+    - [ ] Configurar o Firebase Hosting e fazer o deploy do site.
