@@ -167,6 +167,34 @@ body, html {
     z-index: -1; 
 }
 
+/* --- MARCA DE ÁGUA TÉCNICA (SÍMBOLOS) --- */
+/* Injetamos o valor de `--service-icon` como Material Symbol no fundo do cartão */
+.theme-glass .glass-panel::after {
+    /* Usa a variável que tem o nome do ícone do Google Fonts */
+    content: var(--service-icon);
+    /* Força a usar a fonte Material Symbols Outlined */
+    font-family: 'Material Symbols Outlined';
+    
+    position: absolute;
+    /* Alinhamento para que a imagem corte na borda direita do vidro */
+    top: 50%;
+    right: -20px;
+    transform: translateY(-50%);
+    
+    /* Tamanho gigantesco para servir de textura de fundo */
+    font-size: 20rem;
+    line-height: 1;
+    
+    /* A cor assume o tema, mas com opacidade super baixa (5% a 8%) */
+    color: var(--theme-color);
+    opacity: 0.08;
+    
+    /* Impede interações */
+    user-select: none;
+    pointer-events: none;
+    z-index: -1; 
+}
+
 
 /* --- Detalhes dos Botões Comuns --- */
 .details-btn {
@@ -292,6 +320,12 @@ section[class*="theme-glass"] .details-btn:hover {
     .glass-panel {
         padding: 30px 20px;
         width: 90%;
+    }
+    
+    /* Encolhe o ícone de marca de água nos telemóveis */
+    .theme-glass .glass-panel::after {
+        font-size: 12rem;
+        right: -10px;
     }
 }
 
