@@ -56,27 +56,19 @@ body, html {
     margin: 0;
     display: flex;
     flex-direction: column;
-    /* Removemos o gap completamente para não haver espaços mortos invisíveis */
     gap: 0; 
     align-items: flex-end;
 }
 
-/* A tag 'a' é agora um contentor invisível que ocupa todo o espaço (a verdadeira hitbox) */
 #side-nav ul li a {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    /* 
-       Recriamos o espaçamento visual do antigo gap usando padding.
-       Se o antigo gap era 15px, damos 7.5px acima e 7.5px abaixo.
-       Isto cria blocos de ~23px de altura (7.5 + 8 da bola + 7.5) que se encostam perfeitamente.
-    */
-    padding: 7.5px 0 7.5px 30px; /* O padding-left de 30px aumenta a largura clicável para a esquerda (interior do ecrã) */
+    padding: 7.5px 0 7.5px 30px; 
     text-decoration: none;
     position: relative;
 }
 
-/* A tag span com classe .dot é agora puramente a representação visual da bolinha */
 .dot {
     display: block;
     width: 8px; 
@@ -84,11 +76,9 @@ body, html {
     background-color: rgba(255, 255, 255, 0.3); 
     border-radius: 50%;
     transition: all 0.3s ease;
-    /* Cursor pointer já é herdado da tag A, mas mantemos por segurança */
     cursor: pointer; 
 }
 
-/* Efeitos Hover e Ativo - Detetados pelo contentor A, aplicados à bolinha .dot */
 #side-nav ul li a:hover .dot, 
 #side-nav ul li a.active .dot {
     background-color: #ffffff;
@@ -102,11 +92,10 @@ body, html {
     box-shadow: 0 0 10px rgba(0, 212, 255, 0.8); 
 }
 
-/* Tooltip subtil para os pontos - Detetada pelo contentor A */
 #side-nav ul li a::after {
     content: attr(data-name);
     position: absolute;
-    right: 20px; /* Distância a partir da borda direita da hitbox */
+    right: 20px; 
     top: 50%;
     transform: translateY(-50%);
     color: #ffffff;
@@ -124,6 +113,64 @@ body, html {
     opacity: 1; 
 }
 
+/* --- THEME SYSTEM A/B TESTING --- */
+/* The variables are passed inline on the HTML elements */
+
+/* Opc 1: Aura Glow */
+.theme-aura .aura-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150vw;
+    height: 150vh;
+    /* Um gradiente suave desde o centro com a cor do tema, desvanecendo para transparente */
+    background: radial-gradient(circle, var(--theme-color) 0%, transparent 60%);
+    opacity: 0.08; /* Super subtil */
+    z-index: 0;
+    pointer-events: none;
+}
+
+.theme-aura .content h1 {
+    /* Toque de luz no texto */
+    text-shadow: 0 0 40px var(--theme-color);
+}
+
+.theme-aura .details-btn:hover {
+    background-color: var(--theme-color);
+    border-color: var(--theme-color);
+    color: #000;
+    box-shadow: 0 0 20px var(--theme-color);
+}
+
+
+/* Opc 3: Vidro Fumado (Glass Panel) */
+.theme-glass .glass-panel {
+    background-color: rgba(10, 10, 10, 0.4); /* Fundo quase preto translúcido */
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Borda superior e esquerda com a cor do tema para simular refração de luz direcional */
+    border-top: 1px solid color-mix(in srgb, var(--theme-color) 40%, transparent);
+    border-left: 1px solid color-mix(in srgb, var(--theme-color) 20%, transparent);
+    border-radius: 8px;
+    padding: 60px 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+                inset 0 0 80px color-mix(in srgb, var(--theme-color) 5%, transparent); /* Reflexo interior na cor do tema */
+}
+
+.theme-glass .details-btn {
+    border-color: color-mix(in srgb, var(--theme-color) 50%, transparent);
+}
+
+.theme-glass .details-btn:hover {
+    background-color: var(--theme-color);
+    border-color: var(--theme-color);
+    color: #000;
+}
+
+
+/* --- Base Layout --- */
 #background-layers {
     position: fixed;
     top: 0;
@@ -178,7 +225,6 @@ body, html {
     padding: 20px;
 }
 
-/* --- Initial State for Content Animation --- */
 .content > * {
     opacity: 0;
     transform: translateY(30px);
@@ -197,38 +243,19 @@ body, html {
     line-height: 1.6;
 }
 
-.glass-effect {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 120%; 
-    height: 120%;
-    transform: translate(-50%, -50%) rotate(45deg);
-    z-index: 0; 
-    background-color: rgba(0, 212, 255, 0.1);
-    backdrop-filter: blur(10px) saturate(120%);
-    -webkit-backdrop-filter: blur(10px) saturate(120%); 
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-#acrilico .content {
-    text-shadow: 0 0 20px rgba(0, 212, 255, 0.7);
-}
-
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
     #side-nav {
-        display: none; /* Esconde APENAS os rebites laterais no mobile */
+        display: none; 
     }
 
     #main-header {
-        /* Ajusta o link de contacto para ecrãs pequenos */
         top: 20px;
         right: 20px;
     }
 
     .nav-contact-link {
-        font-size: 0.75rem; /* Um pouco menor para caber melhor */
+        font-size: 0.75rem; 
     }
 
     .content h1 {
@@ -238,6 +265,10 @@ body, html {
 
     .content p {
         font-size: 1.2rem; 
+    }
+    
+    .theme-glass .glass-panel {
+        padding: 30px 20px;
     }
 }
 
@@ -257,7 +288,8 @@ body, html {
     text-decoration: none;
 }
 
-.details-btn:hover {
+/* Hover default (se não houver tema) */
+section:not(.theme-aura):not(.theme-glass) .details-btn:hover {
     background-color: #fff;
     color: #000;
 }
@@ -334,7 +366,6 @@ body, html {
     margin-bottom: 30px;
 }
 
-/* Modal Body Content */
 .modal-description {
     font-size: 1.1rem;
     line-height: 1.7;
@@ -357,7 +388,6 @@ body, html {
     margin-bottom: 5px;
 }
 
-/* Contact Info inside Modal */
 .contact-modal-info {
     text-align: left;
 }

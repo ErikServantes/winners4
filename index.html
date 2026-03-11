@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Industrial-Chic Landing Page</title>
-    <link rel="stylesheet" href="style.css?v=1.9">
+    <link rel="stylesheet" href="style.css?v=1.10">
 </head>
 <body>
 
@@ -31,21 +31,23 @@
         </ul>
     </nav>
 
+    <!-- Fundo base unificado escuro. As cores passam a vir dos radial-gradients no estilo -->
     <div id="background-layers">
-        <div class="layer" id="layer-hero-4winners" style="background-color: #1a1a1a;" data-section="hero-4winners"></div>
-        <div class="layer" id="layer-corte-laser" style="background-color: #444c54;" data-section="corte-laser"></div>
-        <div class="layer" id="layer-gravacao-laser" style="background-color: #00d4ff;" data-section="gravacao-laser"></div>
-        <div class="layer" id="layer-modelacao-3d" style="background-color: #eeeeee;" data-section="modelacao-3d"></div>
-        <div class="layer" id="layer-impressao-3d" style="background-color: #ffffff;" data-section="impressao-3d"></div>
-        <div class="layer" id="layer-maquinacao-cnc" style="background-color: #8c8c8c;" data-section="maquinacao-cnc"></div>
-        <div class="layer" id="layer-estampagem" style="background-color: #c9a46a;" data-section="estampagem"></div>
-        <div class="layer" id="layer-quinagem" style="background-color: #a04040;" data-section="quinagem"></div>
-        <div class="layer" id="layer-calandragem" style="background-color: #c05050;" data-section="calandragem"></div>
-        <div class="layer" id="layer-repuxamento" style="background-color: #d4af37;" data-section="repuxamento"></div>
-        <div class="layer" id="layer-torneamento" style="background-color: #a0a0a0;" data-section="torneamento"></div>
-        <div class="layer" id="layer-galvanizacao" style="background-color: #e5e4e2;" data-section="galvanizacao"></div>
-        <div class="layer" id="layer-impressao-uv" style="background-color: #b3b3b3;" data-section="impressao-uv"></div>
-        <div class="layer" id="layer-contacto" style="background-color: #2a2a2a;" data-section="contacto"></div>
+        <!-- Mantém-se o controlo de opacidade por JS, mas usamos cores muito escuras como base antes das imagens -->
+        <div class="layer" id="layer-hero-4winners" style="background-color: #000000;" data-section="hero-4winners"></div>
+        <div class="layer" id="layer-corte-laser" style="background-color: #050505;" data-section="corte-laser"></div>
+        <div class="layer" id="layer-gravacao-laser" style="background-color: #050505;" data-section="gravacao-laser"></div>
+        <div class="layer" id="layer-modelacao-3d" style="background-color: #050505;" data-section="modelacao-3d"></div>
+        <div class="layer" id="layer-impressao-3d" style="background-color: #050505;" data-section="impressao-3d"></div>
+        <div class="layer" id="layer-maquinacao-cnc" style="background-color: #050505;" data-section="maquinacao-cnc"></div>
+        <div class="layer" id="layer-estampagem" style="background-color: #050505;" data-section="estampagem"></div>
+        <div class="layer" id="layer-quinagem" style="background-color: #050505;" data-section="quinagem"></div>
+        <div class="layer" id="layer-calandragem" style="background-color: #050505;" data-section="calandragem"></div>
+        <div class="layer" id="layer-repuxamento" style="background-color: #050505;" data-section="repuxamento"></div>
+        <div class="layer" id="layer-torneamento" style="background-color: #050505;" data-section="torneamento"></div>
+        <div class="layer" id="layer-galvanizacao" style="background-color: #050505;" data-section="galvanizacao"></div>
+        <div class="layer" id="layer-impressao-uv" style="background-color: #050505;" data-section="impressao-uv"></div>
+        <div class="layer" id="layer-contacto" style="background-color: #050505;" data-section="contacto"></div>
     </div>
 
     <main id="scroll-container">
@@ -55,7 +57,11 @@
                 <p>Excelência em prémios e brindes.</p>
             </div>
         </section>
-        <section id="corte-laser" class="fullscreen-section">
+
+        <!-- FASE 1: TESTE "AURA DE LUZ" (radial-glow) -->
+        <!-- Par 1: Azul -->
+        <section id="corte-laser" class="fullscreen-section theme-aura" style="--theme-color: #00d4ff;">
+            <div class="aura-glow"></div>
             <canvas id="laser-canvas"></canvas>
             <div class="content">
                 <h1>Corte de Laser</h1>
@@ -63,84 +69,101 @@
                 <button class="details-btn" data-service="corte-laser">Saber Mais</button>
             </div>
         </section>
-        <section id="gravacao-laser" class="fullscreen-section">
-            <div class="glass-effect"></div>
+        <section id="gravacao-laser" class="fullscreen-section theme-aura" style="--theme-color: #00d4ff;">
+            <div class="aura-glow"></div>
+            <!-- Removido o class="glass-effect" antigo daqui para limpar -->
             <div class="content">
                 <h1>Gravação a Laser</h1>
                 <p>Detalhes permanentes em diversas superfícies.</p>
                 <button class="details-btn" data-service="gravacao-laser">Saber Mais</button>
             </div>
         </section>
-        <section id="modelacao-3d" class="fullscreen-section">
+
+        <!-- Par 2: Laranja -->
+        <section id="modelacao-3d" class="fullscreen-section theme-aura" style="--theme-color: #ff6b00;">
+            <div class="aura-glow"></div>
             <div class="content">
                 <h1>Modelação 3D</h1>
                 <p>Criando as fundações digitais para a sua visão.</p>
                 <button class="details-btn" data-service="modelacao-3d">Saber Mais</button>
             </div>
         </section>
-        <section id="impressao-3d" class="fullscreen-section">
+        <section id="impressao-3d" class="fullscreen-section theme-aura" style="--theme-color: #ff6b00;">
+            <div class="aura-glow"></div>
             <div class="content">
                 <h1>Impressão 3D</h1>
                 <p>Do digital ao tangível, camada por camada.</p>
                 <button class="details-btn" data-service="impressao-3d">Saber Mais</button>
             </div>
         </section>
-        <section id="maquinacao-cnc" class="fullscreen-section">
+
+        <!-- Par 3: Azul Cinza -->
+        <section id="maquinacao-cnc" class="fullscreen-section theme-aura" style="--theme-color: #5d7b93;">
+            <div class="aura-glow"></div>
             <div class="content">
                 <h1>Maquinação CNC</h1>
                 <p>A robustez do metal esculpida por computador.</p>
                 <button class="details-btn" data-service="maquinacao-cnc">Saber Mais</button>
             </div>
         </section>
-        <section id="estampagem" class="fullscreen-section">
+        <section id="estampagem" class="fullscreen-section theme-aura" style="--theme-color: #5d7b93;">
+            <div class="aura-glow"></div>
             <div class="content">
                 <h1>Estampagem</h1>
                 <p>Impacto e precisão que moldam o metal.</p>
                 <button class="details-btn" data-service="estampagem">Saber Mais</button>
             </div>
         </section>
-        <section id="quinagem" class="fullscreen-section">
-            <div class="content">
+
+        <!-- FASE 2: TESTE "VIDRO FUMADO" (theme-glass) -->
+        <!-- Par 4: Vermelho -->
+        <section id="quinagem" class="fullscreen-section theme-glass" style="--theme-color: #e63946;">
+            <div class="content glass-panel">
                 <h1>Quinagem</h1>
                 <p>Quinagem de chapas para perfis angulares e complexos.</p>
                 <button class="details-btn" data-service="quinagem">Saber Mais</button>
             </div>
         </section>
-        <section id="calandragem" class="fullscreen-section">
-            <div class="content">
+        <section id="calandragem" class="fullscreen-section theme-glass" style="--theme-color: #e63946;">
+            <div class="content glass-panel">
                 <h1>Calandragem</h1>
                 <p>Curvatura de chapas com precisão para formas cilíndricas.</p>
                 <button class="details-btn" data-service="calandragem">Saber Mais</button>
             </div>
         </section>
-        <section id="repuxamento" class="fullscreen-section">
-            <div class="content">
+
+        <!-- Par 5: Verde -->
+        <section id="repuxamento" class="fullscreen-section theme-glass" style="--theme-color: #2a9d8f;">
+            <div class="content glass-panel">
                 <h1>Repuxamento</h1>
                 <p>Moldando chapas de metal em formas ocas e simétricas.</p>
                 <button class="details-btn" data-service="repuxamento">Saber Mais</button>
             </div>
         </section>
-        <section id="torneamento" class="fullscreen-section">
-            <div class="content">
+        <section id="torneamento" class="fullscreen-section theme-glass" style="--theme-color: #2a9d8f;">
+            <div class="content glass-panel">
                 <h1>Torneamento</h1>
                 <p>Formas de revolução com acabamento perfeito.</p>
                 <button class="details-btn" data-service="torneamento">Saber Mais</button>
             </div>
         </section>
-        <section id="galvanizacao" class="fullscreen-section">
-            <div class="content">
+
+        <!-- Par 6: Amarelo -->
+        <section id="galvanizacao" class="fullscreen-section theme-glass" style="--theme-color: #e9c46a;">
+            <div class="content glass-panel">
                 <h1>Galvanização</h1>
                 <p>Proteção e acabamento metálico para as suas peças.</p>
                 <button class="details-btn" data-service="galvanizacao">Saber Mais</button>
             </div>
         </section>
-        <section id="impressao-uv" class="fullscreen-section">
-            <div class="content">
+        <section id="impressao-uv" class="fullscreen-section theme-glass" style="--theme-color: #e9c46a;">
+            <div class="content glass-panel">
                 <h1>Impressão UV</h1>
                 <p>Cores vibrantes com cura instantânea.</p>
                 <button class="details-btn" data-service="impressao-uv">Saber Mais</button>
             </div>
         </section>
+
         <section id="contacto" class="fullscreen-section">
             <div class="content">
                 <h1>Fale Connosco</h1>
@@ -152,7 +175,7 @@
         <div style="height: 25vh;"></div>
     </main>
 
-    <!-- Modal Structure (now a generic container) -->
+    <!-- Modal Structure -->
     <div id="details-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close">&times;</button>
@@ -169,6 +192,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     
     <!-- Custom Script -->
-    <script type="module" src="script.js?v=1.9"></script>
+    <script type="module" src="script.js?v=1.10"></script>
 </body>
 </html>

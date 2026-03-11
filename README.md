@@ -6,7 +6,13 @@ Este projeto é uma Single Page Application (SPA) estática com foco em uma expe
 
 - **Background:** Preto Obsidiana Infinito (`#000000`)
 - **Iluminação:** Chiaroscuro com Rim Lighting
-- **Paleta:** Latão Polido (Warm Gold), Gunmetal Grey e Azul Néon
+- **Paleta Temática:** 
+  - Laser (Azul Néon: `#00d4ff`)
+  - 3D (Laranja: `#ff6b00`)
+  - CNC/Estampa (Azul Cinza: `#5d7b93`)
+  - Quin/Caland (Vermelho: `#e63946`)
+  - Repux/Torn (Verde: `#2a9d8f`)
+  - Galv/UV (Amarelo: `#e9c46a`)
 - **Assets:** Imagens Ultra-Wide 21:9 geradas por IA
 
 ---
@@ -19,6 +25,22 @@ Para garantir que animações complexas baseadas em scroll (Scrollytelling) func
 2.  **`lagSmoothing(0)`:** Desativado no GSAP. Se o browser tiver um solavanco de performance, a animação vai "saltar" para a posição matemática correta (absoluta) do scroll, em vez de tentar animar suavemente até lá (o que arruinaria o efeito de scrollytelling amarrado à posição física).
 3.  **A Regra do `.fromTo` + `scrub: true`:** Animações complexas ligadas ao scroll **NÃO DEVEM** usar `gsap.to()` ou `gsap.from()`, pois estes herdam o estado do ecrã no momento da inicialização (que é imprevisível em refreshes a meio da página). Usa sempre `.fromTo()` para definir rigidamente o estado `0%` e o estado `100%` da animação, com `scrub: true` no ScrollTrigger para atar a cabeça de leitura ao scroll.
 4.  **Isolamento de Estado Inicial:** Se uma secção tem uma animação de "Montagem" no carregamento inicial da página e também reage ao scroll, elas devem ser isoladas. Se o refresh for feito fora do topo da página, a animação de "Montagem" é cancelada via JavaScript e apenas o estado do ScrollTrigger (`.fromTo`) assume o controlo da geometria dos elementos baseada na posição exata da barra de scroll.
+
+---
+
+## Estratégia de Cores em Pares (Em Teste A/B)
+
+Para agrupar os serviços visualmente e manter o design minimalista, implementámos um sistema de temas por pares, injetado via variáveis CSS (`--theme-color`).
+
+Atualmente o site está dividido em duas abordagens para avaliar qual se encaixa melhor no estilo Industrial-Chic:
+
+**Fase 1 (Secções Iniciais - Metade 1): AURA DE LUZ**
+- O agrupamento de serviços (ex: Laser, 3D) partilha a mesma cor temática.
+- A cor manifesta-se através de um *glow* subtil na interface (títulos, hover de botões) e um gradiente radial gigante, extremamente ténue (10% opacidade) no fundo, como se houvesse um holofote de estúdio colorido atrás da secção. O fundo contínua maioritariamente negro.
+
+**Fase 2 (Secções Finais - Metade 2): VIDRO FUMADO (GLASMORPHISM)**
+- O fundo é mantido 100% escuro e técnico (Grid de pontos/linhas).
+- A distinção visual acontece envolvendo o conteúdo da secção num painel de vidro escuro (`backdrop-filter`) com bordas e reflexos suaves pintados com a `--theme-color` do par atual. Confere uma sensação tátil e premium de profundidade.
 
 ---
 
