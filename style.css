@@ -114,18 +114,36 @@ body, html {
 }
 
 /* --- THEME SYSTEM: CORTE DE CHAPA DUPLA A 150º --- */
-/* Base partilhada para todos os painéis de vidro */
+
+/* Tema Aura (para o Hero) */
+.theme-aura .aura-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150vw;
+    height: 150vh;
+    /* Um gradiente suave (10%) com a cor dourada do tema para se notar melhor */
+    background: radial-gradient(circle, color-mix(in srgb, var(--theme-color) 10%, transparent) 0%, transparent 60%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.theme-aura .content h1 {
+    /* Toque de luxo subtil no título do Hero */
+    text-shadow: 0 0 30px color-mix(in srgb, var(--theme-color) 40%, transparent);
+}
+
+
+/* Tema Glass (para as secções de serviços) */
 .glass-panel {
     position: relative;
-    /* Fundo base neutro para garantir o efeito vidro */
     background-color: rgba(10, 10, 10, 0.3); 
     backdrop-filter: blur(16px) saturate(120%);
     -webkit-backdrop-filter: blur(16px) saturate(120%);
     border-radius: 8px;
     padding: 60px 40px;
-    /* Sombras partilhadas para dar elevação do fundo */
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
-    /* Esconde elementos que transbordem os cantos arredondados (necessário para pseudo-elementos) */
     overflow: hidden; 
 }
 
@@ -137,25 +155,24 @@ body, html {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    /* Uma barra rígida desenhada a 150 graus que atravessa o cartão */
     background: repeating-linear-gradient(
         150deg,
         transparent,
         transparent 30%,
         color-mix(in srgb, var(--theme-color) 15%, transparent) 30%,
-        color-mix(in srgb, var(--theme-color) 15%, transparent) 30.5%, /* Apenas uma linha de 0.5% de espessura (vinco) */
+        color-mix(in srgb, var(--theme-color) 15%, transparent) 30.5%,
         transparent 30.5%,
         transparent 60%
     );
-    z-index: -1; /* Fica atrás do texto, mas à frente do vidro */
+    z-index: -1; 
 }
 
 
-/* --- Detalhes dos Botões Comuns a todas as opções de Glass --- */
+/* --- Detalhes dos Botões Comuns --- */
 .details-btn {
     display: inline-block;
     background-color: transparent;
-    border: 1px solid color-mix(in srgb, var(--theme-color) 50%, #fff); /* Herdará a cor da secção */
+    border: 1px solid color-mix(in srgb, var(--theme-color) 50%, #fff); 
     color: #fff;
     padding: 10px 20px;
     margin-top: 30px;
