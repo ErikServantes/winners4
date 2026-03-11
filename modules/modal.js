@@ -9,12 +9,14 @@ const serviceData = {
         description: 'Utilizando um feixe de laser de alta potência, este processo corta materiais com uma precisão excecional, permitindo a criação de geometrias complexas e acabamentos limpos sem contacto físico com a peça.',
         materials: ['Metal', 'Acrílico', 'Madeira'],
         mediaType: 'image',
-        mediaSrc: 'assets/CORTE_LASER.webp' // Imagem Temporária adicionada
+        mediaSrc: 'assets/CORTE_LASER.webp'
     },
     'gravacao-laser': {
         title: 'Gravação a Laser',
         description: 'A gravação a laser remove seletivamente a superfície de um material para criar marcas permanentes, como logótipos, números de série ou designs decorativos, com um detalhe impressionante.',
-        materials: ['Metal', 'Acrílico', 'Madeira', 'Vidro / Cristal']
+        materials: ['Metal', 'Acrílico', 'Madeira', 'Vidro / Cristal'],
+        mediaType: 'image',
+        mediaSrc: 'assets/GRAV_LASER.webp'
     },
     'impressao-uv': {
         title: 'Impressão UV',
@@ -24,12 +26,16 @@ const serviceData = {
     'impressao-3d': {
         title: 'Impressão 3D',
         description: 'A impressão 3D, ou manufatura aditiva, constrói objetos tridimensionais camada por camada a partir de um modelo digital. É perfeita para prototipagem rápida, peças personalizadas e produção de baixo volume.',
-        materials: ['PLA (Ácido Polilático)']
+        materials: ['PLA (Ácido Polilático)'],
+        mediaType: 'image',
+        mediaSrc: 'assets/IMP_3D.webp'
     },
     'modelacao-3d': {
         title: 'Modelação 3D',
         description: 'A modelação 3D é o processo de criar uma representação matemática de um objeto tridimensional usando software especializado. É o primeiro passo essencial para a impressão 3D, maquinação CNC e visualizações de produtos.',
-        materials: []
+        materials: [],
+        mediaType: 'image',
+        mediaSrc: 'assets/MOD_3D.webp'
     },
     'maquinacao-cnc': {
         title: 'Maquinação CNC',
