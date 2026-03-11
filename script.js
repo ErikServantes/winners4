@@ -47,18 +47,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 2. Indicador Ativo na Side Nav
-    const dots = document.querySelectorAll('#side-nav .dot');
+    // A estrutura do HTML mudou. A classe .active deve estar na tag <a> e não no <span>.dot
+    const navLinks = document.querySelectorAll('#side-nav ul li a');
     const sections = gsap.utils.toArray('.fullscreen-section');
 
     sections.forEach((section, i) => {
         ScrollTrigger.create({
             trigger: section,
+            // Ajustado para disparar quando a secção atinge 50% do ecrã (centro)
             start: 'top center',
             end: 'bottom center',
             onToggle: self => {
-                if (self.isActive) {
-                    dots.forEach(dot => dot.classList.remove('active'));
-                    dots[i].classList.add('active');
+                if (self.isActive && navLinks[i]) {
+                    // Remove a classe active de todas as tags 'a'
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    // Adiciona a classe active à tag 'a' correspondente à secção atual
+                    navLinks[i].classList.add('active');
                 }
             }
         });
