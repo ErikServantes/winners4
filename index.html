@@ -6,9 +6,13 @@
     <title>Industrial-Chic Landing Page</title>
     <!-- Fonte para os Símbolos Técnicos Minimalistas -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=1.15">
+    <link rel="stylesheet" href="style.css?v=1.16">
 </head>
 <body>
+
+    <!-- A magia das partículas 3D globais em 2 camadas -->
+    <canvas id="particles-bg"></canvas>
+    <canvas id="particles-fg"></canvas>
 
     <header id="main-header">
         <a href="#contacto" class="nav-contact-link">CONTACTO</a>
@@ -63,7 +67,7 @@
 
         <!-- Par 1: Azul -->
         <section id="corte-laser" class="fullscreen-section theme-glass" style="--theme-color: #00d4ff;">
-            <canvas id="laser-canvas"></canvas>
+            <!-- O laser canvas isolado antigo foi removido daqui a favor do global-particles -->
             <div class="content glass-panel" style="--service-icon: 'flare';">
                 <h1>Corte de Laser</h1>
                 <p>Precisão milimétrica para formas complexas.</p>
@@ -187,6 +191,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     
     <!-- Custom Script -->
-    <script type="module" src="script.js?v=1.15"></script>
+    <script type="module" src="script.js?v=1.16"></script>
 </body>
 </html>
