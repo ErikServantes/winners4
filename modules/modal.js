@@ -49,6 +49,17 @@ const serviceData = {
         description: 'A galvanização é um processo eletroquímico que reveste uma peça metálica com uma fina camada de outro metal. Serve para melhorar a aparência, a resistência à corrosão e a condutividade.',
         materials: ['Latonagem', 'Niquelagem', 'Cobreagem']
     },
+
+    'quinagem': {
+        title: 'Quinagem',
+        description: 'A quinagem é um processo de dobragem de chapas de metal utilizando prensas dobradeiras (quinadoras). Permite criar ângulos e formas complexas com alta precisão e repetibilidade.',
+        materials: ['Ferro', 'Inox', 'Alumínio']
+    },
+    'calandragem': {
+        title: 'Calandragem',
+        description: 'A calandragem é um processo contínuo de curvatura de chapas metálicas que passam por rolos. É utilizado para formar cilindros, cones e outras formas circulares a partir de chapas planas.',
+        materials: ['Ferro', 'Inox', 'Alumínio']
+    },
     'contacto': {
         title: 'Entre em Contacto',
         address: 'Rua do Barqueiro 754, 4805-016 Barco',
