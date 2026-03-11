@@ -3,7 +3,7 @@ export function initializeScrollytelling() {
 
     // Set the initial state: first layer is visible, others are not.
     gsap.set('.layer', { opacity: 0 });
-    gsap.set('#layer-4winners', { opacity: 1 });
+    gsap.set('#layer-hero-4winners', { opacity: 1 });
 
     // A single, clean loop to handle all background transitions
     sections.forEach((section, i) => {
