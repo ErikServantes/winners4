@@ -1,12 +1,25 @@
 export function initializeSmoothScroll() {
-    // Initialize Lenis with optimal settings for scrub animations
+    // --- Física Luxuosa para Desktop (Lenis) ---
+    // Ajustámos estes parâmetros para dar uma sensação de "massa pesada" e deslizamento longo,
+    // simulando a passagem entre secções sem forçar um "snap" irritante para o utilizador.
+    
     const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        // Duração muito maior (2.5s em vez de 1.2s) cria um deslizamento prolongado e amanteigado
+        duration: 2.5, 
+        
+        // Easing de "Expo Out". Começa rápido ao rodar a roda, e desacelera muuuuito suavemente no final
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+        
         direction: 'vertical',
         gestureDirection: 'vertical',
         smooth: true,
-        smoothTouch: false,
+        
+        // Aumenta o multiplicador do rato para que um pequeno clique na roda
+        // percorra uma distância maior (ajuda a aproximar a sensação de passar um "slide" inteiro)
+        mouseMultiplier: 1.5, 
+        
+        // Mantemos o touch nativo para telemóveis (para o dedo controlar com precisão)
+        smoothTouch: false, 
         touchMultiplier: 2,
     });
 
