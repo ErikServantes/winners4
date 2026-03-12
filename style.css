@@ -900,3 +900,8 @@ section:not([class*="theme-"]) .details-btn:hover {
         font-size: 0.8rem !important; /* Tags mais compactas */
     }
 }
+
+
+#hero-subtitle {
+    line-height: 1.5;
+}

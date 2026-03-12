@@ -148,7 +148,25 @@ function setupParticleFading() {
     });
 }
 
+
+
+// Atualiza Dinamicamente os Anos de Experiência no Hero
+function updateExperienceYears() {
+    const subtitleElement = document.getElementById('hero-subtitle');
+    if (!subtitleElement) return;
+
+    const currentYear = new Date().getFullYear();
+    const foundingYear = 1983; // Baseado no facto de ter 43 anos na data da tua instrução (2026)
+    const yearsOfExperience = currentYear - foundingYear;
+
+    // Usar innerHTML em vez de innerText para permitir o uso da tag <br>
+    // A classe .break-mobile pode ser usada no CSS se quisermos quebrar apenas no telemóvel, 
+    // mas por defeito quebraremos sempre após a palavra "experiência" como pedido.
+    subtitleElement.innerHTML = `${yearsOfExperience} anos de experiência<br>a premiar o desporto e a cultura.`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Wait slightly to ensure GSAP is ready and other init scripts ran
     setTimeout(setupParticleFading, 200);
+    updateExperienceYears();
 });
