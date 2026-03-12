@@ -59,7 +59,7 @@ export function initializeHeroAnimation() {
                 rotationY: (index, target) => parseFloat(target.dataset.targetRotY || 0),
                 rotationZ: (index, target) => parseFloat(target.dataset.targetRotZ || 0),
                 opacity: 0,
-                ease: "power1.inOut"
+                ease: "none", stagger: { amount: 0.3, from: "random" }
             }, 
             0 
         ); 
@@ -86,12 +86,12 @@ export function initializeHeroAnimation() {
         buildTl.fromTo(paths, 
             {
                 opacity: 0,
-                x: () => gsap.utils.random(-500, 500),
-                y: () => gsap.utils.random(-500, 500),
-                z: () => gsap.utils.random(-1000, 500),
-                rotationX: () => gsap.utils.random(-180, 180),
-                rotationY: () => gsap.utils.random(-180, 180),
-                rotationZ: () => gsap.utils.random(-180, 180),
+                x: () => gsap.utils.random(-800, 800), // Mais longe e caótico
+                y: () => gsap.utils.random(-600, 600),
+                z: () => gsap.utils.random(-1500, 800), // Mais profundidade para voar de trás
+                rotationX: () => gsap.utils.random(-720, 720), // Roda muito mais
+                rotationY: () => gsap.utils.random(-720, 720),
+                rotationZ: () => gsap.utils.random(-360, 360),
             },
             {
                 opacity: 1,
@@ -101,11 +101,11 @@ export function initializeHeroAnimation() {
                 rotationX: 0,
                 rotationY: 0,
                 rotationZ: 0,
-                duration: 2.5, 
-                ease: "power4.out",
+                duration: 1.5, // Mais rápido e "snappy" como no original
+                ease: "back.out(1.7)", // Efeito de mola (overshoot) onde as peças batem e tremem um pouco ao encaixar
                 stagger: {
-                    amount: 0.8,
-                    from: "edges" 
+                    amount: 0.4, // Menos atraso para ser uma montagem mais agressiva
+                    from: "random" // Em vez das margens, é completamente caótico
                 }
             }
         );
