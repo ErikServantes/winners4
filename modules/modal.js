@@ -49,8 +49,11 @@ const serviceData = {
             'Tecnologias': 'FDM'
         },
         materials: ['PLA'],
-        mediaType: 'image',
-        mediaSrc: 'assets/IMP_3D.webp'
+        mediaType: '360',
+        mediaFolder: 'assets/AfonsoHenriques/',
+        mediaPrefix: 'frame_',
+        mediaExtension: '.webp',
+        mediaCount: 36
     },
     'modelacao-3d': {
         title: 'Modelação 3D',
@@ -173,6 +176,19 @@ export function initializeModal() {
                             <video autoplay loop muted playsinline>
                                 <source src="${data.mediaSrc}" type="video/mp4">
                             </video>
+                        </div>
+                    `;
+                } else if (data.mediaType === '360') {
+                    // Visualizador 360º de Imagens (Sprite/Sequence)
+                    mediaHTML = `
+                        <div class="modal-media-wrapper viewer-360-container" style="background-color: #000; position: relative; cursor: grab; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                            <img id="viewer-360-img" src="${data.mediaFolder}${data.mediaPrefix}00${data.mediaExtension}" style="width: 100%; height: 100%; object-fit: contain; max-height: 80vh; pointer-events: none;" alt="Visualização 360º">
+                            
+                            <!-- Overlay UI para indicar interação -->
+                            <div class="viewer-360-hint" style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #d4af37; font-size: 0.9rem; pointer-events: none; opacity: 0.8; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                                <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px; font-size: 1.2rem;">360</span>
+                                Arraste para rodar
+                            </div>
                         </div>
                     `;
                 } else if (data.mediaType === '3d' && data.mediaSrc) {
@@ -314,11 +330,16 @@ export function initializeModal() {
                     </div>
                 `;
 
-                // Re-anexa o event listener ao botão de fechar (pois foi recriado)
+                // Re-anexa o event listener ao botão de fechar
                 modalContent.querySelector('.modal-close').addEventListener('click', closeModal);
 
                 // Mostra o modal
                 modal.classList.add('visible');
+
+                // --- INICIALIZAÇÃO DO VISUALIZADOR 360º (SE APLICÁVEL) ---
+                if (data.mediaType === '360') {
+                    init360Viewer(data);
+                }
             }
         });
     });
@@ -333,4 +354,112 @@ export function initializeModal() {
             closeModal();
         }
     });
+}
+
+// Lógica de Controlo para Sequências 360º
+function init360Viewer(data) {
+    const container = document.querySelector('.viewer-360-container');
+    const imgElement = document.getElementById('viewer-360-img');
+    const hintElement = document.querySelector('.viewer-360-hint');
+    if (!container || !imgElement) return;
+
+    // Pré-carregamento das imagens em background para evitar soluços (flickering)
+    const images = [];
+    let loadedCount = 0;
+    
+    // Mostra um estado de "A Carregar..." na Dica (Opcional, mas bom para net lenta)
+    hintElement.innerHTML = `<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px; font-size: 1.2rem;">sync</span>A Carregar 360º...`;
+
+    for (let i = 0; i < data.mediaCount; i++) {
+        const img = new Image();
+        // Formata o número com 2 dígitos (ex: 00, 01, ..., 09, 10, ...)
+        const formattedIndex = i.toString().padStart(2, '0');
+        img.src = `${data.mediaFolder}${data.mediaPrefix}${formattedIndex}${data.mediaExtension}`;
+        img.onload = () => {
+            loadedCount++;
+            if (loadedCount === data.mediaCount) {
+                // Todas carregadas, restabelece a dica
+                hintElement.innerHTML = `<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px; font-size: 1.2rem;">360</span>Arraste para rodar`;
+                setupInteraction();
+            }
+        };
+        images.push(img);
+    }
+
+    function setupInteraction() {
+        let isDragging = false;
+        let startX = 0;
+        let currentFrameIndex = 0;
+        
+        // Sensibilidade da rotação: quantos pixeis o dedo/rato tem de mover para avançar 1 frame
+        // Como tens 36 frames (1 a cada 10 graus), uma sensibilidade menor faz a peça rodar rápido
+        const sensitivity = 15; 
+
+        // Rato (Desktop)
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            container.style.cursor = 'grabbing';
+            // Oculta a dica ao começar a interagir para uma vista limpa
+            hintElement.style.opacity = '0';
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                container.style.cursor = 'grab';
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            handleMove(e.clientX);
+        });
+
+        // Toque (Mobile)
+        container.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].clientX;
+            hintElement.style.opacity = '0';
+        }, { passive: true });
+
+        window.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            handleMove(e.touches[0].clientX);
+            // Previne o scroll vertical da página enquanto rola o 360
+            e.preventDefault(); 
+        }, { passive: false });
+
+        // Função de Rotação Matemática Principal
+        function handleMove(currentX) {
+            const diffX = currentX - startX;
+
+            if (Math.abs(diffX) > sensitivity) {
+                // Direção: se mover para a esquerda (negativo), avança frame. 
+                // Se mover para a direita (positivo), recua frame.
+                const direction = diffX > 0 ? -1 : 1; 
+
+                // Atualiza o índice do frame
+                currentFrameIndex = currentFrameIndex + direction;
+
+                // Loop Lógico Infinito 
+                // (Se chegar depois da 35 volta à 0. Se recuar da 0 vai para a 35)
+                if (currentFrameIndex >= data.mediaCount) {
+                    currentFrameIndex = 0;
+                } else if (currentFrameIndex < 0) {
+                    currentFrameIndex = data.mediaCount - 1;
+                }
+
+                // Renderiza na tela a imagem pré-carregada do Array para ser instantâneo
+                imgElement.src = images[currentFrameIndex].src;
+
+                // Restabelece o ponto de partida para calcular a próxima alteração
+                startX = currentX;
+            }
+        }
+    }
 }
