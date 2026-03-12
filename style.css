@@ -689,32 +689,39 @@ section:not([class*="theme-"]) .details-btn:hover {
 }
 
 @media (max-width: 768px) {
-    /* Em mobile empilhamos tudo, adeus zigzag horizontal */
+    /* Em mobile empilhamos tudo e centralizamos perfeitamente no ecrã */
     .layout-split,
     .layout-split.zigzag-left,
     .layout-split.zigzag-right {
         flex-direction: column;
-        padding: 0 20px;
-        margin-top: 40px; /* Mais espaço entre secções em mobile */
+        padding: 0 5%; /* Mais controlável que pixels fixos */
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh; /* Para preencher quase todo o ecrã mas deixar respirar */
     }
 
     .layout-split .section-media {
         width: 100%;
-        height: 35vh;
-        min-height: 250px;
-        border-radius: 8px 8px 0 0; /* Arredonda só em cima */
-        box-shadow: none; /* Simplifica o shadow */
+        height: 40vh; /* Um pouco mais alta */
+        min-height: 280px;
+        border-radius: 12px; /* Em mobile, arredondar tudo fica mais "Card" style */
+        /* O truque do Feather/Fading edge na base da imagem usando pseudo-elemento (mask) */
+        -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        margin-bottom: -50px; /* Puxa o painel de vidro mais para cima da máscara */
     }
 
     .layout-split .glass-panel {
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        /* O painel de vidro sobrepõe ligeiramente a imagem por BAIXO */
-        margin-top: -30px; 
-        border-radius: 8px; /* Mantém os cantos arredondados do vidro */
-        padding: 30px 20px;
-        text-align: center; /* Volta a centrar o texto no mobile */
+        width: 95%; /* 95% para criar uma pequena margem em relação à imagem */
+        margin: 0;
+        /* Como a imagem tem o mask a esfumar em baixo, o painel entra de forma natural */
+        border-radius: 12px;
+        padding: 40px 25px;
+        text-align: center; 
+        z-index: 10;
+        /* Limpar a margem do zigzag para garantir que fica centrado */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
     }
     
     .layout-split .glass-panel h1,
