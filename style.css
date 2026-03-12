@@ -269,7 +269,7 @@ section[class*="theme-glass"] .details-btn:hover {
     text-align: center;
 }
 
-#4winners.fullscreen-section,
+#hero-4winners.fullscreen-section,
 #contacto.fullscreen-section {
     height: 100vh;
 }
@@ -727,5 +727,18 @@ section:not([class*="theme-"]) .details-btn:hover {
     .layout-split .glass-panel h1,
     .layout-split .glass-panel p {
         text-align: center;
+    }
+}
+
+
+/* Ensure the first service section does not bleed into the hero section */
+#corte-laser {
+    margin-top: 20vh; /* creates space so it doesn't peak out when at the top */
+}
+
+/* On mobile, we might need even more separation since elements stack up tall */
+@media (max-width: 768px) {
+    #corte-laser {
+        margin-top: 15vh;
     }
 }
