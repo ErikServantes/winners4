@@ -2,9 +2,8 @@ const serviceData = {
     'estampagem': {
         title: 'Estampagem',
         specs: {
-            'Capacidade Prensa': 'Até 400 Toneladas',
-            'Série Mínima': '500 unidades',
-            'Tolerância': '± 0.1 mm'
+            'Capacidade': 'Até 400 toneladas',
+            'Série Mínima': '50 unidades'
         },
         materials: ['Latão', 'Ferro', 'Alumínio'],
         mediaType: 'image',
@@ -13,31 +12,27 @@ const serviceData = {
     'corte-laser': {
         title: 'Corte de Laser',
         specs: {
-            'Área de Trabalho Útil': '3000 x 1500 mm',
-            'Espessura Máx. (Aço Carbono)': '20 mm',
-            'Espessura Máx. (Inox)': '15 mm',
-            'Espessura Máx. (Alumínio)': '10 mm',
-            'Tolerância': '± 0.05 mm'
+            'Área Corte CO2': { value: '1600 x 1000 mm', materials: ['Acrílico', 'Madeira', 'Cartão'] },
+            'Área Corte Fibra': { value: '1000 x 1500 mm', materials: ['INOX', 'Ferro', 'Alumínio'] }
         },
-        materials: ['Metal', 'Acrílico', 'Madeira'],
+        materials: [],
         mediaType: 'image',
         mediaSrc: 'assets/CORTE_LASER.webp'
     },
     'gravacao-laser': {
         title: 'Gravação a Laser',
         specs: {
-            'Área de Marcação': '150 x 150 mm (até 600x400mm com eixo móvel)',
-            'Profundidade': 'Micro-gravação até 0.5 mm',
-            'Resolução': 'Alta (até 1000 dpi)'
+            'Área Gravação CO2': { value: '1600 x 1000 mm', materials: ['Acrílico', 'Madeira'] },
+            'Área Gravação FIBRA': { value: '200 x 200 mm', materials: ['Ferro', 'INOX', 'Alumínio', 'Cobre', 'Prata', 'Estanho'] }
         },
-        materials: ['Metal', 'Acrílico', 'Madeira', 'Vidro / Cristal'],
+        materials: [],
         mediaType: 'image',
         mediaSrc: 'assets/GRAV_LASER.webp'
     },
     'impressao-uv': {
         title: 'Impressão UV',
         specs: {
-            'Área de Impressão': '900 x 600 mm',
+            'Área de Impressão': '610 x 420 mm',
             'Altura Máx. da Peça': '150 mm',
             'Resolução': '1200 x 1200 dpi',
             'Acabamentos': 'Verniz Localizado, Relevo 3D'
@@ -49,32 +44,31 @@ const serviceData = {
     'impressao-3d': {
         title: 'Impressão 3D',
         specs: {
-            'Volume de Construção': '300 x 300 x 400 mm',
-            'Resolução de Camada': '50 a 300 microns',
-            'Tecnologias': 'FDM, SLA (Resina)'
+            'Volume de Construção': '223 x 223 x 305 mm',
+            'Resolução de Camada': '100 - 300 microns',
+            'Tecnologias': 'FDM'
         },
-        materials: ['PLA', 'ABS', 'PETG', 'TPU (Flexível)', 'Resinas Standard e Técnicas'],
+        materials: ['PLA'],
         mediaType: 'image',
         mediaSrc: 'assets/IMP_3D.webp'
     },
     'modelacao-3d': {
         title: 'Modelação 3D',
         specs: {
-            'Softwares Utilizados': 'SolidWorks, AutoCAD, Fusion 360',
-            'Ficheiros de Entrega': '.STEP, .IGES, .STL, .OBJ',
-            'Engenharia Inversa': 'Sim (Digitalização 3D)'
+            'Softwares': 'Solidworks, Zbrush',
+            'Ficheiros de Entrega': '.STEP, .IGES, .STL, .OBJ'
         },
-        materials: ['Software/Digital'],
+        materials: [],
         mediaType: '3d',
         mediaSrc: 'assets/afonso.glb'
     },
     'maquinacao-cnc': {
         title: 'Maquinação CNC',
         specs: {
-            'Eixos': '3, 4 e 5 eixos simultâneos',
-            'Curso (X, Y, Z)': '1000 x 500 x 500 mm',
-            'Tolerância': '± 0.01 mm',
-            'Rotação Máx.': '12.000 RPM'
+            'Eixos': '3 eixos simultâneos',
+            'Dimensões (X, Y, Z)': '600 x 400 x 300 mm',
+            'Tolerância': '± 0.1 mm',
+            'Rotação Máx.': '6.000 RPM'
         },
         materials: ['Aços Ligas', 'Alumínio', 'Latão', 'Plásticos Técnicos (Delrin, Nylon)'],
         mediaType: 'image',
@@ -83,10 +77,9 @@ const serviceData = {
     'torneamento': {
         title: 'Torneamento',
         specs: {
-            'Diâmetro Máx. Torneável': '300 mm',
-            'Comprimento Máx.': '1000 mm',
-            'Tolerância': '± 0.01 mm',
-            'Ferramenta Motorizada': 'Sim (Torneamento/Fresagem combinados)'
+            'Diâmetro Máx.': '300 mm',
+            'Comprimento Máx.': '300 mm',
+            'Tolerância': '± 0.1 mm'
         },
         materials: ['Aço', 'Inox', 'Alumínio', 'Cobre', 'Latão'],
         mediaType: 'image',
@@ -106,20 +99,18 @@ const serviceData = {
     'galvanizacao': {
         title: 'Galvanização',
         specs: {
-            'Banhos Disponíveis': 'Rotativos e Estáticos',
-            'Tamanho Máx. da Peça': '2000 x 1000 x 500 mm',
-            'Certificação': 'RoHS Compliant'
+            'Banhos Disponíveis': 'Latonagem, Niquelagem e Cobreagem',
+            'Tamanho Máx. da Peça': '300 x 300 x 300 mm'
         },
-        materials: ['Latonagem', 'Niquelagem', 'Cobreagem', 'Prateação', 'Douradura'],
+        materials: ['Inox', 'Cobre', 'Ferro', 'Alumínio'],
         mediaType: 'image',
         mediaSrc: 'https://images.unsplash.com/photo-1533387520709-752d83def36d?q=80&w=1600&auto=format&fit=crop'
     },
     'quinagem': {
         title: 'Quinagem',
         specs: {
-            'Força da Quinadora': 'Até 150 Toneladas',
-            'Comprimento de Quinagem': 'Até 3000 mm',
-            'Espessura Máx. (Aço)': '10 mm'
+            'Comprimento Máximo': 'Até 2000 mm',
+            'Espessura Máx.': 'Por consulta'
         },
         materials: ['Ferro', 'Inox', 'Alumínio'],
         mediaType: 'image',
@@ -128,9 +119,9 @@ const serviceData = {
     'calandragem': {
         title: 'Calandragem',
         specs: {
-            'Comprimento Máx. dos Rolos': '2500 mm',
-            'Espessura Máx. da Chapa': '12 mm',
-            'Diâmetro Mínimo': 'Dependente da espessura da chapa'
+            'Comprimento Máx.': 'Até 1200 mm',
+            'Espessura': 'Por consulta',
+            'Diâmetro Mínimo Interno': '80 mm'
         },
         materials: ['Ferro', 'Inox', 'Alumínio'],
         mediaType: 'image',
@@ -254,21 +245,39 @@ export function initializeModal() {
                         specsHTML = `
                             <div class="tech-specs-container">
                                 <h3 class="section-subtitle">Especificações Técnicas</h3>
-                                <table class="tech-specs-table">
+                                <table class="tech-specs-table" style="border-collapse: collapse; width: 100%;">
                                     <tbody>
-                                        ${Object.entries(data.specs).map(([key, value]) => `
-                                            <tr>
-                                                <td class="spec-label">${key}</td>
-                                                <td class="spec-value">${value}</td>
-                                            </tr>
-                                        `).join('')}
+                                        ${Object.entries(data.specs).map(([key, value]) => {
+                                            if (typeof value === 'object' && value !== null) {
+                                                return `
+                                                    <tr>
+                                                        <td class="spec-label" style="padding-bottom: 5px; border-bottom: none;">${key}</td>
+                                                        <td class="spec-value" style="padding-bottom: 5px; border-bottom: none;">${value.value}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" style="padding-top: 0; padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                                            <ul class="modal-materials" style="margin-top: 5px;">
+                                                                ${value.materials.map(m => `<li>${m}</li>`).join('')}
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                `;
+                                            } else {
+                                                return `
+                                                    <tr>
+                                                        <td class="spec-label" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">${key}</td>
+                                                        <td class="spec-value" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">${value}</td>
+                                                    </tr>
+                                                `;
+                                            }
+                                        }).join('')}
                                     </tbody>
                                 </table>
                             </div>
                         `;
                     }
 
-                    // Constrói Lista de Materiais (Tags)
+                    // Constrói Lista de Materiais Global (Se existir)
                     let materialsHTML = '';
                     if (data.materials && data.materials.length > 0) {
                         materialsHTML = `
