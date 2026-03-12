@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeModal();
     // Inicia o novo sistema de partículas 3D globais em vez do laser isolado
     initializeGlobalParticles();
+
     initializeGlassEffect();
     initializeHeroAnimation();
 
@@ -116,4 +117,38 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     console.log("Navigation & Absolute Scroll Sync fully operational.");
+});
+// Ocultação Inteligente de Partículas (Fase 1 do Plano)
+function setupParticleFading() {
+    const bgParticles = document.getElementById('particles-bg');
+    const fgParticles = document.getElementById('particles-fg');
+    if (!bgParticles || !fgParticles) return;
+
+    ScrollTrigger.create({
+        trigger: '#corte-laser', 
+        start: 'top 70%',        
+        endTrigger: '#contacto', 
+        end: 'top 80%',          
+        onEnter: () => {
+            bgParticles.classList.add('particles-hidden');
+            fgParticles.classList.add('particles-hidden');
+        },
+        onLeave: () => {
+            bgParticles.classList.remove('particles-hidden');
+            fgParticles.classList.remove('particles-hidden');
+        },
+        onEnterBack: () => {
+            bgParticles.classList.add('particles-hidden');
+            fgParticles.classList.add('particles-hidden');
+        },
+        onLeaveBack: () => {
+            bgParticles.classList.remove('particles-hidden');
+            fgParticles.classList.remove('particles-hidden');
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Wait slightly to ensure GSAP is ready and other init scripts ran
+    setTimeout(setupParticleFading, 200);
 });
