@@ -65,8 +65,8 @@ const serviceData = {
             'Engenharia Inversa': 'Sim (Digitalização 3D)'
         },
         materials: ['Software/Digital'],
-        mediaType: 'image',
-        mediaSrc: 'assets/MOD_3D.webp'
+        mediaType: '3d',
+        mediaSrc: 'assets/afonso.glb'
     },
     'maquinacao-cnc': {
         title: 'Maquinação CNC',
@@ -185,10 +185,21 @@ export function initializeModal() {
                         </div>
                     `;
                 } else if (data.mediaType === '3d' && data.mediaSrc) {
-                    // Prepara o terreno para o <model-viewer> no futuro
+                    // Google Model Viewer nativo
                     mediaHTML = `
-                        <div class="modal-media-wrapper">
-                            <model-viewer src="${data.mediaSrc}" auto-rotate camera-controls shadow-intensity="1"></model-viewer>
+                        <div class="modal-media-wrapper" style="background-color: #111; position: relative;">
+                            <model-viewer 
+                                src="${data.mediaSrc}" 
+                                auto-rotate 
+                                rotation-per-second="30deg"
+                                camera-controls 
+                                shadow-intensity="1.5"
+                                exposure="1.2"
+                                style="width: 100%; height: 100%; min-height: 400px; --poster-color: transparent;">
+                            </model-viewer>
+                            <div style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #888; font-size: 0.8rem; pointer-events: none;">
+                                Desliza para rodar a peça 3D
+                            </div>
                         </div>
                     `;
                 }
