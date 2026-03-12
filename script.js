@@ -72,7 +72,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Animações Genéricas de Conteúdo ---
     const allSections = gsap.utils.toArray('.fullscreen-section');
     // Filtra usando o novo ID correto que começa com uma letra
-    const serviceSections = allSections.filter(section => section.id !== 'hero-4winners');
+    // Filtra o Hero (que tem SVG próprio) e a secção de Background Layers para evitar crashs
+    const serviceSections = allSections.filter(section => 
+        section.id !== 'hero-4winners' && 
+        section.id !== 'background-layers'
+    );
     
     serviceSections.forEach((section) => {
         const textElements = gsap.utils.toArray(section.querySelectorAll('.content h1, .content p'));

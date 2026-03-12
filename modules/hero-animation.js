@@ -16,18 +16,22 @@ export function initializeHeroAnimation() {
     // Força o container principal a ficar visível antes da animação GSAP sequer tocar nele
     gsap.set(svgElement, { opacity: 1, visibility: 'visible' });
 
-    // Selecionar todos os pedaços que compõem o logotipo
-    const paths = Array.from(svgElement.querySelectorAll('path, polygon, rect, circle'));
+    // Selecionar todos os pedaços (paths) que compõem o logotipo
+    const paths = Array.from(svgElement.querySelectorAll('.logo-part'));
+
+    if (paths.length === 0) return;
 
     paths.forEach(path => {
-        // Assegurar que as partes começam preparadas
-        gsap.set(path, { opacity: 1 });
-        path.style.transformOrigin = "center center"; 
+        // SVG paths precisam de ter o transform origin explicitamente definido pelo GSAP para funcionar bem
+        gsap.set(path, { 
+            opacity: 1, 
+            transformOrigin: "50% 50%" 
+        });
         
         // Coordenadas para o scroll
-        path.dataset.targetX = gsap.utils.random(-800, 800);
-        path.dataset.targetY = gsap.utils.random(200, 1000);
-        path.dataset.targetZ = gsap.utils.random(-800, 800);
+        path.dataset.targetX = gsap.utils.random(-1000, 1000);
+        path.dataset.targetY = gsap.utils.random(-500, 1000);
+        path.dataset.targetZ = gsap.utils.random(-1000, 1000);
         path.dataset.targetRotX = gsap.utils.random(-360, 360);
         path.dataset.targetRotY = gsap.utils.random(-360, 360);
         path.dataset.targetRotZ = gsap.utils.random(-360, 360);
@@ -48,12 +52,12 @@ export function initializeHeroAnimation() {
                 opacity: 1, x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotationZ: 0
             },
             {
-                x: (index, target) => parseFloat(target.dataset.targetX),
-                y: (index, target) => parseFloat(target.dataset.targetY),
-                z: (index, target) => parseFloat(target.dataset.targetZ),
-                rotationX: (index, target) => parseFloat(target.dataset.targetRotX),
-                rotationY: (index, target) => parseFloat(target.dataset.targetRotY),
-                rotationZ: (index, target) => parseFloat(target.dataset.targetRotZ),
+                x: (index, target) => parseFloat(target.dataset.targetX || 0),
+                y: (index, target) => parseFloat(target.dataset.targetY || 0),
+                z: (index, target) => parseFloat(target.dataset.targetZ || 0),
+                rotationX: (index, target) => parseFloat(target.dataset.targetRotX || 0),
+                rotationY: (index, target) => parseFloat(target.dataset.targetRotY || 0),
+                rotationZ: (index, target) => parseFloat(target.dataset.targetRotZ || 0),
                 opacity: 0,
                 ease: "power1.inOut"
             }, 
