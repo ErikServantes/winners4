@@ -79,7 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
     );
     
     serviceSections.forEach((section) => {
-        const textElements = gsap.utils.toArray(section.querySelectorAll('.content h1, .content p'));
+        // Seleciona apenas os elementos de texto puros dentro do content, ignora qualquer SVG injetado ou imagens
+        const textElements = gsap.utils.toArray(section.querySelectorAll('.content h1:not(:has(svg)), .content p'));
         const buttonElement = section.querySelector('.content .details-btn');
 
         const commonScrollTrigger = {
