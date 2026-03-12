@@ -905,3 +905,29 @@ section:not([class*="theme-"]) .details-btn:hover {
 #hero-subtitle {
     line-height: 1.5;
 }
+
+
+/* --- HERO LOGO SVG STYLES --- */
+#hero-4winners .content h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+#hero-logo-svg {
+    filter: drop-shadow(0px 10px 30px rgba(212, 175, 55, 0.4));
+}
+
+#hero-logo-svg path, 
+#hero-logo-svg polygon, 
+#hero-logo-svg rect, 
+#hero-logo-svg circle {
+    /* Mantém as cores originais do CorelDraw que usaste, mas adicionamos reflexo/brilho do CSS */
+    transition: filter 0.3s ease;
+}
+
+#hero-logo-svg:hover path {
+    filter: brightness(1.2);
+}
