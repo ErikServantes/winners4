@@ -201,7 +201,7 @@ export function initializeModal() {
                                 max-camera-orbit="auto auto 200%"
                                 min-field-of-view="10deg"
                                 max-field-of-view="45deg"
-                                style="width: 100%; height: 100%; min-height: 400px; --poster-color: transparent; padding: 20px; box-sizing: border-box;">
+                                style="width: 100%; height: 100%;  --poster-color: transparent; padding: 20px; box-sizing: border-box;">
                             </model-viewer>
                             <div style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #888; font-size: 0.8rem; pointer-events: none;">
                                 Desliza para rodar a peça 3D

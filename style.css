@@ -839,3 +839,64 @@ section:not([class*="theme-"]) .details-btn:hover {
     border: none;
 }
 
+
+
+/* --- FIX: LIMITES DO MODAL E OVERFLOW INTERNO --- */
+.modal-content {
+    max-height: 90vh !important; /* Nunca ultrapassa 90% da altura do ecrã */
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-layout-container {
+    max-height: 90vh;
+    overflow-y: auto; /* Permite scroll interno se o conteúdo for gigante */
+    /* Estilização da barra de scroll interna para ficar elegante e B2B */
+    scrollbar-width: thin;
+    scrollbar-color: #d4af37 #111;
+}
+
+.modal-layout-container::-webkit-scrollbar {
+    width: 6px;
+}
+.modal-layout-container::-webkit-scrollbar-track {
+    background: #111;
+}
+.modal-layout-container::-webkit-scrollbar-thumb {
+    background-color: #d4af37;
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .modal-media-wrapper {
+        height: 30vh !important; /* Altura proporcional ao ecrã em vez de fixa */
+        min-height: 200px !important;
+        max-height: 250px !important;
+        flex-shrink: 0; /* Garante que a imagem/3D não é esmagada pelo texto */
+    }
+    
+    .modal-text-section {
+        padding: 20px 15px !important; /* Reduz o "ar" inútil */
+    }
+
+    #modal-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 15px !important;
+        padding-bottom: 10px !important;
+    }
+
+    .tech-specs-table td {
+        padding: 8px 10px !important;
+        font-size: 0.85rem !important; /* Texto da tabela ligeiramente menor */
+    }
+
+    .section-subtitle {
+        margin-top: 15px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .modal-materials li {
+        padding: 6px 10px !important;
+        font-size: 0.8rem !important; /* Tags mais compactas */
+    }
+}
