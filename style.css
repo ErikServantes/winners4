@@ -592,3 +592,133 @@ section:not([class*="theme-"]) .details-btn:hover {
 .particles-hidden {
     opacity: 0 !important;
 }
+
+/* --- LAYOUT SPLIT (ZIGZAG) NO FLUXO PRINCIPAL --- */
+.layout-split {
+    display: flex;
+    justify-content: center; /* Centraliza o bloco todo */
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    padding: 0 5%;
+    
+    /* override some inherited fullscreen properties */
+    height: auto; /* let it adapt to content + margin */
+    min-height: 100vh; /* at least full height */
+    box-sizing: border-box;
+    padding-top: 80px; /* Leave space for header */
+}
+
+/* Modificadores para a direção do ZigZag */
+.layout-split.zigzag-left {
+    flex-direction: row; /* Imagem esquerda, texto direita */
+}
+
+.layout-split.zigzag-right {
+    flex-direction: row-reverse; /* Imagem direita, texto esquerda */
+}
+
+.layout-split .section-media {
+    width: 60%; /* Imagem ocupa mais espaço para impacto */
+    height: 60vh; /* Altura considerável */
+    max-height: 600px;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    z-index: 1; /* Fica atrás do painel de vidro */
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.layout-split .section-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Efeito de escurecer ligeiramente a imagem para não chocar com o ambiente dark */
+    filter: brightness(0.8) contrast(1.1); 
+    transition: filter 0.5s ease, transform 1s ease;
+}
+
+/* Efeito ao fazer hover na secção toda para dar vida à imagem */
+.layout-split:hover .section-media img {
+    filter: brightness(1) contrast(1.1);
+    transform: scale(1.03);
+}
+
+.layout-split .glass-panel {
+    width: 45%; /* Texto é mais estreito */
+    /* SOBREPOSIÇÃO: O painel tem margem negativa para "montar" em cima da imagem */
+    margin-left: -10%; 
+    z-index: 10; /* Fica por cima da imagem */
+    padding: 50px 40px;
+    text-align: left; /* No split layout, o texto fica melhor alinhado à esquerda do que ao centro */
+}
+
+.layout-split.zigzag-right .glass-panel {
+    /* Se a imagem está à direita, o painel encosta-se à direita puxando margem negativa */
+    margin-left: 0;
+    margin-right: -10%;
+}
+
+.layout-split .glass-panel h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.layout-split .glass-panel p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+/* Ajustes Responsive para o Layout Split */
+@media (max-width: 1024px) {
+    .layout-split .section-media {
+        width: 55%;
+    }
+    .layout-split .glass-panel {
+        width: 55%;
+        margin-left: -10%;
+    }
+    .layout-split.zigzag-right .glass-panel {
+        margin-right: -10%;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Em mobile empilhamos tudo, adeus zigzag horizontal */
+    .layout-split,
+    .layout-split.zigzag-left,
+    .layout-split.zigzag-right {
+        flex-direction: column;
+        padding: 0 20px;
+        margin-top: 40px; /* Mais espaço entre secções em mobile */
+    }
+
+    .layout-split .section-media {
+        width: 100%;
+        height: 35vh;
+        min-height: 250px;
+        border-radius: 8px 8px 0 0; /* Arredonda só em cima */
+        box-shadow: none; /* Simplifica o shadow */
+    }
+
+    .layout-split .glass-panel {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        /* O painel de vidro sobrepõe ligeiramente a imagem por BAIXO */
+        margin-top: -30px; 
+        border-radius: 8px; /* Mantém os cantos arredondados do vidro */
+        padding: 30px 20px;
+        text-align: center; /* Volta a centrar o texto no mobile */
+    }
+    
+    .layout-split .glass-panel h1,
+    .layout-split .glass-panel p {
+        text-align: center;
+    }
+}
