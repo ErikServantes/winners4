@@ -931,3 +931,20 @@ section:not([class*="theme-"]) .details-btn:hover {
 #hero-logo-svg:hover path {
     filter: brightness(1.2);
 }
+
+
+/* --- HERO SUBTITLE ADJUSTMENTS --- */
+#hero-subtitle {
+    font-size: 1.2rem; /* Was around 2rem or inheriting large sizes, now 40% smaller */
+    letter-spacing: 2px;
+    margin-top: 40px; /* More distance from the logo */
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.7); /* Slightly muted to let the golden logo shine */
+}
+
+@media (max-width: 768px) {
+    #hero-subtitle {
+        font-size: 0.9rem; /* Even smaller on mobile */
+        margin-top: 30px;
+    }
+}
