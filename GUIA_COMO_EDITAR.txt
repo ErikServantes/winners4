@@ -1,0 +1,32 @@
+GUIA RAPIDO 4WINNERS
+O site tem 2 zonas principais para mudares conteúdos:
+1. Mudar a Fotografia Principal da Página
+Onde ir: Ficheiro index.html
+- Procura o nome do serviço (Ex: Estampagem) e troca o src da tag img.
+ 
+2. Mudar a Ficha Técnica (O que aparece ao clicar 'Saber Mais')
+Onde ir: Ficheiro modules/modal.js
+- Todo o texto, especificações técnicas e materiais das máquinas estão escritos no topo desse ficheiro, num bloco chamado 'serviceData'.
+- Basta editares as palavras que estão dentro das aspas (ex: mudar '300 mm' para '400 mm').
+ 
+3. Como Mudar o Media do Modal (Imagem / 3D / Video / 360)
+No mesmo ficheiro modules/modal.js, no fim das especificações de cada máquina, vais ver um 'mediaType'. Basta dizeres o que queres lá pôr:
+ 
+Para Imagens:
+mediaType: 'image',
+mediaSrc: 'assets/foto.webp'
+ 
+Para Videos (rodam sozinhos):
+mediaType: 'video',
+mediaSrc: 'assets/corte-loop.mp4'
+ 
+Para Modelos 3D (Ficheiro GLB Nativo):
+mediaType: '3d',
+mediaSrc: 'assets/modelo.glb'
+ 
+Para Interação 360 Graus (Sequência de Fotos):
+mediaType: '360',
+mediaFolder: 'assets/minha_pasta_360/', // A pasta com as fotos
+mediaPrefix: 'frame_', // O nome antes do numero (ex: foto_00.webp -> mete 'foto_')
+mediaExtension: '.webp', // Formato
+mediaCount: 36 // Quantas fotos?
