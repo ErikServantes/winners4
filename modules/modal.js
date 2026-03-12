@@ -1,72 +1,140 @@
 const serviceData = {
     'estampagem': {
         title: 'Estampagem',
-        description: 'A estampagem é um processo de conformação de chapas metálicas, onde a força de uma prensa molda o material para criar peças com precisão e repetibilidade. Ideal para produção em massa de componentes complexos.',
-        materials: ['Latão', 'Ferro', 'Alumínio']
+        specs: {
+            'Capacidade Prensa': 'Até 400 Toneladas',
+            'Série Mínima': '500 unidades',
+            'Tolerância': '± 0.1 mm'
+        },
+        materials: ['Latão', 'Ferro', 'Alumínio'],
+        mediaType: 'image',
+        mediaSrc: 'assets/ESTAMPAGEM.webp'
     },
     'corte-laser': {
         title: 'Corte de Laser',
-        description: 'Utilizando um feixe de laser de alta potência, este processo corta materiais com uma precisão excecional, permitindo a criação de geometrias complexas e acabamentos limpos sem contacto físico com a peça.',
+        specs: {
+            'Área de Trabalho Útil': '3000 x 1500 mm',
+            'Espessura Máx. (Aço Carbono)': '20 mm',
+            'Espessura Máx. (Inox)': '15 mm',
+            'Espessura Máx. (Alumínio)': '10 mm',
+            'Tolerância': '± 0.05 mm'
+        },
         materials: ['Metal', 'Acrílico', 'Madeira'],
         mediaType: 'image',
         mediaSrc: 'assets/CORTE_LASER.webp'
     },
     'gravacao-laser': {
         title: 'Gravação a Laser',
-        description: 'A gravação a laser remove seletivamente a superfície de um material para criar marcas permanentes, como logótipos, números de série ou designs decorativos, com um detalhe impressionante.',
+        specs: {
+            'Área de Marcação': '150 x 150 mm (até 600x400mm com eixo móvel)',
+            'Profundidade': 'Micro-gravação até 0.5 mm',
+            'Resolução': 'Alta (até 1000 dpi)'
+        },
         materials: ['Metal', 'Acrílico', 'Madeira', 'Vidro / Cristal'],
         mediaType: 'image',
         mediaSrc: 'assets/GRAV_LASER.webp'
     },
     'impressao-uv': {
         title: 'Impressão UV',
-        description: 'A impressão UV utiliza tintas especiais que secam instantaneamente sob luz ultravioleta. Este processo permite imprimir designs vibrantes e duradouros numa vasta gama de superfícies rígidas e semi-rígidas.',
-        materials: ['Metal', 'Acrílico', 'Madeira', 'Plástico', 'Vidro / Cristal']
+        specs: {
+            'Área de Impressão': '900 x 600 mm',
+            'Altura Máx. da Peça': '150 mm',
+            'Resolução': '1200 x 1200 dpi',
+            'Acabamentos': 'Verniz Localizado, Relevo 3D'
+        },
+        materials: ['Metal', 'Acrílico', 'Madeira', 'Plástico', 'Vidro / Cristal'],
+        mediaType: 'image',
+        mediaSrc: 'https://images.unsplash.com/photo-1614316335967-1fa7663a83f9?q=80&w=1600&auto=format&fit=crop'
     },
     'impressao-3d': {
         title: 'Impressão 3D',
-        description: 'A impressão 3D, ou manufatura aditiva, constrói objetos tridimensionais camada por camada a partir de um modelo digital. É perfeita para prototipagem rápida, peças personalizadas e produção de baixo volume.',
-        materials: ['PLA (Ácido Polilático)'],
+        specs: {
+            'Volume de Construção': '300 x 300 x 400 mm',
+            'Resolução de Camada': '50 a 300 microns',
+            'Tecnologias': 'FDM, SLA (Resina)'
+        },
+        materials: ['PLA', 'ABS', 'PETG', 'TPU (Flexível)', 'Resinas Standard e Técnicas'],
         mediaType: 'image',
         mediaSrc: 'assets/IMP_3D.webp'
     },
     'modelacao-3d': {
         title: 'Modelação 3D',
-        description: 'A modelação 3D é o processo de criar uma representação matemática de um objeto tridimensional usando software especializado. É o primeiro passo essencial para a impressão 3D, maquinação CNC e visualizações de produtos.',
-        materials: [],
+        specs: {
+            'Softwares Utilizados': 'SolidWorks, AutoCAD, Fusion 360',
+            'Ficheiros de Entrega': '.STEP, .IGES, .STL, .OBJ',
+            'Engenharia Inversa': 'Sim (Digitalização 3D)'
+        },
+        materials: ['Software/Digital'],
         mediaType: 'image',
         mediaSrc: 'assets/MOD_3D.webp'
     },
     'maquinacao-cnc': {
         title: 'Maquinação CNC',
-        description: 'A Maquinação por Controlo Numérico Computadorizado (CNC) utiliza ferramentas de corte controladas por computador para remover material de um bloco sólido, esculpindo peças com tolerâncias muito apertadas.',
-        materials: ['Metal', 'Acrílico', 'Madeira']
+        specs: {
+            'Eixos': '3, 4 e 5 eixos simultâneos',
+            'Curso (X, Y, Z)': '1000 x 500 x 500 mm',
+            'Tolerância': '± 0.01 mm',
+            'Rotação Máx.': '12.000 RPM'
+        },
+        materials: ['Aços Ligas', 'Alumínio', 'Latão', 'Plásticos Técnicos (Delrin, Nylon)'],
+        mediaType: 'image',
+        mediaSrc: 'assets/MAQ_CNC.webp'
     },
     'torneamento': {
         title: 'Torneamento',
-        description: 'O torneamento é um processo de maquinação que roda uma peça de trabalho enquanto uma ferramenta de corte remove material para criar formas cilíndricas. É ideal para eixos, pinos e outras peças de revolução.',
-        materials: ['Metal', 'Acrílico', 'Madeira']
+        specs: {
+            'Diâmetro Máx. Torneável': '300 mm',
+            'Comprimento Máx.': '1000 mm',
+            'Tolerância': '± 0.01 mm',
+            'Ferramenta Motorizada': 'Sim (Torneamento/Fresagem combinados)'
+        },
+        materials: ['Aço', 'Inox', 'Alumínio', 'Cobre', 'Latão'],
+        mediaType: 'image',
+        mediaSrc: 'https://images.unsplash.com/photo-1598506509613-2dfc1eb60ee0?q=80&w=1600&auto=format&fit=crop'
     },
     'repuxamento': {
         title: 'Repuxamento',
-        description: 'O repuxamento é uma técnica de conformação de metal que molda uma chapa circular sobre um mandril rotativo. Permite criar peças ocas, simétricas e sem costuras, como taças, cones e hemisférios.',
-        materials: ['Metal']
+        specs: {
+            'Diâmetro Máx. da Chapa': '1200 mm',
+            'Espessura Máx. (Aço)': '3 mm',
+            'Espessura Máx. (Alumínio)': '5 mm'
+        },
+        materials: ['Aço Carbono', 'Inox', 'Alumínio', 'Cobre'],
+        mediaType: 'image',
+        mediaSrc: 'https://images.unsplash.com/photo-1565034946487-077786996e27?q=80&w=1600&auto=format&fit=crop'
     },
     'galvanizacao': {
         title: 'Galvanização',
-        description: 'A galvanização é um processo eletroquímico que reveste uma peça metálica com uma fina camada de outro metal. Serve para melhorar a aparência, a resistência à corrosão e a condutividade.',
-        materials: ['Latonagem', 'Niquelagem', 'Cobreagem']
+        specs: {
+            'Banhos Disponíveis': 'Rotativos e Estáticos',
+            'Tamanho Máx. da Peça': '2000 x 1000 x 500 mm',
+            'Certificação': 'RoHS Compliant'
+        },
+        materials: ['Latonagem', 'Niquelagem', 'Cobreagem', 'Prateação', 'Douradura'],
+        mediaType: 'image',
+        mediaSrc: 'https://images.unsplash.com/photo-1533387520709-752d83def36d?q=80&w=1600&auto=format&fit=crop'
     },
-
     'quinagem': {
         title: 'Quinagem',
-        description: 'A quinagem é um processo de dobragem de chapas de metal utilizando prensas dobradeiras (quinadoras). Permite criar ângulos e formas complexas com alta precisão e repetibilidade.',
-        materials: ['Ferro', 'Inox', 'Alumínio']
+        specs: {
+            'Força da Quinadora': 'Até 150 Toneladas',
+            'Comprimento de Quinagem': 'Até 3000 mm',
+            'Espessura Máx. (Aço)': '10 mm'
+        },
+        materials: ['Ferro', 'Inox', 'Alumínio'],
+        mediaType: 'image',
+        mediaSrc: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=1600&auto=format&fit=crop'
     },
     'calandragem': {
         title: 'Calandragem',
-        description: 'A calandragem é um processo contínuo de curvatura de chapas metálicas que passam por rolos. É utilizado para formar cilindros, cones e outras formas circulares a partir de chapas planas.',
-        materials: ['Ferro', 'Inox', 'Alumínio']
+        specs: {
+            'Comprimento Máx. dos Rolos': '2500 mm',
+            'Espessura Máx. da Chapa': '12 mm',
+            'Diâmetro Mínimo': 'Dependente da espessura da chapa'
+        },
+        materials: ['Ferro', 'Inox', 'Alumínio'],
+        mediaType: 'image',
+        mediaSrc: 'https://images.unsplash.com/photo-1620023412580-1a61dc58f11d?q=80&w=1600&auto=format&fit=crop'
     },
     'contacto': {
         title: 'Entre em Contacto',
@@ -161,17 +229,42 @@ export function initializeModal() {
                     `;
                 } else {
                     // Layout Genérico para Serviços (Com ou Sem Media)
-                    let materialsHTML = '';
-                    if (data.materials && data.materials.length > 0) {
-                        materialsHTML = `
-                            <h3>Materiais Trabalhados</h3>
-                            <ul class="modal-materials">
-                                ${data.materials.map(material => `<li>${material}</li>`).join('')}
-                            </ul>
+                    // Layout Genérico para Serviços (Ficha Técnica B2B)
+                    
+                    // Constrói Tabela de Especificações Técnicas (Specs)
+                    let specsHTML = '';
+                    if (data.specs) {
+                        specsHTML = `
+                            <div class="tech-specs-container">
+                                <h3 class="section-subtitle">Especificações Técnicas</h3>
+                                <table class="tech-specs-table">
+                                    <tbody>
+                                        ${Object.entries(data.specs).map(([key, value]) => `
+                                            <tr>
+                                                <td class="spec-label">${key}</td>
+                                                <td class="spec-value">${value}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
                         `;
                     }
 
-                    // Se houver media, usamos o CSS para dividir o ecrã. Caso contrário, a classe full-width expande o texto
+                    // Constrói Lista de Materiais (Tags)
+                    let materialsHTML = '';
+                    if (data.materials && data.materials.length > 0) {
+                        materialsHTML = `
+                            <div class="materials-container">
+                                <h3 class="section-subtitle">Materiais Suportados</h3>
+                                <ul class="modal-materials">
+                                    ${data.materials.map(material => `<li>${material}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+
+                    // Se houver media, dividimos. Se não, tela cheia.
                     const textClass = mediaHTML ? 'modal-text-section split-width' : 'modal-text-section full-width';
 
                     contentHTML = `
@@ -179,7 +272,7 @@ export function initializeModal() {
                         <div class="${textClass}">
                             <h2 id="modal-title">${data.title}</h2>
                             <div id="modal-body">
-                                <p class="modal-description">${data.description}</p>
+                                ${specsHTML}
                                 ${materialsHTML}
                             </div>
                         </div>
