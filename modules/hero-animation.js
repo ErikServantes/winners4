@@ -14,7 +14,10 @@ export function initializeHeroAnimation() {
     svgElement.style.display = 'block';
 
     // Força o container principal a ficar visível antes da animação GSAP sequer tocar nele
-    gsap.set(svgElement, { opacity: 1, visibility: 'visible' });
+    // A MAGIA DA PROFUNDIDADE ESTAVA AQUI: Sem 'perspective', o 3D fica espalmado!
+    const logoContainer = document.getElementById('main-logo-container');
+    gsap.set(logoContainer, { perspective: 1000 });
+    gsap.set(svgElement, { opacity: 1, visibility: 'visible', overflow: 'visible' });
 
     // Selecionar todos os pedaços (paths) que compõem o logotipo
     const paths = Array.from(svgElement.querySelectorAll('.logo-part'));
@@ -28,13 +31,13 @@ export function initializeHeroAnimation() {
             transformOrigin: "50% 50%" 
         });
         
-        // Coordenadas para o scroll
-        path.dataset.targetX = gsap.utils.random(-1000, 1000);
-        path.dataset.targetY = gsap.utils.random(-500, 1000);
-        path.dataset.targetZ = gsap.utils.random(-1000, 1000);
+        // Coordenadas idênticas às originais para o scroll (Efeito Gravidade e Explosão)
+        path.dataset.targetX = gsap.utils.random(-800, 800);
+        path.dataset.targetY = gsap.utils.random(200, 800); // Valores sempre positivos atiram o metal PARA BAIXO (Gravidade)
+        path.dataset.targetZ = gsap.utils.random(-800, 800); // Dispara para a frente e para trás
         path.dataset.targetRotX = gsap.utils.random(-360, 360);
         path.dataset.targetRotY = gsap.utils.random(-360, 360);
-        path.dataset.targetRotZ = gsap.utils.random(-360, 360);
+        path.dataset.targetRotZ = gsap.utils.random(-180, 180);
     });
 
     function initScrollAnimation() {
@@ -59,7 +62,7 @@ export function initializeHeroAnimation() {
                 rotationY: (index, target) => parseFloat(target.dataset.targetRotY || 0),
                 rotationZ: (index, target) => parseFloat(target.dataset.targetRotZ || 0),
                 opacity: 0,
-                ease: "none", stagger: { amount: 0.3, from: "random" }
+                ease: "none", stagger: { amount: 0.2, from: "random" }
             }, 
             0 
         ); 
@@ -86,12 +89,12 @@ export function initializeHeroAnimation() {
         buildTl.fromTo(paths, 
             {
                 opacity: 0,
-                x: () => gsap.utils.random(-800, 800), // Mais longe e caótico
+                x: () => gsap.utils.random(-600, 600),
                 y: () => gsap.utils.random(-600, 600),
-                z: () => gsap.utils.random(-1500, 800), // Mais profundidade para voar de trás
-                rotationX: () => gsap.utils.random(-720, 720), // Roda muito mais
-                rotationY: () => gsap.utils.random(-720, 720),
-                rotationZ: () => gsap.utils.random(-360, 360),
+                z: () => gsap.utils.random(-1000, 500),
+                rotationX: () => gsap.utils.random(-360, 360),
+                rotationY: () => gsap.utils.random(-360, 360),
+                rotationZ: () => gsap.utils.random(-180, 180),
             },
             {
                 opacity: 1,
@@ -101,12 +104,9 @@ export function initializeHeroAnimation() {
                 rotationX: 0,
                 rotationY: 0,
                 rotationZ: 0,
-                duration: 1.5, // Mais rápido e "snappy" como no original
-                ease: "back.out(1.7)", // Efeito de mola (overshoot) onde as peças batem e tremem um pouco ao encaixar
-                stagger: {
-                    amount: 0.4, // Menos atraso para ser uma montagem mais agressiva
-                    from: "random" // Em vez das margens, é completamente caótico
-                }
+                duration: 1.5,
+                ease: "back.out(2.5)", // O 'estalo' brutal original (mola forte)
+                stagger: 0.1 // O atraso em cascata puro original
             }
         );
 
