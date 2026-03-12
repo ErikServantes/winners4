@@ -31,10 +31,10 @@ export function initializeHeroAnimation() {
             transformOrigin: "50% 50%" 
         });
         
-        // Coordenadas idênticas às originais para o scroll (Efeito Gravidade e Explosão)
-        path.dataset.targetX = gsap.utils.random(-800, 800);
-        path.dataset.targetY = gsap.utils.random(200, 800); // Valores sempre positivos atiram o metal PARA BAIXO (Gravidade)
-        path.dataset.targetZ = gsap.utils.random(-800, 800); // Dispara para a frente e para trás
+        // O viewBox do teu CorelDraw é gigante (4200px), logo as translações têm de ser colossais para se notarem
+        path.dataset.targetX = gsap.utils.random(-6000, 6000);
+        path.dataset.targetY = gsap.utils.random(2000, 8000); 
+        path.dataset.targetZ = gsap.utils.random(-6000, 6000);
         path.dataset.targetRotX = gsap.utils.random(-360, 360);
         path.dataset.targetRotY = gsap.utils.random(-360, 360);
         path.dataset.targetRotZ = gsap.utils.random(-180, 180);
@@ -89,9 +89,9 @@ export function initializeHeroAnimation() {
         buildTl.fromTo(paths, 
             {
                 opacity: 0,
-                x: () => gsap.utils.random(-600, 600),
-                y: () => gsap.utils.random(-600, 600),
-                z: () => gsap.utils.random(-1000, 500),
+                x: () => gsap.utils.random(-8000, 8000), // Valores extremos devido ao viewBox do Corel
+                y: () => gsap.utils.random(-8000, 8000),
+                z: () => gsap.utils.random(-10000, 5000),
                 rotationX: () => gsap.utils.random(-360, 360),
                 rotationY: () => gsap.utils.random(-360, 360),
                 rotationZ: () => gsap.utils.random(-180, 180),
