@@ -106,7 +106,7 @@ export function initializeHeroAnimation() {
                 rotationZ: 0,
                 duration: 1.5,
                 ease: "back.out(2.5)", // O 'estalo' brutal original (mola forte)
-                stagger: 0.1 // O atraso em cascata puro original
+                stagger: 0.04 // Intervalo mais curto para sobrepor a chegada das pecas
             }
         );
 
