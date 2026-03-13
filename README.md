@@ -24,57 +24,42 @@ Para garantir que animações complexas baseadas em scroll funcionam sem falhas,
 
 ---
 
-## Plano de Integração de Mídia Mista nos Modais (Pop-ups)
+## Funcionalidades Implementadas (Changelog Recente)
 
-A estrutura atual dos modais (`modules/modal.js`) suporta texto dinâmico. Para o futuro, onde cada serviço precisará de um "Showcase" visual quando aberto, o modal deve ser adaptado para suportar **Mídia Híbrida**.
+A aplicação sofreu uma transformação estrutural profunda ("Fase 2" e "Fase 3" do Plano de Transformação) para melhorar a apresentação dos serviços e a experiência do utilizador:
 
-### Estratégia de Arquitetura (A Implementar)
-O objeto de dados `modalData` no JS deixará de ter apenas `description` e passará a ter uma chave genérica de `media`. O script lerá o tipo de mídia e injetará o HTML correspondente no `#modal-media-container` (que criaremos dentro do modal).
+### 1. Novo Layout ZigZag para Serviços
+- Transição de descrições escondidas em modais para a página principal (fluxo de scroll).
+- Implementação de um layout "Split" (ZigZag) elegante e intercalado para Desktop (Esquerda/Direita).
+- Empilhamento vertical otimizado para Mobile (Imagem em cima, texto colado em baixo).
+- Integração de imagens reais de alta qualidade (`.webp`) para os principais serviços (Estampagem, Corte Laser, Gravação Laser, Impressão 3D, Maquinação CNC, Modelação 3D).
 
-**1. Imagens de Destaque (Alta Resolução)**
-*   **Formato nos Dados:** `{ mediaType: 'image', mediaSrc: 'assets/cnc-highres.webp' }`
-*   **Renderização:** Uma tag `<img loading="lazy">` com `object-fit: cover` para preencher o topo do modal.
-*   **Otimização:** Uso estrito de `.webp` para manter o site rápido.
+### 2. O Novo Modal "Deep-Dive Técnico" (Split Layout)
+O modal evoluiu de uma simples caixa de texto para uma ficha técnica interativa avançada:
+- **Layout Split:** O ecrã do modal agora divide-se entre Media (Esquerda) e Dados Técnicos (Direita) no Desktop.
+- **Especificações Técnicas (B2B):** Injeção de tabelas geradas dinamicamente via JS com dados concretos (Tolerâncias, Áreas de Corte, Eixos, etc.).
+- **Visualizador 360º Nativo:** Implementação de um sistema de renderização de sequência de imagens (Sprite/Sequence) com suporte a interação por arrasto (Drag/Touch) para a Impressão 3D.
+- **Visualizador 3D GLB:** Integração da tag `<model-viewer>` do Google para inspecionar peças modeladas em 3D em tempo real.
+- **Otimização Media:** Suporte nativo para Imagens, Vídeos (`autoplay loop muted`), Visões 360º e Modelos 3D Genéricos, tudo gerido por um único JSON no ficheiro `modules/modal.js`.
 
-**2. Vídeos (B-Roll e Processo de Fabrico)**
-*   **Formato nos Dados:** `{ mediaType: 'video', mediaSrc: 'assets/laser-cut.mp4' }`
-*   **Renderização:** Tag `<video autoplay loop muted playsinline>` (Crucial: sem som e autoplay para agir como um GIF de altíssima qualidade).
-*   **UX:** O vídeo dá vida imediata ao processo industrial assim que o cartão abre.
+### 3. Melhorias Visuais e de Performance
+- **Comportamento Inteligente das Partículas:** As partículas globais (brasas) agora fazem fade-out automático ao entrar na zona de leitura dos serviços e fade-in no Hero e Contactos, reduzindo o ruído visual e poupando bateria/CPU (ScrollTrigger).
+- **Hero & Slogan:** Adição e animação fluída do Slogan ("Excelência em Transformação de Metal") e correção de bugs ("Logo Fantasma" e espaçamentos) na renderização inicial do logótipo SVG.
+- **Correções CSS/UI:** Isolamento do título principal, fixação da altura da janela no telemóvel para evitar saltos (100vh dinâmico), e remoção de barras de scroll horizontais extra introduzidas pelo modal.
 
-**3. Modelos 3D (Inspeção Interativa)**
-*   **Formato nos Dados:** `{ mediaType: '3d', mediaSrc: 'assets/medal-model.glb' }`
-*   **Renderização:** Uso do web component `<model-viewer>` (do Google).
-*   **Vantagem:** Permite ao cliente rodar a peça 3D com o rato/dedo diretamente dentro do modal, suportando inclusivamente Realidade Aumentada (AR) em telemóveis.
-
-**Layout do Modal Futuro:**
-O modal deixará de ser apenas um quadrado de texto. Passará a ter um layout "Split" (Desktop) ou "Stack" (Mobile): Metade esquerda com o Showcase visual (Imagem/Vídeo/3D), metade direita com as especificações técnicas, tolerâncias de maquinagem e o texto atual.
-
----
-
-## Implementado até agora
-
-1.  **Estrutura e Estilo:**
-    *   Arquitetura SPA baseada em Secções de Altura Total (100vh).
-    *   Painéis de Vidro (`backdrop-filter`) com textura diagonal (150º) a simular chapa cortada.
-    *   Marcas de água tipográficas através da fonte "Material Symbols Outlined" gigante a 5% de opacidade.
-    *   Hitboxes de navegação lateral contínuas para zero frustração de clique.
-
-2.  **Animação e Partículas:**
-    *   `global-particles.js`: 2 Telas de partículas (fundo lento com blur refrativo, ecrã frontal com Bokeh rápido) atadas à inércia do scroll Lenis.
-    *   Fragmentação condicional do título Hero ("4WINNERS").
-
-3.  **Ambiente de Desenvolvimento:**
-    *   Servidor web Python via Nix e IDX (`dev.nix`).
+### 4. Funcionalidades de Contacto & Segurança
+- **Segurança Anti-Bot:** Implementação de ofuscação (concatenação de strings em execução) no JS para proteger o Email e o Telefone de web scrapers/bots de spam.
+- **Layout Modal de Contacto:** O modal de contacto tem agora um design em ecrã inteiro focado puramente na ação rápida ("Ligar Agora" CTA) e direções de GPS.
 
 ---
 
-## Próximos Passos (A Implementar)
+## Próximos Passos (Backlog)
 
 - [ ] **Efeitos Visuais Específicos:**
     - [ ] **Montagem de Medalhas:** Animar a vista explodida dos componentes a unirem-se com o scroll.
 
-- [ ] **Evolução dos Modais (Details):**
-    - [ ] Injetar `<model-viewer>` e estrutura híbrida de vídeos/imagens detalhada na seção de Estratégia acima.
+- [ ] **Expansão de Conteúdo:**
+    - [ ] Adicionar assets fotográficos e ficheiros 3D (`.glb` / `.webp` sequência) em falta para os restantes serviços (Torneamento, Repuxamento, Galvanização, etc.).
 
 - [ ] **Finalização e Deploy:**
     - [ ] Configurar Firebase Hosting para Testes Q/A.
