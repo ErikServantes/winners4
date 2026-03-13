@@ -1,134 +1,131 @@
+
+// Função utilitária para obter a semana do ano (1 a 52)
+function getWeekNumber() {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+    const yearStart = new Date(d.getFullYear(), 0, 1);
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
+
+
 const serviceData = {
     'estampagem': {
         title: 'Estampagem',
+        folder: 'estampagem',
         specs: {
             'Capacidade': 'Até 400 toneladas',
             'Série Mínima': '50 unidades'
         },
-        materials: ['Latão', 'Ferro', 'Alumínio'],
-        mediaType: 'image',
-        mediaSrc: 'assets/estampagem/00.webp'
+        materials: ['Latão', 'Ferro', 'Alumínio']
     },
     'corte-laser': {
         title: 'Corte de Laser',
+        folder: 'corte-laser',
         specs: {
             'Área Corte CO2': { value: '1600 x 1000 mm', materials: ['Acrílico', 'Madeira', 'Cartão'] },
             'Área Corte Fibra': { value: '1000 x 1500 mm', materials: ['INOX', 'Ferro', 'Alumínio'] }
         },
-        materials: [],
-        mediaType: 'image',
-        mediaSrc: 'assets/corte-laser/00.webp'
+        materials: []
     },
     'gravacao-laser': {
         title: 'Gravação a Laser',
+        folder: 'gravacao-laser',
         specs: {
             'Área Gravação CO2': { value: '1600 x 1000 mm', materials: ['Acrílico', 'Madeira'] },
             'Área Gravação FIBRA': { value: '200 x 200 mm', materials: ['Ferro', 'INOX', 'Alumínio', 'Cobre', 'Prata', 'Estanho'] }
         },
-        materials: [],
-        mediaType: 'image',
-        mediaSrc: 'assets/gravacao-laser/00.webp'
+        materials: []
     },
     'impressao-uv': {
         title: 'Impressão UV',
+        folder: 'impressao-uv',
         specs: {
             'Área de Impressão': '610 x 420 mm',
             'Altura Máx. da Peça': '150 mm',
             'Resolução': '1200 x 1200 dpi',
             'Acabamentos': 'Verniz Localizado, Relevo 3D'
         },
-        materials: ['Metal', 'Acrílico', 'Madeira', 'Plástico', 'Vidro / Cristal'],
-        mediaType: 'image',
-        mediaSrc: 'https://images.unsplash.com/photo-1614316335967-1fa7663a83f9?q=80&w=1600&auto=format&fit=crop'
+        materials: ['Metal', 'Acrílico', 'Madeira', 'Plástico', 'Vidro / Cristal']
     },
     'impressao-3d': {
         title: 'Impressão 3D',
+        folder: 'impressao-3d',
         specs: {
             'Volume de Construção': '223 x 223 x 305 mm',
             'Resolução de Camada': '100 - 300 microns',
             'Tecnologias': 'FDM'
         },
-        materials: ['PLA'],
-        mediaType: '360',
-        mediaFolder: 'assets/impressao-3d/01/',
-        mediaPrefix: 'frame_',
-        mediaExtension: '.webp',
-        mediaCount: 36
+        materials: ['PLA']
     },
     'modelacao-3d': {
         title: 'Modelação 3D',
+        folder: 'modelacao-3d',
         specs: {
             'Softwares': 'Solidworks, Zbrush',
             'Ficheiros de Entrega': '.STEP, .IGES, .STL, .OBJ'
         },
-        materials: [],
-        mediaType: '3d',
-        mediaSrc: 'assets/afonso.glb'
+        materials: []
     },
     'maquinacao-cnc': {
         title: 'Maquinação CNC',
+        folder: 'maquinacao-cnc',
         specs: {
             'Eixos': '3 eixos simultâneos',
             'Dimensões (X, Y, Z)': '600 x 400 x 300 mm',
             'Tolerância': '± 0.1 mm',
             'Rotação Máx.': '6.000 RPM'
         },
-        materials: ['Aços Ligas', 'Alumínio', 'Latão', 'Plásticos Técnicos (Delrin, Nylon)'],
-        mediaType: 'image',
-        mediaSrc: 'assets/maquinacao-cnc/00.webp'
+        materials: ['Aços Ligas', 'Alumínio', 'Latão', 'Plásticos Técnicos (Delrin, Nylon)']
     },
     'torneamento': {
         title: 'Torneamento',
+        folder: 'torneamento',
         specs: {
             'Diâmetro Máx.': '300 mm',
             'Comprimento Máx.': '300 mm',
             'Tolerância': '± 0.1 mm'
         },
-        materials: ['Aço', 'Inox', 'Alumínio', 'Cobre', 'Latão'],
-        mediaType: 'image',
-        mediaSrc: 'https://images.unsplash.com/photo-1598506509613-2dfc1eb60ee0?q=80&w=1600&auto=format&fit=crop'
+        materials: ['Aço', 'Inox', 'Alumínio', 'Cobre', 'Latão']
     },
     'repuxamento': {
         title: 'Repuxamento',
+        folder: 'repuxamento',
         specs: {
             'Diâmetro Máx. da Chapa': '1200 mm',
             'Espessura Máx. (Aço)': '3 mm',
             'Espessura Máx. (Alumínio)': '5 mm'
         },
-        materials: ['Aço Carbono', 'Inox', 'Alumínio', 'Cobre'],
-        mediaType: 'image',
-        mediaSrc: 'https://images.unsplash.com/photo-1565034946487-077786996e27?q=80&w=1600&auto=format&fit=crop'
+        materials: ['Aço Carbono', 'Inox', 'Alumínio', 'Cobre']
     },
     'galvanizacao': {
         title: 'Galvanização',
+        folder: 'galvanizacao',
         specs: {
             'Banhos Disponíveis': 'Latonagem, Niquelagem e Cobreagem',
             'Tamanho Máx. da Peça': '300 x 300 x 300 mm'
         },
-        materials: ['Inox', 'Cobre', 'Ferro', 'Alumínio'],
-        mediaType: 'image',
-        mediaSrc: 'https://images.unsplash.com/photo-1533387520709-752d83def36d?q=80&w=1600&auto=format&fit=crop'
+        materials: ['Inox', 'Cobre', 'Ferro', 'Alumínio']
     },
     'quinagem': {
         title: 'Quinagem',
+        folder: 'quinagem',
         specs: {
             'Comprimento Máximo': 'Até 2000 mm',
             'Espessura Máx.': 'Por consulta'
         },
-        materials: ['Ferro', 'Inox', 'Alumínio'],
-        mediaType: 'image',
-        mediaSrc: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=1600&auto=format&fit=crop'
+        materials: ['Ferro', 'Inox', 'Alumínio']
     },
     'calandragem': {
         title: 'Calandragem',
+        folder: 'calandragem',
         specs: {
             'Comprimento Máx.': 'Até 1200 mm',
             'Espessura': 'Por consulta',
             'Diâmetro Mínimo Interno': '80 mm'
         },
-        materials: ['Ferro', 'Inox', 'Alumínio'],
-        mediaType: 'image',
-        mediaSrc: 'https://images.unsplash.com/photo-1620023412580-1a61dc58f11d?q=80&w=1600&auto=format&fit=crop'
+        materials: ['Ferro', 'Inox', 'Alumínio']
     },
     'contacto': {
         title: 'Entre em Contacto',
@@ -145,15 +142,117 @@ const serviceData = {
     }
 };
 
+
+// Cache global para não fazermos scan à mesma pasta duas vezes (Crucial para performance e para o Portefólio futuro)
+window.mediaCache = window.mediaCache || {};
+
+// Função auxiliar para testar se um índice específico existe (tenta vídeo, imagem e 360)
+async function testIndexExists(folderName, index) {
+    const idxStr = index.toString().padStart(2, '0');
+    const basePath = `assets/${folderName}/${idxStr}`;
+    
+    if (await fileExists(`${basePath}.mp4`)) return { index: index, type: 'video', src: `${basePath}.mp4` };
+    if (await fileExists(`${basePath}.webp`)) return { index: index, type: 'image', src: `${basePath}.webp` };
+    if (await fileExists(`${basePath}/frame_00.webp`)) return { 
+        index: index, type: '360', folder: `${basePath}/`, prefix: 'frame_', extension: '.webp', count: 36 
+    };
+    return null;
+}
+
+// O Scanner Inteligente Otimizado (Binary Search / Procura Binária)
+// Assume que não existem "buracos" (ex: se há 01 e 03, obriga a haver 02)
+async function scanServiceMedia(folderName) {
+    if (window.mediaCache[folderName]) {
+        console.log(`📦 [CACHE] Servico '${folderName}' já foi pesquisado. Encontrados: ${window.mediaCache[folderName].length} ficheiros.`);
+        return window.mediaCache[folderName];
+    }
+
+    console.log(`🔍 [SCAN BINÁRIO] A iniciar varrimento otimizado na pasta 'assets/${folderName}/'...`);
+    
+    let low = 1;
+    let high = 27; // O nosso limite teórico máximo
+    let highestFound = 0;
+    const foundItems = []; // Vamos guardar os resultados que encontramos pelo caminho para não re-testar
+
+    // Procura Binária para encontrar o limite superior (o último ficheiro válido)
+    while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        const result = await testIndexExists(folderName, mid);
+        
+        if (result !== null) {
+            // Sucesso! Significa que este e (assumimos) todos para trás existem.
+            highestFound = mid;
+            foundItems[mid] = result; // Guarda em cache local
+            low = mid + 1; // Vamos tentar encontrar um número ainda maior
+        } else {
+            // Falhou! O limite máximo está para trás.
+            high = mid - 1;
+        }
+    }
+
+    // Agora que sabemos o limite exato (highestFound), construímos o array final.
+    // Como a Procura Binária saltou alguns números pelo caminho, vamos preencher os buracos (1 até highestFound)
+    // Fazemos isto em paralelo para ser super rápido, apenas para os que faltam!
+    const availableMedia = [];
+    const missingPromises = [];
+    
+    for (let i = 1; i <= highestFound; i++) {
+        if (foundItems[i]) {
+            availableMedia.push(foundItems[i]);
+        } else {
+            // Lança a verificação dos que saltámos
+            missingPromises.push((async () => {
+                const res = await testIndexExists(folderName, i);
+                if (res !== null) availableMedia.push(res);
+            })());
+        }
+    }
+    
+    await Promise.all(missingPromises);
+    
+    // Ordena de 1 até ao fim
+    availableMedia.sort((a, b) => a.index - b.index);
+
+    console.log(`✅ [SCAN COMPLETO] '${folderName}' tem ${availableMedia.length} ficheiros reais.`);
+    
+    // Guarda na memória do browser para o Modal e para a Galeria Portefólio
+    window.mediaCache[folderName] = availableMedia;
+    return availableMedia;
+}
+
+// Fallback absoluto
+function getBaseMedia(folderName) {
+    return { type: 'image', src: `assets/${folderName}/00.webp` };
+}
+
+// Pequena função utilitária para fazer PING a um ficheiro no servidor
+function fileExists(url) {
+    return new Promise(resolve => {
+        const req = new XMLHttpRequest();
+        req.open('HEAD', url, true);
+        req.onload = function() {
+            if (req.status >= 200 && req.status < 300) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        };
+        req.onerror = function() {
+            resolve(false);
+        };
+        req.send();
+    });
+}
+
+
 export function initializeModal() {
     const modal = document.getElementById('details-modal');
     if (!modal) return;
 
-    // A estrutura do modal vai mudar. Em vez de usar variáveis soltas, injetamos tudo dinamicamente.
     const detailBtns = document.querySelectorAll('.details-btn');
 
     detailBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
             if (btn.tagName === 'A') {
                 e.preventDefault();
             }
@@ -162,66 +261,21 @@ export function initializeModal() {
             const data = serviceData[service];
 
             if (data) {
-                // Prepara a Divisão de Media (Imagem/Vídeo/3D)
+                // Se for um serviço técnico (não contacto), mostramos logo um esqueleto de carregamento
                 let mediaHTML = '';
-                if (data.mediaType === 'image' && data.mediaSrc) {
-                    mediaHTML = `
-                        <div class="modal-media-wrapper">
-                            <img src="${data.mediaSrc}" alt="${data.title}" loading="lazy">
-                        </div>
-                    `;
-                } else if (data.mediaType === 'video' && data.mediaSrc) {
-                    mediaHTML = `
-                        <div class="modal-media-wrapper">
-                            <video autoplay loop muted playsinline>
-                                <source src="${data.mediaSrc}" type="video/mp4">
-                            </video>
-                        </div>
-                    `;
-                } else if (data.mediaType === '360') {
-                    // Visualizador 360º de Imagens (Sprite/Sequence)
-                    mediaHTML = `
-                        <div class="modal-media-wrapper viewer-360-container" style="background-color: #000; position: relative; cursor: grab; overflow: hidden; display: flex; justify-content: center; align-items: center; user-select: none; -webkit-user-select: none;">
-                            <img id="viewer-360-img" src="${data.mediaFolder}${data.mediaPrefix}00${data.mediaExtension}" style="width: 100%; height: 100%; object-fit: contain; max-height: 80vh; pointer-events: none;" alt="Visualização 360º">
-                            
-                            <!-- Overlay UI para indicar interação -->
-                            <div class="viewer-360-hint" style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #d4af37; font-size: 0.9rem; pointer-events: none; opacity: 0.8; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
-                                <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px; font-size: 1.2rem;">360</span>
-                                Arraste para rodar
-                            </div>
-                        </div>
-                    `;
-                } else if (data.mediaType === '3d' && data.mediaSrc) {
-                    // Google Model Viewer nativo
-                    mediaHTML = `
-                        <div class="modal-media-wrapper" style="background-color: #111; position: relative;">
-                            <model-viewer 
-                                src="${data.mediaSrc}" 
-                                auto-rotate 
-                                rotation-per-second="30deg"
-                                camera-controls 
-                                shadow-intensity="1.5"
-                                exposure="1.2"
-                                bounds="tight"
-                                camera-orbit="0deg 75deg 110%" 
-                                min-camera-orbit="auto auto auto"
-                                max-camera-orbit="auto auto 200%"
-                                min-field-of-view="10deg"
-                                max-field-of-view="45deg"
-                                style="width: 100%; height: 100%;  --poster-color: transparent; padding: 20px; box-sizing: border-box;">
-                            </model-viewer>
-                            <div style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #888; font-size: 0.8rem; pointer-events: none;">
-                                Desliza para rodar a peça 3D
-                            </div>
+                if (service !== 'contacto') {
+                     mediaHTML = `
+                        <div class="modal-media-wrapper" id="dynamic-media-container" style="display: flex; justify-content: center; align-items: center; background: #050505;">
+                            <span class="material-symbols-outlined" style="font-size: 3rem; animation: spin 2s linear infinite; color: #d4af37;">hourglass_empty</span>
                         </div>
                     `;
                 }
-                // Se não houver media, o HTML fica vazio e o CSS cuida de alargar a secção de texto
 
-                // --- GERA O HTML INTERNO DO MODAL (NOVO SPLIT LAYOUT) ---
+                // --- GERA O HTML INTERNO DO MODAL (ESTÁTICO PRIMEIRO) ---
                 let contentHTML = '';
 
                 if (service === 'contacto') {
+
                     // Layout Especial para Contacto (Sem Media)
                     contentHTML = `
                         <div class="modal-text-section full-width">
@@ -333,7 +387,8 @@ export function initializeModal() {
                 // Re-anexa o event listener ao botão de fechar
                 modalContent.querySelector('.modal-close').addEventListener('click', closeModal);
 
-                // Mostra o modal
+                
+                // Mostra o modal imediatamente (Abre as portas)
                 modal.classList.add('visible');
                 
                 // Pára o Lenis para evitar scroll duplo enquanto o modal está aberto
@@ -341,15 +396,59 @@ export function initializeModal() {
                     window.lenis.stop();
                 }
 
-                // --- INICIALIZAÇÃO DO VISUALIZADOR 360º (SE APLICÁVEL) ---
-                if (data.mediaType === '360') {
-                    init360Viewer(data);
+                                // --- AGORA PROCURA A MEDIA DA SEMANA (AUTO-DISCOVERY & PERFECT ROTATION) ---
+                if (service !== 'contacto') {
+                                        // 1. O Scanner varre a pasta e descobre EXATAMENTE quantas imagens tens lá.
+                    const availableMedia = await scanServiceMedia(data.folder);
+                    let discoveredMedia = null;
+
+                    if (availableMedia.length > 0) {
+                        // 2. Rotação Perfeita (Matemática Pura):
+                        const week = getWeekNumber();
+                        const rotationIndex = (week - 1) % availableMedia.length;
+                        discoveredMedia = availableMedia[rotationIndex];
+                        console.log(`📅 [ROTAÇÃO] Semana ${week}. A escolher ficheiro índice ${rotationIndex} (de ${availableMedia.length} totais): ${discoveredMedia.src || discoveredMedia.folder}`);
+                    } else {
+                        // 3. Se a fábrica ainda não atirou nada para a pasta 01 a 27, cai no seguro 00.
+                        console.log(`⚠️ [FALLBACK] Nenhum ficheiro extra no servico '${data.folder}'. A mostrar o 00.webp de segurança.`);
+                        discoveredMedia = getBaseMedia(data.folder);
+                    }
+
+                    const container = document.getElementById('dynamic-media-container');
+                    
+                    if (container && discoveredMedia) {
+                        if (discoveredMedia.type === 'image') {
+                            container.innerHTML = `<img src="${discoveredMedia.src}" alt="${data.title}" loading="lazy" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">`;
+                        } else if (discoveredMedia.type === 'video') {
+                            container.innerHTML = `
+                                <video autoplay loop muted playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                                    <source src="${discoveredMedia.src}" type="video/mp4">
+                                </video>
+                            `;
+                        } else if (discoveredMedia.type === '360') {
+                            container.classList.add('viewer-360-container');
+                            container.style.cursor = 'grab';
+                            container.style.userSelect = 'none';
+                            container.style.webkitUserSelect = 'none';
+                            container.innerHTML = `
+                                <img id="viewer-360-img" src="${discoveredMedia.folder}${discoveredMedia.prefix}00${discoveredMedia.extension}" style="width: 100%; height: 100%; object-fit: contain; max-height: 80vh; pointer-events: none;" alt="Visualização 360º">
+                                
+                                <div class="viewer-360-hint" style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #d4af37; font-size: 0.9rem; pointer-events: none; opacity: 0.8; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                                    <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px; font-size: 1.2rem;">360</span>
+                                    A carregar interação...
+                                </div>
+                            `;
+                            // Iniciar a lógica pesada do 360
+                            init360Viewer(discoveredMedia);
+                        }
+                    }
                 }
             }
         });
     });
 
     function closeModal() {
+
         modal.classList.remove('visible');
         
         // Retoma o scroll da página
