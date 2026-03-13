@@ -142,110 +142,55 @@ const serviceData = {
     }
 };
 
+// --- NOVO SISTEMA DE INVENTÁRIO (BASEADO EM JSON) ---
 
-// Cache global para não fazermos scan à mesma pasta duas vezes (Crucial para performance e para o Portefólio futuro)
-window.mediaCache = window.mediaCache || {};
+// Guarda o inventário carregado na memória para acesso instantâneo
+let mediaInventory = null;
 
-// Função auxiliar para testar se um índice específico existe (tenta vídeo, imagem e 360)
-async function testIndexExists(folderName, index) {
-    const idxStr = index.toString().padStart(2, '0');
-    const basePath = `assets/${folderName}/${idxStr}`;
+/**
+ * Carrega o ficheiro inventory.json e guarda-o na variável mediaInventory.
+ * Esta função é chamada uma única vez quando o site é inicializado.
+ */
+async function loadInventory() {
+    if (mediaInventory) return mediaInventory; // Se já foi carregado, não faz nada
     
-    if (await fileExists(`${basePath}.mp4`)) return { index: index, type: 'video', src: `${basePath}.mp4` };
-    if (await fileExists(`${basePath}.webp`)) return { index: index, type: 'image', src: `${basePath}.webp` };
-    if (await fileExists(`${basePath}/frame_00.webp`)) return { 
-        index: index, type: '360', folder: `${basePath}/`, prefix: 'frame_', extension: '.webp', count: 36 
-    };
-    return null;
+    try {
+        // Adiciona um timestamp para evitar problemas de cache do browser ao atualizar o inventário
+        const response = await fetch('./assets/inventory.json?v=' + new Date().getTime());
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        mediaInventory = await response.json();
+        console.log('✅ Inventário de media carregado com sucesso!');
+        return mediaInventory;
+    } catch (error) {
+        console.error('❌ Falha ao carregar o inventário de media (inventory.json). O site pode não mostrar media dinâmica.', error);
+        mediaInventory = {}; // Evita que futuras tentativas falhem
+        return mediaInventory;
+    }
 }
 
-// O Scanner Inteligente Otimizado (Binary Search / Procura Binária)
-// Assume que não existem "buracos" (ex: se há 01 e 03, obriga a haver 02)
-export async function scanServiceMedia(folderName) {
-    if (window.mediaCache[folderName]) {
-        console.log(`📦 [CACHE] Servico '${folderName}' já foi pesquisado. Encontrados: ${window.mediaCache[folderName].length} ficheiros.`);
-        return window.mediaCache[folderName];
-    }
-
-    console.log(`🔍 [SCAN BINÁRIO] A iniciar varrimento otimizado na pasta 'assets/${folderName}/'...`);
-    
-    let low = 1;
-    let high = 27; // O nosso limite teórico máximo
-    let highestFound = 0;
-    const foundItems = []; // Vamos guardar os resultados que encontramos pelo caminho para não re-testar
-
-    // Procura Binária para encontrar o limite superior (o último ficheiro válido)
-    while (low <= high) {
-        const mid = Math.floor((low + high) / 2);
-        const result = await testIndexExists(folderName, mid);
-        
-        if (result !== null) {
-            // Sucesso! Significa que este e (assumimos) todos para trás existem.
-            highestFound = mid;
-            foundItems[mid] = result; // Guarda em cache local
-            low = mid + 1; // Vamos tentar encontrar um número ainda maior
-        } else {
-            // Falhou! O limite máximo está para trás.
-            high = mid - 1;
-        }
-    }
-
-    // Agora que sabemos o limite exato (highestFound), construímos o array final.
-    // Como a Procura Binária saltou alguns números pelo caminho, vamos preencher os buracos (1 até highestFound)
-    // Fazemos isto em paralelo para ser super rápido, apenas para os que faltam!
-    const availableMedia = [];
-    const missingPromises = [];
-    
-    for (let i = 1; i <= highestFound; i++) {
-        if (foundItems[i]) {
-            availableMedia.push(foundItems[i]);
-        } else {
-            // Lança a verificação dos que saltámos
-            missingPromises.push((async () => {
-                const res = await testIndexExists(folderName, i);
-                if (res !== null) availableMedia.push(res);
-            })());
-        }
-    }
-    
-    await Promise.all(missingPromises);
-    
-    // Ordena de 1 até ao fim
-    availableMedia.sort((a, b) => a.index - b.index);
-
-    console.log(`✅ [SCAN COMPLETO] '${folderName}' tem ${availableMedia.length} ficheiros reais.`);
-    
-    // Guarda na memória do browser para o Modal e para a Galeria Portefólio
-    window.mediaCache[folderName] = availableMedia;
-    return availableMedia;
+/**
+ * Obtém a lista de media para um serviço específico a partir do inventário em memória.
+ * @param {string} serviceName - O nome do serviço (ex: 'impressao-3d').
+ * @returns {Array} - A lista de ficheiros de media para esse serviço.
+ */
+function getServiceMedia(serviceName) {
+    return mediaInventory?.[serviceName] || [];
 }
 
-// Fallback absoluto
+// Fallback absoluto para obter a imagem de capa (00.webp)
 export function getBaseMedia(folderName) {
     return { type: 'image', src: `assets/${folderName}/00.webp` };
 }
 
-// Pequena função utilitária para fazer PING a um ficheiro no servidor
-function fileExists(url) {
-    return new Promise(resolve => {
-        const req = new XMLHttpRequest();
-        req.open('HEAD', url, true);
-        req.onload = function() {
-            if (req.status >= 200 && req.status < 300) {
-                resolve(true);
-            } else {
-                resolve(false);
-            }
-        };
-        req.onerror = function() {
-            resolve(false);
-        };
-        req.send();
-    });
-}
+// -------------------------------------------------------------
 
 
-export function initializeModal() {
+export async function initializeModal() {
+    // Carrega o inventário assim que o módulo é inicializado
+    await loadInventory();
+
     const modal = document.getElementById('details-modal');
     if (!modal) return;
 
@@ -275,41 +220,21 @@ export function initializeModal() {
                 let contentHTML = '';
 
                 if (service === 'contacto') {
-
-                    // Layout Especial para Contacto (Sem Media)
                     contentHTML = `
                         <div class="modal-text-section full-width">
                             <h2 id="modal-title">${data.title}</h2>
                             <div id="modal-body">
                                 <div class="contact-modal-info">
-                                    <div class="contact-item">
-                                        <strong>Morada:</strong>
-                                        <a href="${data.address_link}" target="_blank">${data.address}</a>
-                                    </div>
-                                    <div class="contact-item">
-                                        <strong>Email:</strong>
-                                        <a href="mailto:${data.email}">${data.email}</a>
-                                    </div>
-                                    <div class="contact-item">
-                                        <strong>Telefone:</strong>
-                                        <a href="${data.phone_link}">${data.phone}</a>
-                                    </div>
-                                    <div class="contact-item">
-                                        <strong>Horário:</strong>
-                                        <div class="schedule">
-                                            ${data.schedule.map(line => `<span>${line}</span>`).join('')}
-                                        </div>
-                                    </div>
+                                    <div class="contact-item"><strong>Morada:</strong><a href="${data.address_link}" target="_blank">${data.address}</a></div>
+                                    <div class="contact-item"><strong>Email:</strong><a href="mailto:${data.email}">${data.email}</a></div>
+                                    <div class="contact-item"><strong>Telefone:</strong><a href="${data.phone_link}">${data.phone}</a></div>
+                                    <div class="contact-item"><strong>Horário:</strong><div class="schedule">${data.schedule.map(line => `<span>${line}</span>`).join('')}</div></div>
                                 </div>
                                 <a href="${data.phone_link}" class="details-btn cta-btn">Ligar Agora</a>
                             </div>
                         </div>
                     `;
                 } else {
-                    // Layout Genérico para Serviços (Com ou Sem Media)
-                    // Layout Genérico para Serviços (Ficha Técnica B2B)
-                    
-                    // Constrói Tabela de Especificações Técnicas (Specs)
                     let specsHTML = '';
                     if (data.specs) {
                         specsHTML = `
@@ -319,26 +244,9 @@ export function initializeModal() {
                                     <tbody>
                                         ${Object.entries(data.specs).map(([key, value]) => {
                                             if (typeof value === 'object' && value !== null) {
-                                                return `
-                                                    <tr>
-                                                        <td class="spec-label" style="padding-bottom: 5px; border-bottom: none;">${key}</td>
-                                                        <td class="spec-value" style="padding-bottom: 5px; border-bottom: none;">${value.value}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2" style="padding-top: 0; padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
-                                                            <ul class="modal-materials" style="margin-top: 5px;">
-                                                                ${value.materials.map(m => `<li>${m}</li>`).join('')}
-                                                            </ul>
-                                                        </td>
-                                                    </tr>
-                                                `;
+                                                return `<tr><td class="spec-label">${key}</td><td class="spec-value">${value.value}</td></tr><tr><td colspan="2" style="padding: 0;"><ul class="modal-materials" style="margin: 5px 0 10px 15px; justify-content: flex-end;">${value.materials.map(m => `<li>${m}</li>`).join('')}</ul></td></tr>`;
                                             } else {
-                                                return `
-                                                    <tr>
-                                                        <td class="spec-label" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">${key}</td>
-                                                        <td class="spec-value" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">${value}</td>
-                                                    </tr>
-                                                `;
+                                                return `<tr><td class="spec-label">${key}</td><td class="spec-value">${value}</td></tr>`;
                                             }
                                         }).join('')}
                                     </tbody>
@@ -347,93 +255,61 @@ export function initializeModal() {
                         `;
                     }
 
-                    // Constrói Lista de Materiais Global (Se existir)
                     let materialsHTML = '';
                     if (data.materials && data.materials.length > 0) {
                         materialsHTML = `
                             <div class="materials-container">
                                 <h3 class="section-subtitle">Materiais Suportados</h3>
-                                <ul class="modal-materials">
-                                    ${data.materials.map(material => `<li>${material}</li>`).join('')}
-                                </ul>
+                                <ul class="modal-materials">${data.materials.map(material => `<li>${material}</li>`).join('')}</ul>
                             </div>
                         `;
                     }
 
-                    // Se houver media, dividimos. Se não, tela cheia.
                     const textClass = mediaHTML ? 'modal-text-section split-width' : 'modal-text-section full-width';
-
                     contentHTML = `
                         ${mediaHTML}
                         <div class="${textClass}">
                             <h2 id="modal-title">${data.title}</h2>
-                            <div id="modal-body">
-                                ${specsHTML}
-                                ${materialsHTML}
-                            </div>
+                            <div id="modal-body">${specsHTML}${materialsHTML}</div>
                         </div>
                     `;
                 }
 
-                // Injeta tudo no modal-content (apagando o antigo e mantendo apenas o botão de fechar)
                 const modalContent = modal.querySelector('.modal-content');
                 modalContent.innerHTML = `
                     <button class="modal-close">&times;</button>
-                    <div class="modal-layout-container">
-                        ${contentHTML}
-                    </div>
+                    <div class="modal-layout-container">${contentHTML}</div>
                 `;
-
-                // Re-anexa o event listener ao botão de fechar
                 modalContent.querySelector('.modal-close').addEventListener('click', closeModal);
-
                 
-                // Mostra o modal imediatamente (Abre as portas)
-                openModal();
+                openModalUI();
                 
-                // --- AGORA PROCURA A MEDIA DA SEMANA (AUTO-DISCOVERY & PERFECT ROTATION) ---
                 if (service !== 'contacto') {
-                                        // 1. O Scanner varre a pasta e descobre EXATAMENTE quantas imagens tens lá.
-                    const availableMedia = await scanServiceMedia(data.folder);
+                    // --- ALTERAÇÃO PRINCIPAL AQUI ---
+                    const availableMedia = getServiceMedia(service); // Usa o inventário
                     let discoveredMedia = null;
 
                     if (availableMedia.length > 0) {
-                        // 2. Rotação Perfeita (Matemática Pura):
                         const week = getWeekNumber();
                         const rotationIndex = (week - 1) % availableMedia.length;
                         discoveredMedia = availableMedia[rotationIndex];
-                        console.log(`📅 [ROTAÇÃO] Semana ${week}. A escolher ficheiro índice ${rotationIndex} (de ${availableMedia.length} totais): ${discoveredMedia.src || discoveredMedia.folder}`);
+                        console.log(`📅 [ROTAÇÃO] Semana ${week}. A escolher do INVENTÁRIO o ficheiro índice ${rotationIndex}:`, discoveredMedia);
                     } else {
-                        // 3. Se a fábrica ainda não atirou nada para a pasta 01 a 27, cai no seguro 00.
-                        console.log(`⚠️ [FALLBACK] Nenhum ficheiro extra no servico '${data.folder}'. A mostrar o 00.webp de segurança.`);
+                        console.log(`⚠️ [FALLBACK] Nenhum ficheiro extra no INVENTÁRIO para '${data.folder}'. A mostrar o 00.webp de segurança.`);
                         discoveredMedia = getBaseMedia(data.folder);
                     }
 
                     const container = document.getElementById('dynamic-media-container');
-                    
                     if (container && discoveredMedia) {
                         if (discoveredMedia.type === 'image') {
                             container.innerHTML = `<img src="${discoveredMedia.src}" alt="${data.title}" loading="lazy" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">`;
                         } else if (discoveredMedia.type === 'video') {
-                            container.innerHTML = `
-                                <video autoplay loop muted playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
-                                    <source src="${discoveredMedia.src}" type="video/mp4">
-                                </video>
-                            `;
+                            container.innerHTML = `<video autoplay loop muted playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"><source src="${discoveredMedia.src}" type="video/mp4"></video>`;
                         } else if (discoveredMedia.type === '360') {
                             container.classList.add('viewer-360-container');
                             container.style.cursor = 'grab';
                             container.style.userSelect = 'none';
-                            container.style.webkitUserSelect = 'none';
-                            container.innerHTML = `
-                                <img id="viewer-360-img" src="${discoveredMedia.folder}${discoveredMedia.prefix}00${discoveredMedia.extension}" style="width: 100%; height: 100%; object-fit: contain; max-height: 80vh; pointer-events: none;" alt="Visualização 360º">
-                                
-                                <div class="viewer-360-hint" style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #d4af37; font-size: 0.9rem; pointer-events: none; opacity: 0.8; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
-                                    <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px; font-size: 1.2rem;">360</span>
-                                    A carregar interação...
-                                </div>
-                            `;
-                            // Iniciar a lógica pesada do 360
+                            container.innerHTML = `<img id="viewer-360-img" src="${discoveredMedia.folder}${discoveredMedia.prefix}00${discoveredMedia.extension}" style="width: 100%; height: 100%; object-fit: contain; max-height: 80vh; pointer-events: none;" alt="Visualização 360º"><div class="viewer-360-hint"></div>`;
                             init360Viewer(discoveredMedia);
                         }
                     }
@@ -442,23 +318,16 @@ export function initializeModal() {
         });
     });
 
-    function openModal() {
+    function openModalUI() {
         modal.classList.add('visible');
         document.documentElement.classList.add('modal-open');
         document.body.classList.add('modal-open');
-        if (window.lenis) {
-            window.lenis.stop();
-        }
     }
 
     function closeModal() {
         modal.classList.remove('visible');
         document.documentElement.classList.remove('modal-open');
         document.body.classList.remove('modal-open');
-        if (window.lenis) {
-            window.lenis.start();
-        }
-        
         const viewerContainer = document.querySelector('.viewer-360-container');
         if (viewerContainer && typeof viewerContainer.cleanup360 === 'function') {
             viewerContainer.cleanup360();
@@ -466,16 +335,14 @@ export function initializeModal() {
     }
 
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
+        if (e.target === modal) closeModal();
     });
 }
 
 function init360Viewer(data) {
     const container = document.querySelector('.viewer-360-container');
     const imgElement = document.getElementById('viewer-360-img');
-    const hintElement = document.querySelector('.viewer-360-hint');
+    const hintElement = container.querySelector('.viewer-360-hint');
     
     container.cleanup360 = null;
     if (!container || !imgElement) return;
@@ -483,7 +350,7 @@ function init360Viewer(data) {
     const images = [];
     let loadedCount = 0;
     
-    hintElement.innerHTML = `<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px; font-size: 1.2rem;">sync</span>A Carregar 360º...`;
+    hintElement.innerHTML = `<span class="material-symbols-outlined">sync</span>A Carregar 360º...`;
 
     for (let i = 0; i < data.count; i++) {
         const img = new Image();
@@ -492,7 +359,7 @@ function init360Viewer(data) {
         img.onload = () => {
             loadedCount++;
             if (loadedCount === data.count) {
-                hintElement.innerHTML = `<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px; font-size: 1.2rem;">360</span>Arraste para rodar`;
+                hintElement.innerHTML = `<span class="material-symbols-outlined">360</span>Arraste para rodar`;
                 setupInteraction();
             }
         };
@@ -504,13 +371,12 @@ function init360Viewer(data) {
         let startX = 0;
         let currentFrameIndex = 0;
         
-        let autoRotateInterval = null;
+        let autoRotateInterval, autoRotateTimeout;
         let isAutoRotating = true;
-        let autoRotateTimeout = null;
 
         function startAutoRotate() {
             isAutoRotating = true;
-            if (autoRotateInterval) clearInterval(autoRotateInterval);
+            clearInterval(autoRotateInterval);
             autoRotateInterval = setInterval(() => {
                 if (isAutoRotating && !isDragging) {
                     currentFrameIndex = (currentFrameIndex + 1) % data.count;
@@ -531,7 +397,6 @@ function init360Viewer(data) {
         }
 
         startAutoRotate();
-
         container.cleanup360 = stopAutoRotate;
         
         const sensitivity = 15;
@@ -539,7 +404,6 @@ function init360Viewer(data) {
         const handleMove = (currentX) => {
             if (!isDragging) return;
             const diffX = currentX - startX;
-
             if (Math.abs(diffX) > sensitivity) {
                 const direction = diffX > 0 ? -1 : 1;
                 currentFrameIndex = (currentFrameIndex + direction + data.count) % data.count;
@@ -564,27 +428,17 @@ function init360Viewer(data) {
             }
         };
 
-        // Eventos de Rato (Desktop)
         container.addEventListener('mousedown', (e) => startDrag(e.clientX));
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('mousemove', (e) => handleMove(e.clientX));
         document.addEventListener('mouseleave', endDrag);
 
-        // Eventos de Toque (Mobile)
-        container.addEventListener('touchstart', (e) => {
-            if (e.touches.length > 0) {
-                startDrag(e.touches[0].clientX);
-            }
-        }, { passive: true });
-
+        container.addEventListener('touchstart', (e) => e.touches.length && startDrag(e.touches[0].clientX), { passive: true });
         container.addEventListener('touchend', endDrag);
         container.addEventListener('touchcancel', endDrag);
-        
         container.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                handleMove(e.touches[0].clientX);
-            }
             e.preventDefault();
+            e.touches.length && handleMove(e.touches[0].clientX);
         }, { passive: false });
     }
 }

@@ -1,0 +1,23 @@
+{
+  "calandragem": [],
+  "corte-laser": [],
+  "estampagem": [],
+  "galvanizacao": [],
+  "gravacao-laser": [],
+  "impressao-3d": [
+    {
+      "index": 1,
+      "type": "360",
+      "folder": "assets/impressao-3d/01/",
+      "prefix": "frame_",
+      "extension": ".webp",
+      "count": 36
+    }
+  ],
+  "impressao-uv": [],
+  "maquinacao-cnc": [],
+  "modelacao-3d": [],
+  "quinagem": [],
+  "repuxamento": [],
+  "torneamento": []
+}
