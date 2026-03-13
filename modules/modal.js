@@ -389,14 +389,9 @@ export function initializeModal() {
 
                 
                 // Mostra o modal imediatamente (Abre as portas)
-                modal.classList.add('visible');
+                openModal();
                 
-                // Pára o Lenis para evitar scroll duplo enquanto o modal está aberto
-                if (window.lenis) {
-                    window.lenis.stop();
-                }
-
-                                // --- AGORA PROCURA A MEDIA DA SEMANA (AUTO-DISCOVERY & PERFECT ROTATION) ---
+                // --- AGORA PROCURA A MEDIA DA SEMANA (AUTO-DISCOVERY & PERFECT ROTATION) ---
                 if (service !== 'contacto') {
                                         // 1. O Scanner varre a pasta e descobre EXATAMENTE quantas imagens tens lá.
                     const availableMedia = await scanServiceMedia(data.folder);
@@ -447,23 +442,29 @@ export function initializeModal() {
         });
     });
 
-    function closeModal() {
+    function openModal() {
+        modal.classList.add('visible');
+        document.documentElement.classList.add('modal-open');
+        document.body.classList.add('modal-open');
+        if (window.lenis) {
+            window.lenis.stop();
+        }
+    }
 
+    function closeModal() {
         modal.classList.remove('visible');
-        
-        // Retoma o scroll da página
+        document.documentElement.classList.remove('modal-open');
+        document.body.classList.remove('modal-open');
         if (window.lenis) {
             window.lenis.start();
         }
         
-        // Se houver um 360 viewer ativo, para o seu timer/animação de fundo
         const viewerContainer = document.querySelector('.viewer-360-container');
         if (viewerContainer && typeof viewerContainer.cleanup360 === 'function') {
             viewerContainer.cleanup360();
         }
     }
 
-    // Fecha o modal ao clicar fora dele
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             closeModal();
@@ -471,32 +472,26 @@ export function initializeModal() {
     });
 }
 
-// Lógica de Controlo para Sequências 360º
 function init360Viewer(data) {
     const container = document.querySelector('.viewer-360-container');
     const imgElement = document.getElementById('viewer-360-img');
     const hintElement = document.querySelector('.viewer-360-hint');
     
-    // Função global de limpeza (útil se o modal fechar)
     container.cleanup360 = null;
     if (!container || !imgElement) return;
 
-    // Pré-carregamento das imagens em background para evitar soluços (flickering)
     const images = [];
     let loadedCount = 0;
     
-    // Mostra um estado de "A Carregar..." na Dica (Opcional, mas bom para net lenta)
     hintElement.innerHTML = `<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px; font-size: 1.2rem;">sync</span>A Carregar 360º...`;
 
-    for (let i = 0; i < data.mediaCount; i++) {
+    for (let i = 0; i < data.count; i++) {
         const img = new Image();
-        // Formata o número com 2 dígitos (ex: 00, 01, ..., 09, 10, ...)
         const formattedIndex = i.toString().padStart(2, '0');
-        img.src = `${data.mediaFolder}${data.mediaPrefix}${formattedIndex}${data.mediaExtension}`;
+        img.src = `${data.folder}${data.prefix}${formattedIndex}${data.extension}`;
         img.onload = () => {
             loadedCount++;
-            if (loadedCount === data.mediaCount) {
-                // Todas carregadas, restabelece a dica
+            if (loadedCount === data.count) {
                 hintElement.innerHTML = `<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px; font-size: 1.2rem;">360</span>Arraste para rodar`;
                 setupInteraction();
             }
@@ -509,123 +504,87 @@ function init360Viewer(data) {
         let startX = 0;
         let currentFrameIndex = 0;
         
-        // --- LÓGICA DE AUTO-ROTAÇÃO ---
         let autoRotateInterval = null;
         let isAutoRotating = true;
         let autoRotateTimeout = null;
 
-        // Inicia a rotação automática a 15fps
         function startAutoRotate() {
             isAutoRotating = true;
             if (autoRotateInterval) clearInterval(autoRotateInterval);
             autoRotateInterval = setInterval(() => {
                 if (isAutoRotating && !isDragging) {
-                    currentFrameIndex++;
-                    if (currentFrameIndex >= data.mediaCount) currentFrameIndex = 0;
+                    currentFrameIndex = (currentFrameIndex + 1) % data.count;
                     imgElement.src = images[currentFrameIndex].src;
                 }
-            }, 60); // 60ms ≈ 16 FPS
+            }, 60);
         }
 
-        // Para temporariamente a auto-rotação quando o utilizador interagir
         function stopAutoRotate() {
             isAutoRotating = false;
-            if (autoRotateInterval) clearInterval(autoRotateInterval);
-            if (autoRotateTimeout) clearTimeout(autoRotateTimeout);
+            clearInterval(autoRotateInterval);
+            clearTimeout(autoRotateTimeout);
         }
         
-        // Retoma a auto-rotação após um atraso (1 segundo)
         function resumeAutoRotateDelay() {
-            if (autoRotateTimeout) clearTimeout(autoRotateTimeout);
-            autoRotateTimeout = setTimeout(() => {
-                startAutoRotate();
-            }, 1000); // 1 segundo de espera
+            clearTimeout(autoRotateTimeout);
+            autoRotateTimeout = setTimeout(startAutoRotate, 1000);
         }
 
-        // Inicia a rodar logo de caras
         startAutoRotate();
 
-        // Expõe uma forma de parar os timers se o utilizador fechar o modal
-        container.cleanup360 = () => {
-            stopAutoRotate();
-        };
-        // ------------------------------
+        container.cleanup360 = stopAutoRotate;
         
-        // Sensibilidade da rotação: quantos pixeis o dedo/rato tem de mover para avançar 1 frame
-        // Como tens 36 frames (1 a cada 10 graus), uma sensibilidade menor faz a peça rodar rápido
-        const sensitivity = 15; 
+        const sensitivity = 15;
 
-        // Rato (Desktop)
-        container.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.clientX;
-            container.style.cursor = 'grabbing';
-            // Oculta a dica ao começar a interagir para uma vista limpa
-            hintElement.style.opacity = '0';
-            stopAutoRotate(); // Pausa imediatamente e cancela delays pendentes
-        });
-
-        window.addEventListener('mouseup', () => {
-            if (isDragging) {
-                isDragging = false;
-                container.style.cursor = 'grab';
-                resumeAutoRotateDelay(); // Retoma rotação 1s após largar
-            }
-        });
-
-        window.addEventListener('mousemove', (e) => {
+        const handleMove = (currentX) => {
             if (!isDragging) return;
-            handleMove(e.clientX);
-        });
-
-        // Toque (Mobile)
-        container.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            startX = e.touches[0].clientX;
-            hintElement.style.opacity = '0';
-            stopAutoRotate(); // Pausa imediatamente e cancela delays pendentes
-        }, { passive: true });
-
-        window.addEventListener('touchend', () => {
-            if (isDragging) {
-                isDragging = false;
-                resumeAutoRotateDelay(); // Retoma rotação 1s após largar
-            }
-        });
-
-        window.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            handleMove(e.touches[0].clientX);
-            // Previne o scroll vertical da página enquanto rola o 360
-            e.preventDefault(); 
-        }, { passive: false });
-
-        // Função de Rotação Matemática Principal
-        function handleMove(currentX) {
             const diffX = currentX - startX;
 
             if (Math.abs(diffX) > sensitivity) {
-                // Direção: se mover para a esquerda (negativo), avança frame. 
-                // Se mover para a direita (positivo), recua frame.
-                const direction = diffX > 0 ? -1 : 1; 
-
-                // Atualiza o índice do frame
-                currentFrameIndex = currentFrameIndex + direction;
-
-                // Loop Lógico Infinito 
-                // (Se chegar depois da 35 volta à 0. Se recuar da 0 vai para a 35)
-                if (currentFrameIndex >= data.mediaCount) {
-                    currentFrameIndex = 0;
-                } else if (currentFrameIndex < 0) {
-                    currentFrameIndex = data.mediaCount - 1;
-                }
-
-                // Renderiza na tela a imagem pré-carregada do Array para ser instantâneo
+                const direction = diffX > 0 ? -1 : 1;
+                currentFrameIndex = (currentFrameIndex + direction + data.count) % data.count;
                 imgElement.src = images[currentFrameIndex].src;
-
-                // Restabelece o ponto de partida para calcular a próxima alteração
                 startX = currentX;
             }
-        }
+        };
+
+        const startDrag = (clientX) => {
+            isDragging = true;
+            startX = clientX;
+            container.style.cursor = 'grabbing';
+            hintElement.style.opacity = '0';
+            stopAutoRotate();
+        };
+
+        const endDrag = () => {
+            if (isDragging) {
+                isDragging = false;
+                container.style.cursor = 'grab';
+                resumeAutoRotateDelay();
+            }
+        };
+
+        // Eventos de Rato (Desktop)
+        container.addEventListener('mousedown', (e) => startDrag(e.clientX));
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('mousemove', (e) => handleMove(e.clientX));
+        document.addEventListener('mouseleave', endDrag);
+
+        // Eventos de Toque (Mobile)
+        container.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                startDrag(e.touches[0].clientX);
+            }
+        }, { passive: true });
+
+        container.addEventListener('touchend', endDrag);
+        container.addEventListener('touchcancel', endDrag);
+        
+        container.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                handleMove(e.touches[0].clientX);
+            }
+            e.preventDefault();
+        }, { passive: false });
     }
 }

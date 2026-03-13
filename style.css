@@ -980,3 +980,7 @@ html.lenis, html.lenis body {
 @keyframes spin { 
     100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } 
 }
+
+html.modal-open, body.modal-open {
+    overflow: hidden;
+}
