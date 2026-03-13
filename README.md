@@ -57,11 +57,16 @@ O modal evoluiu de uma simples caixa de texto para uma ficha técnica interativa
 
 ## Próximos Passos (Backlog)
 
-- [ ] **Efeitos Visuais Específicos:**
-    - [ ] **Montagem de Medalhas:** Animar a vista explodida dos componentes a unirem-se com o scroll.
+### Implementação do Portefólio e Dinamismo Rotativo
+Todo o detalhe arquitetónico desta evolução está documentado no ficheiro `PLANO_GALERIA.md`. O resumo da implementação a decorrer:
+- [ ] **Fase 1 (Estrutura de Assets):** Criar sub-pastas por serviço e migrar ficheiros numéricos (`01.webp`, `02.mp4`).
+- [ ] **Fase 2 (Auto-Discovery):** Javascript com injeção por *fallback* cego para descobrir os ficheiros de forma dinâmica, rotacionando a média semanalmente.
+- [ ] **Fase 3 (Cartões Dinâmicos):** Propagar o sistema da Fase 2 para os thumbnails dos serviços na *landing page*.
+- [ ] **Fase 4 (Showroom Portefólio):** Construir o Modal Global com Grelha, Filtros, Slideshow Interativo (Pinch-to-zoom) e Suporte nativo ao 360º.
+- [ ] **Fase 5 (Performance):** Controlo e *garbage collection* para não causar vazamento de memória com reproduções múltiplas no Lightbox.
 
-- [ ] **Expansão de Conteúdo:**
-    - [ ] Adicionar assets fotográficos e ficheiros 3D (`.glb` / `.webp` sequência) em falta para os restantes serviços (Torneamento, Repuxamento, Galvanização, etc.).
+- [ ] **Efeitos Visuais Específicos:**
+    - [ ] Montagem de Medalhas: Animar a vista explodida dos componentes a unirem-se com o scroll.
 
 - [ ] **Finalização e Deploy:**
     - [ ] Configurar Firebase Hosting para Testes Q/A.
