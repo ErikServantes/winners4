@@ -6,7 +6,7 @@ body, html {
     color: #FFFFFF;
     font-family: 'Helvetica Neue', sans-serif;
     /* Evita scroll horizontal causado pelos canvas */
-    overflow-y: scroll;
+    overflow-y: hidden; /* Scroll nativo escondido pelo Lenis, elimina a barra dupla */
 }
 
 /* --- PARTÍCULAS GLOBAIS (3D Depth) --- */
@@ -949,3 +949,24 @@ section:not([class*="theme-"]) .details-btn:hover {
     }
 }
 /* Move the logo container higher on the screen */\n#main-logo-container {\n    transform: translateY(-5vh); /* Moves the logo 5% of the viewport height upwards */\n}
+
+/* Esconder de vez barras de scroll nativas durante scroll virtual */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
