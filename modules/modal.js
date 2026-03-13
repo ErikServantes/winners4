@@ -7,7 +7,7 @@ const serviceData = {
         },
         materials: ['Latão', 'Ferro', 'Alumínio'],
         mediaType: 'image',
-        mediaSrc: 'assets/ESTAMPAGEM.webp'
+        mediaSrc: 'assets/estampagem/00.webp'
     },
     'corte-laser': {
         title: 'Corte de Laser',
@@ -17,7 +17,7 @@ const serviceData = {
         },
         materials: [],
         mediaType: 'image',
-        mediaSrc: 'assets/CORTE_LASER.webp'
+        mediaSrc: 'assets/corte-laser/00.webp'
     },
     'gravacao-laser': {
         title: 'Gravação a Laser',
@@ -27,7 +27,7 @@ const serviceData = {
         },
         materials: [],
         mediaType: 'image',
-        mediaSrc: 'assets/GRAV_LASER.webp'
+        mediaSrc: 'assets/gravacao-laser/00.webp'
     },
     'impressao-uv': {
         title: 'Impressão UV',
@@ -50,7 +50,7 @@ const serviceData = {
         },
         materials: ['PLA'],
         mediaType: '360',
-        mediaFolder: 'assets/AfonsoHenriques/',
+        mediaFolder: 'assets/impressao-3d/01/',
         mediaPrefix: 'frame_',
         mediaExtension: '.webp',
         mediaCount: 36
@@ -75,7 +75,7 @@ const serviceData = {
         },
         materials: ['Aços Ligas', 'Alumínio', 'Latão', 'Plásticos Técnicos (Delrin, Nylon)'],
         mediaType: 'image',
-        mediaSrc: 'assets/MAQ_CNC.webp'
+        mediaSrc: 'assets/maquinacao-cnc/00.webp'
     },
     'torneamento': {
         title: 'Torneamento',
