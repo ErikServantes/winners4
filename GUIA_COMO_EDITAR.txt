@@ -30,3 +30,74 @@ mediaFolder: 'assets/minha_pasta_360/', // A pasta com as fotos
 mediaPrefix: 'frame_', // O nome antes do numero (ex: foto_00.webp -> mete 'foto_')
 mediaExtension: '.webp', // Formato
 mediaCount: 36 // Quantas fotos?
+
+
+# GUIA DE ATUALIZAÇÃO DE MEDIA (SISTEMA "DROP & FORGET")
+
+Este guia explica como adicionar novas fotografias, vídeos e animações 360º ao site. O sistema foi desenhado para ser simples: basta colocar os ficheiros nas pastas corretas e o site atualiza-se sozinho.
+
+---
+
+### 1. Estrutura de Pastas
+
+Todo o conteúdo visual dos serviços está dentro da pasta \`assets/\`. Cada serviço tem a sua própria sub-pasta:
+- \`assets/estampagem/\`
+- \`assets/corte-laser/\`
+- \`assets/maquinacao-cnc/\`
+- ... e por aí fora.
+
+---
+
+### 2. A "Capa de Livro" (Ficheiro \`00\`)
+
+A imagem ou vídeo que aparece na página principal (no layout ZigZag) é o ficheiro \`00\`. Este é o seu "cartão de visita" e só deve ser mudado manualmente quando tiver uma imagem/vídeo de qualidade superior.
+
+- **Para usar uma IMAGEM:** Coloque o ficheiro na pasta do serviço com o nome \`00.webp\`.
+  - Exemplo: \`assets/estampagem/00.webp\`
+
+- **Para usar um VÍDEO:** Coloque o ficheiro na pasta do serviço com o nome \`00.mp4\`.
+  - Exemplo: \`assets/quinagem/00.mp4\`
+
+- **Para usar uma ANIMAÇÃO 360º:** Crie uma sub-pasta chamada \`00\` e coloque os 36 frames lá dentro.
+  - Exemplo: \`assets/impressao-3d/00/frame_00.webp\`
+
+O site deteta automaticamente o tipo de ficheiro e adapta a página principal.
+
+---
+
+### 3. Conteúdo Dinâmico (Ficheiros \`01\` a \`27\`)
+
+Os ficheiros que aparecem dentro do botão "Saber Mais" (e na futura galeria do Portefólio) são os que rodam semanalmente para dar vida ao site.
+
+- **Como funciona:** Basta "despejar" os seus ficheiros numerados de \`01\` a \`27\` dentro da pasta do serviço. **Não pode haver buracos na sequência** (se tem o \`03\`, tem de ter o \`01\` e o \`02\`).
+
+- **Exemplos de Nomenclatura:**
+  - \`assets/maquinacao-cnc/01.webp\` (uma foto)
+  - \`assets/maquinacao-cnc/02.mp4\` (um vídeo)
+  - \`assets/maquinacao-cnc/03/\` (uma pasta com os 36 frames para um 360º)
+
+O site irá automaticamente detetar quantos ficheiros existem e irá rodá-los de forma equitativa ao longo das semanas.
+
+---
+
+### 4. Recomendações Técnicas (Resolução e Tamanho)
+
+Para o site se manter extremamente rápido e profissional, os ficheiros devem ser otimizados ANTES de serem carregados.
+
+**A. Imagens (Formato \`.webp\`)**
+   - **Resolução Ideal:** 1920x1080 pixels (Full HD).
+   - **Compressão:** **OBRIGATÓRIO**. Use ferramentas online como [TinyPNG](https://tinypng.com/) ou [Squoosh](https://squoosh.app/).
+   - **Tamanho Máximo Alvo:** **< 300 KB**. Uma imagem para a web nunca deve ter Megabytes!
+
+**B. Vídeos (Formato \`.mp4\`)**
+   - **Resolução Ideal:** 1080p (1920x1080).
+   - **Duração:** Super curtos! Pensa em "GIFs de alta qualidade". Idealmente **entre 5 a 15 segundos**.
+   - **Codec:** Usar sempre o standard \`H.264\` para máxima compatibilidade.
+   - **Compressão:** **OBRIGATÓRIO**. Use um programa como o [HandBrake](https://handbrake.fr/).
+   - **Tamanho Máximo Alvo:** **< 2 MB**.
+
+**C. Sequências 360º (Pasta com 36 frames \`.webp\`)**
+   - **Contagem de Ficheiros:** **OBRIGATÓRIO** ter exatamente 36 ficheiros.
+   - **Nomenclatura:** **OBRIGATÓRIO** ir de \`frame_00.webp\` a \`frame_35.webp\`.
+   - **Resolução Ideal (por frame):** 1280x720 pixels (HD).
+   - **Tamanho Máximo Alvo (Total):** A pasta inteira não deve ultrapassar os **5 MB** (cada frame deve ter ~100-150 KB).

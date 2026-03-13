@@ -1,6 +1,6 @@
 
 // Função utilitária para obter a semana do ano (1 a 52)
-function getWeekNumber() {
+export function getWeekNumber() {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
     d.setDate(d.getDate() + 4 - (d.getDay() || 7));
@@ -161,7 +161,7 @@ async function testIndexExists(folderName, index) {
 
 // O Scanner Inteligente Otimizado (Binary Search / Procura Binária)
 // Assume que não existem "buracos" (ex: se há 01 e 03, obriga a haver 02)
-async function scanServiceMedia(folderName) {
+export async function scanServiceMedia(folderName) {
     if (window.mediaCache[folderName]) {
         console.log(`📦 [CACHE] Servico '${folderName}' já foi pesquisado. Encontrados: ${window.mediaCache[folderName].length} ficheiros.`);
         return window.mediaCache[folderName];
@@ -221,7 +221,7 @@ async function scanServiceMedia(folderName) {
 }
 
 // Fallback absoluto
-function getBaseMedia(folderName) {
+export function getBaseMedia(folderName) {
     return { type: 'image', src: `assets/${folderName}/00.webp` };
 }
 

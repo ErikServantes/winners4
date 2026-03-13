@@ -6,6 +6,7 @@ import { initializeGlobalParticles } from './modules/global-particles.js';
 import { initializeGlassEffect } from './modules/glass-effect.js';
 import { initializeHeroAnimation } from './modules/hero-animation.js';
 
+
 // Espera que o DOM esteja completamente carregado para executar o código
 document.addEventListener('DOMContentLoaded', function() {
     // Regista o plugin ScrollTrigger do GSAP
