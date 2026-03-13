@@ -317,8 +317,8 @@ section[class*="theme-glass"] .details-btn:hover {
     }
 
     #main-header {
-        top: 20px;
-        right: 20px;
+        top: 2px; /* Extremamente colado ao topo no telemóvel */
+        right: 10px;
     }
 
     .nav-contact-link {
