@@ -37,7 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
+            if (targetId === '#') return;
+            const targetElement = targetId === '#' ? null : document.querySelector(targetId);
             
             if (targetElement) {
                 // Usa o motor Lenis (que está disponível globalmente através do módulo smooth-scroll)
