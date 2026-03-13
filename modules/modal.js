@@ -335,6 +335,11 @@ export function initializeModal() {
 
                 // Mostra o modal
                 modal.classList.add('visible');
+                
+                // Pára o Lenis para evitar scroll duplo enquanto o modal está aberto
+                if (window.lenis) {
+                    window.lenis.stop();
+                }
 
                 // --- INICIALIZAÇÃO DO VISUALIZADOR 360º (SE APLICÁVEL) ---
                 if (data.mediaType === '360') {
@@ -346,6 +351,11 @@ export function initializeModal() {
 
     function closeModal() {
         modal.classList.remove('visible');
+        
+        // Retoma o scroll da página
+        if (window.lenis) {
+            window.lenis.start();
+        }
         
         // Se houver um 360 viewer ativo, para o seu timer/animação de fundo
         const viewerContainer = document.querySelector('.viewer-360-container');
