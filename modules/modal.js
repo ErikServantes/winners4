@@ -285,20 +285,15 @@ export async function initializeModal() {
                 openModalUI();
                 
                 if (service !== 'contacto') {
-                    // --- ALTERAÇÃO PRINCIPAL AQUI ---
-                    const availableMedia = getServiceMedia(service); // Usa o inventário
-                    let discoveredMedia = null;
+                    const availableMedia = getServiceMedia(service);
+                    let discoveredMedia = getBaseMedia(data.folder);
 
                     if (availableMedia.length > 0) {
                         const week = getWeekNumber();
                         const rotationIndex = (week - 1) % availableMedia.length;
                         discoveredMedia = availableMedia[rotationIndex];
-                        console.log(`📅 [ROTAÇÃO] Semana ${week}. A escolher do INVENTÁRIO o ficheiro índice ${rotationIndex}:`, discoveredMedia);
-                    } else {
-                        console.log(`⚠️ [FALLBACK] Nenhum ficheiro extra no INVENTÁRIO para '${data.folder}'. A mostrar o 00.webp de segurança.`);
-                        discoveredMedia = getBaseMedia(data.folder);
                     }
-
+                    
                     const container = document.getElementById('dynamic-media-container');
                     if (container && discoveredMedia) {
                         if (discoveredMedia.type === 'image') {
@@ -309,7 +304,13 @@ export async function initializeModal() {
                             container.classList.add('viewer-360-container');
                             container.style.cursor = 'grab';
                             container.style.userSelect = 'none';
-                            container.innerHTML = `<img id="viewer-360-img" src="${discoveredMedia.folder}${discoveredMedia.prefix}00${discoveredMedia.extension}" style="width: 100%; height: 100%; object-fit: contain; max-height: 80vh; pointer-events: none;" alt="Visualização 360º"><div class="viewer-360-hint"></div>`;
+                            // --- CORREÇÃO AQUI ---
+                            container.innerHTML = `
+                                <img id="viewer-360-img" src="${discoveredMedia.folder}${discoveredMedia.prefix}00${discoveredMedia.extension}" style="width: 100%; height: 100%; object-fit: contain; max-height: 80vh; pointer-events: none;" alt="Visualização 360º">
+                                <div class="viewer-360-hint" style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #d4af37; font-size: 0.9rem; pointer-events: none; opacity: 0.8; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                                    A carregar interação...
+                                </div>
+                            `;
                             init360Viewer(discoveredMedia);
                         }
                     }
@@ -350,7 +351,7 @@ function init360Viewer(data) {
     const images = [];
     let loadedCount = 0;
     
-    hintElement.innerHTML = `<span class="material-symbols-outlined">sync</span>A Carregar 360º...`;
+    // O HTML já tem o texto de 'A carregar', por isso não precisamos de o redefinir aqui
 
     for (let i = 0; i < data.count; i++) {
         const img = new Image();
@@ -359,7 +360,7 @@ function init360Viewer(data) {
         img.onload = () => {
             loadedCount++;
             if (loadedCount === data.count) {
-                hintElement.innerHTML = `<span class="material-symbols-outlined">360</span>Arraste para rodar`;
+                hintElement.innerHTML = `<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px;">360</span>Arraste para rodar`;
                 setupInteraction();
             }
         };
