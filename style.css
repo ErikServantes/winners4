@@ -938,7 +938,8 @@ section:not([class*="theme-"]) .details-btn:hover {
 #hero-subtitle {
     font-size: 1.2rem; /* Was around 2rem or inheriting large sizes, now 40% smaller */
     letter-spacing: 2px;
-    margin-top: 60px; /* Increased distance from the logo */
+    /* Distância equivalente a 1.5x a altura da linha (line-height é 1.5, logo 1.5 * 1.5 = 2.25em) */
+    margin-top: 2.25em;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.7); /* Slightly muted to let the golden logo shine */
 }
@@ -946,10 +947,14 @@ section:not([class*="theme-"]) .details-btn:hover {
 @media (max-width: 768px) {
     #hero-subtitle {
         font-size: 0.9rem; /* Even smaller on mobile */
-        margin-top: 30px;
+        /* Como usamos 'em', a margem encolhe automaticamente com a fonte no telemóvel! */
+        margin-top: 2.25em; 
     }
 }
-/* Move the logo container higher on the screen */\n#main-logo-container {\n    transform: translateY(-5vh); /* Moves the logo 5% of the viewport height upwards */\n}
+/* O logótipo sobe de igual forma em todo o lado para centralizar o grupo (Logo+Texto) verticalmente */
+#main-logo-container {
+    transform: translateY(-5vh);
+}
 
 /* Esconder de vez barras de scroll nativas durante scroll virtual */
 html.lenis, html.lenis body {
