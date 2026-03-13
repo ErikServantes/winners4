@@ -132,11 +132,11 @@ const serviceData = {
     },
     'contacto': {
         title: 'Entre em Contacto',
-        address: 'Rua do Barqueiro 754, 4805-016 Barco',
-        address_link: 'https://www.google.com/maps/search/?api=1&query=Rua+do+Barqueiro+754,+4805-016+Barco',
+        address: 'Rua do Barqueiro 754, 4805-016 Barco - GMR',
+        address_link: 'https://www.google.com/maps/search/?api=1&query=Rua+do+Barqueiro+754,+4805-016+Barco+-+GMR',
         phone: '253 576 251',
         phone_link: 'tel:+351253576251',
-        email: 'geral@4winners.pt',
+        email: 'geral@4winners.com.pt',
         schedule: [
             'Segunda a Sexta: 08:30 – 18:30',
             'Sábado: 09:00 – 12:30',

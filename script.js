@@ -35,15 +35,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // O Lenis trata do scroll, mas precisamos de intercetar os cliques
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
-            e.preventDefault();
             const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            const targetElement = targetId === '#' ? null : document.querySelector(targetId);
             
-            if (targetElement) {
-                // Usa o motor Lenis (que está disponível globalmente através do módulo smooth-scroll)
-                // para fazer o scroll suave até ao destino
-                window.lenis?.scrollTo(targetElement);
+            // Ignora links que são apenas "#" (para os modais não serem afetados)
+            if (!targetId || targetId === '#') return; 
+            
+            e.preventDefault();
+            
+            try {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.lenis?.scrollTo(targetElement);
+                }
+            } catch (err) {
+                // Se o utilizador clicar num anchor inválido, ignora silenciosamente
+                // em vez de rebentar com o erro 'querySelector' no terminal
             }
         });
     });
