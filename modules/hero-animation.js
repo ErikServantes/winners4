@@ -16,8 +16,8 @@ export function initializeHeroAnimation() {
     // Força o container principal a ficar visível antes da animação GSAP sequer tocar nele
     // A MAGIA DA PROFUNDIDADE ESTAVA AQUI: Sem 'perspective', o 3D fica espalmado!
     const logoContainer = document.getElementById('main-logo-container');
-    gsap.set(logoContainer, { perspective: 1000 });
-    gsap.set(svgElement, { opacity: 1, visibility: 'visible', overflow: 'visible' });
+    gsap.set(logoContainer, { perspective: 1000, autoAlpha: 1 });
+    gsap.set(svgElement, { autoAlpha: 1, overflow: 'visible' });
 
     // Selecionar todos os pedaços (paths) que compõem o logotipo
     const paths = Array.from(svgElement.querySelectorAll('.logo-part'));

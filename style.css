@@ -937,7 +937,7 @@ section:not([class*="theme-"]) .details-btn:hover {
 #hero-subtitle {
     font-size: 1.2rem; /* Was around 2rem or inheriting large sizes, now 40% smaller */
     letter-spacing: 2px;
-    margin-top: 40px; /* More distance from the logo */
+    margin-top: 60px; /* Increased distance from the logo */
     font-weight: 300;
     color: rgba(255, 255, 255, 0.7); /* Slightly muted to let the golden logo shine */
 }
@@ -948,3 +948,4 @@ section:not([class*="theme-"]) .details-btn:hover {
         margin-top: 30px;
     }
 }
+/* Move the logo container higher on the screen */\n#main-logo-container {\n    transform: translateY(-5vh); /* Moves the logo 5% of the viewport height upwards */\n}
