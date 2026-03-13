@@ -468,7 +468,7 @@ section:not([class*="theme-"]) .details-btn:hover {
 .modal-text-section {
     /* Box-sizing previne que o padding se some aos 50% de largura no Flexbox, que causava o corte de texto */
     box-sizing: border-box; 
-    padding: 50px 40px;
+    padding: 40px 30px;
     display: flex;
     flex-direction: column;
     justify-content: center; /* Centra o texto verticalmente */
@@ -493,7 +493,7 @@ section:not([class*="theme-"]) .details-btn:hover {
 }
 
 .modal-description {
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.7;
     color: #cccccc;
 }
@@ -605,9 +605,9 @@ section:not([class*="theme-"]) .details-btn:hover {
     
     /* override some inherited fullscreen properties */
     height: auto; /* let it adapt to content + margin */
-    min-height: 100vh; /* at least full height */
+    min-height: 50vh; /* at least full height */
     box-sizing: border-box;
-    padding-top: 80px; /* Leave space for header */
+    padding-top: 40px; padding-bottom: 40px; /* Leave space for header */
 }
 
 /* Modificadores para a direção do ZigZag */
@@ -651,7 +651,7 @@ section:not([class*="theme-"]) .details-btn:hover {
     /* SOBREPOSIÇÃO: O painel tem margem negativa para "montar" em cima da imagem */
     margin-left: -10%; 
     z-index: 10; /* Fica por cima da imagem */
-    padding: 50px 40px;
+    padding: 40px 30px;
     text-align: left; /* No split layout, o texto fica melhor alinhado à esquerda do que ao centro */
 }
 
@@ -668,9 +668,9 @@ section:not([class*="theme-"]) .details-btn:hover {
 }
 
 .layout-split .glass-panel p {
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.6;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     text-align: left;
 }
 
@@ -697,12 +697,12 @@ section:not([class*="theme-"]) .details-btn:hover {
         padding: 0 5%; /* Mais controlável que pixels fixos */
         justify-content: center;
         align-items: center;
-        min-height: 90vh; /* Para preencher quase todo o ecrã mas deixar respirar */
+        min-height: 80vh; /* Para preencher quase todo o ecrã mas deixar respirar */
     }
 
     .layout-split .section-media {
         width: 100%;
-        height: 40vh; /* Um pouco mais alta */
+        height: 35vh; /* Um pouco mais alta */
         min-height: 280px;
         border-radius: 12px; /* Em mobile, arredondar tudo fica mais "Card" style */
         /* O truque do Feather/Fading edge na base da imagem usando pseudo-elemento (mask) */
@@ -716,7 +716,7 @@ section:not([class*="theme-"]) .details-btn:hover {
         margin: 0;
         /* Como a imagem tem o mask a esfumar em baixo, o painel entra de forma natural */
         border-radius: 12px;
-        padding: 40px 25px;
+        padding: 25px 20px;
         text-align: center; 
         z-index: 10;
         /* Limpar a margem do zigzag para garantir que fica centrado */
@@ -733,13 +733,13 @@ section:not([class*="theme-"]) .details-btn:hover {
 
 /* Ensure the first service section does not bleed into the hero section */
 #corte-laser {
-    margin-top: 20vh; /* creates space so it doesn't peak out when at the top */
+    margin-top: 10vh; /* creates space so it doesn't peak out when at the top */
 }
 
 /* On mobile, we might need even more separation since elements stack up tall */
 @media (max-width: 768px) {
     #corte-laser {
-        margin-top: 15vh;
+        margin-top: 10vh;
     }
 }
 
@@ -770,7 +770,7 @@ section:not([class*="theme-"]) .details-btn:hover {
 .tech-specs-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     background: rgba(255, 255, 255, 0.02);
     border-radius: 6px;
     overflow: hidden;
