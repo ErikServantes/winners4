@@ -346,6 +346,12 @@ export function initializeModal() {
 
     function closeModal() {
         modal.classList.remove('visible');
+        
+        // Se houver um 360 viewer ativo, para o seu timer/animação de fundo
+        const viewerContainer = document.querySelector('.viewer-360-container');
+        if (viewerContainer && typeof viewerContainer.cleanup360 === 'function') {
+            viewerContainer.cleanup360();
+        }
     }
 
     // Fecha o modal ao clicar fora dele
@@ -361,6 +367,9 @@ function init360Viewer(data) {
     const container = document.querySelector('.viewer-360-container');
     const imgElement = document.getElementById('viewer-360-img');
     const hintElement = document.querySelector('.viewer-360-hint');
+    
+    // Função global de limpeza (útil se o modal fechar)
+    container.cleanup360 = null;
     if (!container || !imgElement) return;
 
     // Pré-carregamento das imagens em background para evitar soluços (flickering)
@@ -391,6 +400,48 @@ function init360Viewer(data) {
         let startX = 0;
         let currentFrameIndex = 0;
         
+        // --- LÓGICA DE AUTO-ROTAÇÃO ---
+        let autoRotateInterval = null;
+        let isAutoRotating = true;
+        let autoRotateTimeout = null;
+
+        // Inicia a rotação automática a 15fps
+        function startAutoRotate() {
+            isAutoRotating = true;
+            if (autoRotateInterval) clearInterval(autoRotateInterval);
+            autoRotateInterval = setInterval(() => {
+                if (isAutoRotating && !isDragging) {
+                    currentFrameIndex++;
+                    if (currentFrameIndex >= data.mediaCount) currentFrameIndex = 0;
+                    imgElement.src = images[currentFrameIndex].src;
+                }
+            }, 60); // 60ms ≈ 16 FPS
+        }
+
+        // Para temporariamente a auto-rotação quando o utilizador interagir
+        function stopAutoRotate() {
+            isAutoRotating = false;
+            if (autoRotateInterval) clearInterval(autoRotateInterval);
+            if (autoRotateTimeout) clearTimeout(autoRotateTimeout);
+        }
+        
+        // Retoma a auto-rotação após um atraso (1 segundo)
+        function resumeAutoRotateDelay() {
+            if (autoRotateTimeout) clearTimeout(autoRotateTimeout);
+            autoRotateTimeout = setTimeout(() => {
+                startAutoRotate();
+            }, 1000); // 1 segundo de espera
+        }
+
+        // Inicia a rodar logo de caras
+        startAutoRotate();
+
+        // Expõe uma forma de parar os timers se o utilizador fechar o modal
+        container.cleanup360 = () => {
+            stopAutoRotate();
+        };
+        // ------------------------------
+        
         // Sensibilidade da rotação: quantos pixeis o dedo/rato tem de mover para avançar 1 frame
         // Como tens 36 frames (1 a cada 10 graus), uma sensibilidade menor faz a peça rodar rápido
         const sensitivity = 15; 
@@ -402,12 +453,14 @@ function init360Viewer(data) {
             container.style.cursor = 'grabbing';
             // Oculta a dica ao começar a interagir para uma vista limpa
             hintElement.style.opacity = '0';
+            stopAutoRotate(); // Pausa imediatamente e cancela delays pendentes
         });
 
         window.addEventListener('mouseup', () => {
             if (isDragging) {
                 isDragging = false;
                 container.style.cursor = 'grab';
+                resumeAutoRotateDelay(); // Retoma rotação 1s após largar
             }
         });
 
@@ -421,10 +474,14 @@ function init360Viewer(data) {
             isDragging = true;
             startX = e.touches[0].clientX;
             hintElement.style.opacity = '0';
+            stopAutoRotate(); // Pausa imediatamente e cancela delays pendentes
         }, { passive: true });
 
         window.addEventListener('touchend', () => {
-            isDragging = false;
+            if (isDragging) {
+                isDragging = false;
+                resumeAutoRotateDelay(); // Retoma rotação 1s após largar
+            }
         });
 
         window.addEventListener('touchmove', (e) => {
