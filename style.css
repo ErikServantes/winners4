@@ -5,8 +5,9 @@ body, html {
     overflow-x: hidden;
     color: #FFFFFF;
     font-family: 'Helvetica Neue', sans-serif;
-    /* Evita scroll horizontal causado pelos canvas */
-    overflow-y: hidden; /* Scroll nativo escondido pelo Lenis, elimina a barra dupla */
+    /* IMPORTANTE: Em mobile (onde o Lenis desativa o smooth e usa o scroll nativo), o overflow-y não pode ser hidden! */
+    overflow-y: auto; 
+    overflow-x: hidden;
 }
 
 /* --- PARTÍCULAS GLOBAIS (3D Depth) --- */
