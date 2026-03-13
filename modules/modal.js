@@ -181,7 +181,7 @@ export function initializeModal() {
                 } else if (data.mediaType === '360') {
                     // Visualizador 360º de Imagens (Sprite/Sequence)
                     mediaHTML = `
-                        <div class="modal-media-wrapper viewer-360-container" style="background-color: #000; position: relative; cursor: grab; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                        <div class="modal-media-wrapper viewer-360-container" style="background-color: #000; position: relative; cursor: grab; overflow: hidden; display: flex; justify-content: center; align-items: center; user-select: none; -webkit-user-select: none;">
                             <img id="viewer-360-img" src="${data.mediaFolder}${data.mediaPrefix}00${data.mediaExtension}" style="width: 100%; height: 100%; object-fit: contain; max-height: 80vh; pointer-events: none;" alt="Visualização 360º">
                             
                             <!-- Overlay UI para indicar interação -->
