@@ -323,12 +323,14 @@ export async function initializeModal() {
         modal.classList.add('visible');
         document.documentElement.classList.add('modal-open');
         document.body.classList.add('modal-open');
+        if (window.lenis) window.lenis.stop();
     }
 
     function closeModal() {
         modal.classList.remove('visible');
         document.documentElement.classList.remove('modal-open');
         document.body.classList.remove('modal-open');
+        if (window.lenis) window.lenis.start();
         const viewerContainer = document.querySelector('.viewer-360-container');
         if (viewerContainer && typeof viewerContainer.cleanup360 === 'function') {
             viewerContainer.cleanup360();
