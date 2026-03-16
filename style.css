@@ -52,27 +52,50 @@ body {
     position: fixed;
     top: 60px;
     left: 0;
-    z-index: 9999;
-    /* Transições mais lentas e suaves sem 'saltos' bruscos (easing linear/ease-in-out) */
-    transition: top 1s ease-in-out, padding 1s ease-in-out, background-color 1s ease-in-out, box-shadow 1s ease-in-out, border-color 1s ease-in-out;
+    z-index: 9900;
+    
+    /* Configuração de transições "a sair" (quando se volta ao topo) */
+    transition: 
+        top 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+        padding 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+        background-color 0.4s ease, 
+        backdrop-filter 0.4s ease,
+        -webkit-backdrop-filter 0.4s ease,
+        box-shadow 0.4s ease, 
+        border-color 0.4s ease;
+        
     align-items: center;
     padding: 0 50px;
     box-sizing: border-box;
-    /* Começa transparente */
     background-color: rgba(5, 5, 5, 0);
     border-bottom: 1px solid rgba(255, 255, 255, 0);
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
-    /* Manter o blur pronto a atuar se a cor mudar */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    
+    /* Retirar o blur no estado inicial para que o vidro seja INEXISTENTE */
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
 }
 
 #main-header.header-scrolled {
     top: 0;
     padding-top: 10px;
     padding-bottom: 10px;
-    /* Fade in suave das cores, bordas e sombras do vidro */
+    
+    /* Configuração de transições "a entrar" (quando se faz scroll down)
+       O SEGREDO: O Top/Padding começam de imediato e demoram 0.8s a subir.
+       As cores, o vidro e as sombras só começam DEPOIS (delay de 0.6s) e duram 0.8s a aparecer. */
+    transition: 
+        top 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+        padding 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+        background-color 0.8s ease 0.6s, 
+        backdrop-filter 0.8s ease 0.6s,
+        -webkit-backdrop-filter 0.8s ease 0.6s,
+        box-shadow 0.8s ease 0.6s, 
+        border-color 0.8s ease 0.6s;
+        
     background-color: rgba(5, 5, 5, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-bottom-color: rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
@@ -80,8 +103,7 @@ body {
 /* Forçar os botões no cabeçalho a perderem a margem extra do .details-btn */
 #main-header .details-btn {
     margin-top: 0; 
-    /* Transição dos botões sincronizada com a barra */
-    transition: all 1s ease-in-out;
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Encolher e tornar muito mais discretos os botões após o scroll */
