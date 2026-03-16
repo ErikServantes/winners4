@@ -156,8 +156,8 @@ function renderGrid(gridContainer, filter) {
                     div.appendChild(video);
                     
                     const icon = document.createElement('span');
-                    icon.className = 'item-type-icon material-symbols-outlined';
-                    icon.textContent = 'play_circle';
+                    icon.className = 'item-type-icon';
+                    icon.textContent = '[ > ]';
                     div.appendChild(icon);
                 } else if (item.type === '360') {
                     const img = document.createElement('img');
@@ -167,8 +167,8 @@ function renderGrid(gridContainer, filter) {
                     div.appendChild(img);
                     
                     const icon = document.createElement('span');
-                    icon.className = 'item-type-icon material-symbols-outlined';
-                    icon.textContent = '360';
+                    icon.className = 'item-type-icon';
+                    icon.textContent = '[ 360 ]';
                     div.appendChild(icon);
                 }
 

@@ -1159,11 +1159,19 @@ html.modal-open, body.modal-open {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(0,0,0,0.6);
-    padding: 5px;
-    border-radius: 50%;
-    font-size: 1.2rem;
+    background: rgba(5, 5, 5, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 4px 8px;
+    border-radius: 0; /* Reto e mecânico */
     pointer-events: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 
