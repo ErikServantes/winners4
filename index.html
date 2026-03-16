@@ -15,6 +15,7 @@
     <canvas id="particles-fg"></canvas>
 
     <header id="main-header">
+        <a href="#" class="nav-contact-link" id="portfolio-btn">PORTEFÓLIO</a>
         <a href="#" class="nav-contact-link details-btn" data-service="contacto">CONTACTO</a>
     </header>
 
@@ -246,6 +247,17 @@ viewBox="0 0 4215.48 1393.34"
     </main>
 
     <!-- Modal Structure -->
+    <!-- Portfolio Modal Global -->
+    <div id="portfolio-modal" class="modal-overlay">
+        <div class="modal-content portfolio-content">
+            <button class="modal-close portfolio-close">&times;</button>
+            <h2 id="portfolio-title">Portefólio Global</h2>
+            <div id="portfolio-filters" class="portfolio-filters"></div>
+            <div id="portfolio-grid" class="portfolio-grid"></div>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
     <div id="details-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close">&times;</button>
@@ -262,7 +274,7 @@ viewBox="0 0 4215.48 1393.34"
     <script src="vendor/ScrollTrigger.min.js"></script>
     
     <!-- Custom Script -->
-    <script type="module" src="script.js?v=1.47"></script>
+    <script type="module" src="script.js?v=1.48"></script>
 
     <!-- Google Model Viewer para 3D nativo -->
     <script type="module" src="vendor/model-viewer.min.js"></script>

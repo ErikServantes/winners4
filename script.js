@@ -2,6 +2,7 @@
 import { initializeSmoothScroll } from './modules/smooth-scroll.js';
 import { initializeScrollytelling } from './modules/scrollytelling.js';
 import { initializeModal } from './modules/modal.js';
+import { initializePortfolio } from './modules/portfolio.js';
 import { initializeGlobalParticles } from './modules/global-particles.js';
 import { initializeGlassEffect } from './modules/glass-effect.js';
 import { initializeHeroAnimation } from './modules/hero-animation.js';
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializa os restantes módulos
     initializeScrollytelling();
     initializeModal();
+    initializePortfolio();
     // Inicia o novo sistema de partículas 3D globais em vez do laser isolado
     initializeGlobalParticles();
 

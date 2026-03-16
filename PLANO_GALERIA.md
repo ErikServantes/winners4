@@ -47,14 +47,14 @@ O sistema assenta em três pilares:
 *   **Tarefas:**
     1.  Cada `.service-card` carrega dinamicamente a sua imagem de capa (`00.webp`) correspondente, servindo de base para o dinamismo futuro.
 
-### Fase 4: Showroom de Portefólio - Modal Global **[A FAZER]**
+### Fase 4: Showroom de Portefólio - Modal Global **[EM PROGRESSO]**
 
 *   **Ação:** Construir o modal de portefólio global, que agrega toda a media de todos os serviços numa única interface.
 *   **Tarefas:**
-    1.  **Ponto de Acesso:** Adicionar um link/botão "Portefólio" no cabeçalho (`#main-header`) do site.
-    2.  **Estrutura do Modal:** Criar o HTML e CSS para um novo modal de ecrã inteiro (`#portfolio-modal`).
-    3.  **Grelha de Media:** No arranque, ler o `inventory.json` e construir dinamicamente uma grelha (`grid`) com todas as miniaturas de todos os serviços.
-    4.  **Filtros de Categoria:** Adicionar botões no topo do modal para filtrar a grelha (ex: "Todos", "Estampagem", "Maquinação CNC", etc.).
+    1.  **Ponto de Acesso:** Adicionar um link/botão "Portefólio" no cabeçalho (`#main-header`) do site. **[CONCLUÍDO]**
+    2.  **Estrutura do Modal:** Criar o HTML e CSS para um novo modal de ecrã inteiro (`#portfolio-modal`). **[CONCLUÍDO]**
+    3.  **Grelha de Media:** No arranque, ler o `inventory.json` e construir dinamicamente uma grelha (`grid`) com todas as miniaturas de todos os serviços. **[CONCLUÍDO]**
+    4.  **Filtros de Categoria:** Adicionar botões no topo do modal para filtrar a grelha (ex: "Todos", "Estampagem", "Maquinação CNC", etc.). **[CONCLUÍDO]**
     5.  **Implementar o Lightbox:**
         -   Ao clicar numa miniatura da grelha, abrir um visualizador "lightbox" em ecrã inteiro.
         -   Se for uma imagem, mostrar a imagem. Se for um vídeo, mostrar o vídeo. Se for um 360, **o lightbox deve tornar-se no visualizador 360 interativo**.
