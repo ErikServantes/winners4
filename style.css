@@ -46,13 +46,57 @@ body {
 
 /* --- Fixed Header Minimalista --- */
 #main-header {
-    width: calc(100% - 100px);
+    width: 100%;
     display: flex;
     justify-content: space-between;
     position: fixed;
-    top: 40px;
-    left: 50px;
-    z-index: 9999; /* Forçado para o topo absoluto (abaixo apenas do modal) */
+    top: 60px;
+    left: 0;
+    z-index: 9999;
+    /* Transições mais lentas e suaves sem 'saltos' bruscos (easing linear/ease-in-out) */
+    transition: top 1s ease-in-out, padding 1s ease-in-out, background-color 1s ease-in-out, box-shadow 1s ease-in-out, border-color 1s ease-in-out;
+    align-items: center;
+    padding: 0 50px;
+    box-sizing: border-box;
+    /* Começa transparente */
+    background-color: rgba(5, 5, 5, 0);
+    border-bottom: 1px solid rgba(255, 255, 255, 0);
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
+    /* Manter o blur pronto a atuar se a cor mudar */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+#main-header.header-scrolled {
+    top: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    /* Fade in suave das cores, bordas e sombras do vidro */
+    background-color: rgba(5, 5, 5, 0.65);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Forçar os botões no cabeçalho a perderem a margem extra do .details-btn */
+#main-header .details-btn {
+    margin-top: 0; 
+    /* Transição dos botões sincronizada com a barra */
+    transition: all 1s ease-in-out;
+}
+
+/* Encolher e tornar muito mais discretos os botões após o scroll */
+#main-header.header-scrolled .details-btn {
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+#main-header.header-scrolled .details-btn:hover {
+    color: #000;
+    background-color: #d4af37;
+    border-color: #d4af37;
 }
 
 .nav-contact-link {
@@ -317,12 +361,18 @@ section[class*="theme-glass"] .details-btn:hover {
     }
 
     #main-header {
-        width: calc(100% - 20px);
+        width: 100%;
         display: flex;
         justify-content: space-between;
-        top: 20px;
-        left: 10px;
-        right: 10px;
+        top: 40px;
+        left: 0;
+        padding: 0 20px;
+    }
+
+    #main-header.header-scrolled {
+        top: 0;
+        padding-top: 8px;
+        padding-bottom: 8px;
     }
 
     .nav-contact-link {

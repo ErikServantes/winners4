@@ -29,6 +29,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicia o novo sistema de partículas 3D globais em vez do laser isolado
     initializeGlobalParticles();
 
+
+
+    // --- CABEÇALHO FROSTED GLASS DINÂMICO SUAVE ---
+    const header = document.getElementById('main-header');
+    if (header) {
+        // Removemos o trigger de "onEnter/onLeave" brusco
+        // Em vez disso, deixamos que o GSAP faça a transição de classe de forma muito longa 
+        // e suave durante a altura completa da secção Hero
+        ScrollTrigger.create({
+            trigger: '#hero-4winners',
+            start: 'top -10%', // Começa a transição quase desde o início do scroll
+            end: 'bottom top', // Termina a transição quando o hero acaba
+            scrub: true, // Sincroniza a transição com a roda do rato (efeito escorregar e fade-in colado ao scroll)
+            onUpdate: (self) => {
+                // Em vez de alternar a classe abruptamente, calculamos o progresso.
+                // Mas, como queremos o comportamento do CSS, a forma mais elegante de um "fade-in suave" 
+                // baseado no ecrã é usar classes, mas com durações muito longas no CSS (que já configurámos para 1s).
+                // Alternativa: Se o scroll passar de 50%, ativamos a classe. Como a transição CSS é longa (1s), parece que derrete para o sítio.
+                if (self.progress > 0.4) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+            }
+        });
+    }
+
     initializeGlassEffect();
     initializeHeroAnimation();
 
