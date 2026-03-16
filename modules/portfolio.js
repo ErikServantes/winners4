@@ -206,7 +206,9 @@ function openLightbox(index) {
 
     // Limpar área (para matar vídeos antigos e libertar memória)
     contentArea.innerHTML = '';
-    caption.textContent = `${serviceName} - ${index + 1} de ${lightboxItems.length}`;
+    
+    // Adiciona o toque de consola técnica (CNC) na legenda: 
+    caption.textContent = `SRV::${serviceName.toUpperCase()} / PRJ::[${String(index + 1).padStart(3, '0')}] // LDD::${lightboxItems.length.toString().padStart(3, '0')}`;
 
     if (itemData.item.type === 'image') {
         const img = document.createElement('img');
@@ -230,13 +232,13 @@ function openLightbox(index) {
         container.style.height = '80vh';
         container.style.maxWidth = '1000px';
         container.style.position = 'relative';
-        container.style.cursor = 'grab';
+        container.style.cursor = 'crosshair'; /* Mira laser a condizer com tema técnico */
         container.style.userSelect = 'none';
         
         container.innerHTML = `
             <img id="lightbox-360-img" src="${itemData.item.folder}frame_00.webp" style="width: 100%; height: 100%; object-fit: contain; pointer-events: none;" alt="Visualização 360º">
-            <div class="viewer-360-hint" style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #d4af37; font-size: 1.2rem; pointer-events: none; opacity: 0.8; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
-                A carregar interação...
+            <div class="viewer-360-hint" style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #d4af37; font-family: monospace; font-size: 0.9rem; letter-spacing: 2px; pointer-events: none; opacity: 0.8; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                &gt; SISTEMA DE ANÁLISE 360 PRONTO // ARRASTE PARA EXAMINAR &lt;
             </div>
         `;
         contentArea.appendChild(container);
@@ -245,7 +247,7 @@ function openLightbox(index) {
 
     lightbox.classList.add('visible');
     
-    // Atualizar visibilidade das setas
+    // Atualizar visibilidade das setas (os nossos novos botões CNC)
     document.querySelector('.lightbox-prev').style.display = currentLightboxIndex > 0 ? 'flex' : 'none';
     document.querySelector('.lightbox-next').style.display = currentLightboxIndex < lightboxItems.length - 1 ? 'flex' : 'none';
 }
