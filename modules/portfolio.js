@@ -72,111 +72,76 @@ function closePortfolio(modal) {
 }
 
 function renderFilters(filtersContainer, gridContainer) {
+    // Não precisamos de botões de filtro, a galeria será contínua
     filtersContainer.innerHTML = '';
-    
-    // "Todos" button
-    const allBtn = document.createElement('button');
-    allBtn.className = 'portfolio-filter-btn active';
-    allBtn.textContent = 'Todos';
-    allBtn.dataset.filter = 'todos';
-    allBtn.addEventListener('click', () => {
-        setActiveFilter(filtersContainer, 'todos');
-        renderGrid(gridContainer, 'todos');
-    });
-    filtersContainer.appendChild(allBtn);
-
-    // Dynamic service buttons
-    for (const folder in inventoryCache) {
-        const data = inventoryCache[folder];
-        if (data && data.length > 0) {
-            const btn = document.createElement('button');
-            btn.className = 'portfolio-filter-btn';
-            btn.textContent = serviceData[folder] ? serviceData[folder].title : folder;
-            btn.dataset.filter = folder;
-            btn.addEventListener('click', () => {
-                setActiveFilter(filtersContainer, folder);
-                renderGrid(gridContainer, folder);
-            });
-            filtersContainer.appendChild(btn);
-        }
-    }
-}
-
-function setActiveFilter(filtersContainer, activeFilter) {
-    const buttons = filtersContainer.querySelectorAll('.portfolio-filter-btn');
-    buttons.forEach(btn => {
-        if (btn.dataset.filter === activeFilter) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    });
+    filtersContainer.style.display = 'none'; // Esconder o contentor
 }
 
 function renderGrid(gridContainer, filter) {
     gridContainer.innerHTML = ''; // Limpar grelha
 
-    const items = [];
+    // Percorrer cada serviço no inventário
+    for (const folder in inventoryCache) {
+        const data = inventoryCache[folder];
+        
+        // Se este serviço tiver itens no portefólio
+        if (Array.isArray(data) && data.length > 0) {
+            
+            // 1. Criar o cabeçalho/título da categoria
+            const categoryHeader = document.createElement('h3');
+            categoryHeader.className = 'portfolio-category-title';
+            categoryHeader.textContent = serviceData[folder] ? serviceData[folder].title : folder;
+            gridContainer.appendChild(categoryHeader);
 
-    if (filter === 'todos') {
-        for (const folder in inventoryCache) {
-            const data = inventoryCache[folder];
-            if (Array.isArray(data)) {
-                data.forEach(item => items.push({ folder, item }));
-            }
-        }
-    } else {
-        const data = inventoryCache[filter];
-        if (Array.isArray(data)) {
-            data.forEach(item => items.push({ folder: filter, item }));
+            // 2. Criar a grelha específica para esta categoria
+            const categoryGrid = document.createElement('div');
+            categoryGrid.className = 'portfolio-category-grid';
+            gridContainer.appendChild(categoryGrid);
+
+            // 3. Adicionar os itens à grelha da categoria
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'portfolio-item';
+                div.dataset.folder = folder;
+                div.dataset.type = item.type;
+
+                if (item.type === 'image') {
+                    const img = document.createElement('img');
+                    img.src = item.src;
+                    img.loading = 'lazy';
+                    img.alt = `Portefólio ${folder}`;
+                    div.appendChild(img);
+                } else if (item.type === 'video') {
+                    const video = document.createElement('video');
+                    video.src = item.src + "#t=0.1";
+                    video.preload = "metadata";
+                    video.muted = true;
+                    video.playsInline = true;
+                    div.appendChild(video);
+                    
+                    const icon = document.createElement('span');
+                    icon.className = 'item-type-icon material-symbols-outlined';
+                    icon.textContent = 'play_circle';
+                    div.appendChild(icon);
+                } else if (item.type === '360') {
+                    const img = document.createElement('img');
+                    img.src = `${item.folder}frame_00.webp`;
+                    img.loading = 'lazy';
+                    img.alt = `Portefólio 360 ${folder}`;
+                    div.appendChild(img);
+                    
+                    const icon = document.createElement('span');
+                    icon.className = 'item-type-icon material-symbols-outlined';
+                    icon.textContent = '360';
+                    div.appendChild(icon);
+                }
+
+                div.addEventListener('click', () => {
+                     console.log('Abrir Lightbox para:', folder, item);
+                });
+
+                categoryGrid.appendChild(div);
+            });
         }
     }
-
-    items.forEach(({ folder, item }) => {
-        const div = document.createElement('div');
-        div.className = 'portfolio-item';
-        div.dataset.folder = folder;
-        div.dataset.type = item.type;
-
-        if (item.type === 'image') {
-            const img = document.createElement('img');
-            img.src = item.src;
-            img.loading = 'lazy';
-            img.alt = `Portefólio ${folder}`;
-            div.appendChild(img);
-        } else if (item.type === 'video') {
-            // Miniatura estática para vídeo para poupar memória/CPU
-            // Como não temos poster gerado, usamos a primeira frame (browser tenta carregar mas sem autoplay)
-            const video = document.createElement('video');
-            video.src = item.src + "#t=0.1"; // Sugestão para mostrar o início
-            video.preload = "metadata";
-            video.muted = true;
-            video.playsInline = true;
-            div.appendChild(video);
-            
-            const icon = document.createElement('span');
-            icon.className = 'item-type-icon material-symbols-outlined';
-            icon.textContent = 'play_circle';
-            div.appendChild(icon);
-        } else if (item.type === '360') {
-            // Miniatura estática para 360
-            const img = document.createElement('img');
-            img.src = `${item.folder}frame_00.webp`;
-            img.loading = 'lazy';
-            img.alt = `Portefólio 360 ${folder}`;
-            div.appendChild(img);
-            
-            const icon = document.createElement('span');
-            icon.className = 'item-type-icon material-symbols-outlined';
-            icon.textContent = '360';
-            div.appendChild(icon);
-        }
-
-        // Lightbox será implementado na próxima fase
-        div.addEventListener('click', () => {
-             console.log('Abrir Lightbox para:', folder, item);
-        });
-
-        gridContainer.appendChild(div);
-    });
 }
