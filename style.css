@@ -1279,3 +1279,16 @@ html.modal-open, body.modal-open {
     .lightbox-next { right: 10px; }
     .lightbox-close { top: 15px; right: 10px; }
 }
+
+/* Smooth scroll nativo para as caixas com data-lenis-prevent (como modais) */
+[data-lenis-prevent] {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Esconder texto dos botões no mobile para ficarem mais compactos */
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none !important;
+    }
+}

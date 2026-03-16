@@ -253,16 +253,16 @@ viewBox="0 0 4215.48 1393.34"
             <button class="modal-close portfolio-close">&times;</button>
             <h2 id="portfolio-title">Portefólio Global</h2>
             <div id="portfolio-filters" class="portfolio-filters"></div>
-            <div id="portfolio-grid" class="portfolio-grid"></div>
+            <div id="portfolio-grid" class="portfolio-grid" data-lenis-prevent></div>
         </div>
     </div>
 
 
     <!-- Portfolio Lightbox Overlay -->
     <div id="portfolio-lightbox" class="lightbox-overlay">
-        <button class="lightbox-close cnc-btn">[ X ] FECHAR</button>
-        <button class="lightbox-nav lightbox-prev cnc-btn">[ &lt; ] ANTERIOR</button>
-        <button class="lightbox-nav lightbox-next cnc-btn">SEGUINTE [ &gt; ]</button>
+        <button class="lightbox-close cnc-btn">[ X ]<span class="hide-mobile">&nbsp;FECHAR</span></button>
+        <button class="lightbox-nav lightbox-prev cnc-btn">[ &lt; ]<span class="hide-mobile">&nbsp;ANTERIOR</span></button>
+        <button class="lightbox-nav lightbox-next cnc-btn"><span class="hide-mobile">SEGUINTE&nbsp;</span>[ &gt; ]</button>
         <div id="lightbox-content-area" class="lightbox-content"></div>
         <div id="lightbox-caption" class="lightbox-caption"></div>
     </div>
@@ -272,7 +272,7 @@ viewBox="0 0 4215.48 1393.34"
         <div class="modal-content">
             <button class="modal-close">&times;</button>
             <h2 id="modal-title"></h2>
-            <div id="modal-body"></div>
+            <div id="modal-body" data-lenis-prevent></div>
         </div>
     </div>
 

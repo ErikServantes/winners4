@@ -278,7 +278,7 @@ export async function initializeModal() {
                 const modalContent = modal.querySelector('.modal-content');
                 modalContent.innerHTML = `
                     <button class="modal-close">&times;</button>
-                    <div class="modal-layout-container">${contentHTML}</div>
+                    <div class="modal-layout-container" data-lenis-prevent>${contentHTML}</div>
                 `;
                 modalContent.querySelector('.modal-close').addEventListener('click', closeModal);
                 
@@ -323,14 +323,14 @@ export async function initializeModal() {
         modal.classList.add('visible');
         document.documentElement.classList.add('modal-open');
         document.body.classList.add('modal-open');
-        if (window.lenis) window.lenis.stop();
+        
     }
 
     function closeModal() {
         modal.classList.remove('visible');
         document.documentElement.classList.remove('modal-open');
         document.body.classList.remove('modal-open');
-        if (window.lenis) window.lenis.start();
+        
         const viewerContainer = document.querySelector('.viewer-360-container');
         if (viewerContainer && typeof viewerContainer.cleanup360 === 'function') {
             viewerContainer.cleanup360();
@@ -385,7 +385,7 @@ function init360Viewer(data) {
                     currentFrameIndex = (currentFrameIndex + 1) % data.count;
                     imgElement.src = images[currentFrameIndex].src;
                 }
-            }, 60);
+            }, 120);
         }
 
         function stopAutoRotate() {

@@ -85,18 +85,12 @@ function openPortfolio(modal, filtersContainer, gridContainer) {
     document.body.classList.add('modal-open');
     modal.classList.add('visible');
 
-    // Parar o smooth scroll do Lenis no fundo enquanto o modal está aberto
-    if (window.lenis) window.lenis.stop();
-
     renderFilters(filtersContainer, gridContainer);
     renderGrid(gridContainer, 'todos'); // Show all by default
 }
 
 function closePortfolio(modal) {
     modal.classList.remove('visible');
-    
-    // Retomar o smooth scroll do Lenis quando o modal fecha
-    if (window.lenis) window.lenis.start();
 
     setTimeout(() => {
         document.documentElement.classList.remove('modal-open');
@@ -301,7 +295,7 @@ function initLightbox360(data, container) {
                     currentFrameIndex = (currentFrameIndex + 1) % data.count;
                     imgElement.src = images[currentFrameIndex].src;
                 }
-            }, 60);
+            }, 120);
         }
 
         function stopAutoRotate() {
