@@ -1,8 +1,6 @@
 {
-  "calandragem": [],
   "corte-laser": [],
   "estampagem": [],
-  "galvanizacao": [],
   "gravacao-laser": [],
   "impressao-3d": [
     {
@@ -12,12 +10,18 @@
       "prefix": "frame_",
       "extension": ".webp",
       "count": 36
+    },
+    {
+      "index": 2,
+      "type": "video",
+      "src": "assets/impressao-3d/02.mp4"
+    },
+    {
+      "index": 3,
+      "type": "image",
+      "src": "assets/impressao-3d/03.webp"
     }
   ],
-  "impressao-uv": [],
   "maquinacao-cnc": [],
-  "modelacao-3d": [],
-  "quinagem": [],
-  "repuxamento": [],
-  "torneamento": []
+  "modelacao-3d": []
 }
