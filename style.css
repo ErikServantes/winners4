@@ -220,7 +220,7 @@ body {
     border: 1px solid color-mix(in srgb, var(--theme-color) 50%, #fff); 
     color: #fff;
     padding: 10px 20px;
-    margin-top: 30px;
+    margin-top: 10px;
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -504,7 +504,7 @@ section:not([class*="theme-"]) .details-btn:hover {
 }
 
 #modal-body h3 {
-    margin-top: 30px;
+    margin-top: 10px;
     margin-bottom: 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -763,7 +763,7 @@ section:not([class*="theme-"]) .details-btn:hover {
 }
 
 .section-subtitle {
-    margin-top: 30px;
+    margin-top: 10px;
     margin-bottom: 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
