@@ -360,14 +360,3 @@ function initLightbox360(data, container) {
         }, { passive: false });
     }
 }
-
-
-                div.addEventListener('click', () => {
-                     console.log('Abrir Lightbox para:', folder, item);
-                });
-
-                categoryGrid.appendChild(div);
-            });
-        }
-    }
-}
