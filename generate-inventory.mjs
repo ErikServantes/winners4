@@ -41,7 +41,7 @@ try {
                                 folder: `assets/${service}/${file}/`,
                                 prefix: 'frame_',
                                 extension: '.webp',
-                                count: 36 // Assumimos 36 frames por convenção
+                                count: fs.readdirSync(mediaPath).filter(f => f.startsWith('frame_')).length
                             };
                         }
                     } else {

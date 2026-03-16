@@ -372,7 +372,7 @@ section[class*="theme-glass"] .details-btn:hover {
 }
 
 .content p {
-    font-size: 1.5rem;
+    font-size: 0.8rem;
     line-height: 1.6;
 }
 
@@ -505,7 +505,7 @@ section:not([class*="theme-"]) .details-btn:hover {
     align-items: center;
     border: 1px solid rgba(255,255,255,0.2);
     color: #fff;
-    font-size: 1.5rem;
+    font-size: 0.8rem;
     cursor: pointer;
     z-index: 10001;
     transition: all 0.3s ease;
@@ -564,7 +564,7 @@ section:not([class*="theme-"]) .details-btn:hover {
     margin-top: 0;
     text-transform: uppercase;
     margin-bottom: 25px;
-    font-size: 2rem;
+    font-size: 1rem;
     letter-spacing: 2px;
     color: #d4af37; /* Usa a cor dourada premium */
 }
@@ -659,7 +659,7 @@ section:not([class*="theme-"]) .details-btn:hover {
     }
     
     #modal-title {
-        font-size: 1.5rem;
+        font-size: 0.8rem;
     }
 }
 /* --- FADE EFFECTS FOR PARTICLES (PHASE 1) --- */
@@ -827,7 +827,7 @@ section:not([class*="theme-"]) .details-btn:hover {
     margin-top: 0;
     text-transform: uppercase;
     margin-bottom: 25px;
-    font-size: 2rem;
+    font-size: 1rem;
     letter-spacing: 2px;
     color: #d4af37; /* Dourado Premium */
     border-bottom: 1px solid rgba(212, 175, 55, 0.3);
@@ -1074,7 +1074,7 @@ html.modal-open, body.modal-open {
 
 #portfolio-title {
     text-align: center;
-    font-size: 2rem;
+    font-size: 1rem;
     letter-spacing: 2px;
     color: #d4af37;
     margin-top: 0;
@@ -1118,7 +1118,7 @@ html.modal-open, body.modal-open {
 
 .portfolio-category-title {
     margin: 0 0 15px 0;
-    font-size: 1.5rem;
+    font-size: 0.8rem;
     color: #fff;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 10px;
@@ -1201,6 +1201,7 @@ html.modal-open, body.modal-open {
 
 /* --- CNC/HUD LIGHTBOX CONTROLS --- */
 .cnc-btn {
+    white-space: nowrap;
     position: absolute;
     background: rgba(5, 5, 5, 0.6);
     backdrop-filter: blur(5px);
@@ -1279,6 +1280,7 @@ html.modal-open, body.modal-open {
 /* Fix mobile nav */
 @media (max-width: 768px) {
     .cnc-btn {
+    white-space: nowrap;
         padding: 6px 10px;
         font-size: 0.7rem;
         letter-spacing: 1px;
@@ -1299,4 +1301,26 @@ html.modal-open, body.modal-open {
     .hide-mobile {
         display: none !important;
     }
+}
+
+/* Garantir visibilidade do visualizador 360 no Lightbox */
+.lightbox-content .viewer-360-container {
+    width: 80vw !important;
+    height: 80vh !important;
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.viewer-360-hint {
+    white-space: nowrap; /* Impede a quebra de linha estranha que viste na foto */
+    pointer-events: none;
+}
+
+/* Ajuste para botão fechar CNC dentro do Modal de Portfolio */
+.portfolio-content .modal-close.cnc-btn {
+    white-space: nowrap;
+    top: 20px;
+    right: 20px;
 }

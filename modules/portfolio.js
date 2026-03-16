@@ -222,7 +222,7 @@ function openLightbox(index) {
     } else if (itemData.item.type === '360') {
         const container = document.createElement('div');
         container.className = 'viewer-360-container';
-        container.style.width = '100%';
+        container.style.width = '80vw';
         container.style.height = '80vh';
         container.style.maxWidth = '1000px';
         container.style.position = 'relative';
@@ -231,8 +231,8 @@ function openLightbox(index) {
         
         container.innerHTML = `
             <img id="lightbox-360-img" src="${itemData.item.folder}frame_00.webp" style="width: 100%; height: 100%; object-fit: contain; pointer-events: none;" alt="Visualização 360º">
-            <div class="viewer-360-hint" style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #d4af37; font-family: monospace; font-size: 0.9rem; letter-spacing: 2px; pointer-events: none; opacity: 0.8; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
-                &gt; SISTEMA DE ANÁLISE 360 PRONTO // ARRASTE PARA EXAMINAR &lt;
+            <div class="viewer-360-hint" style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #d4af37; font-family: monospace; font-size: 0.6rem; letter-spacing: 2px; pointer-events: none; opacity: 0.8; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                &gt; SISTEMA DE ANÁLISE 360 PRONTO<br>ARRASTE PARA EXAMINAR &lt;
             </div>
         `;
         contentArea.appendChild(container);
@@ -259,7 +259,6 @@ function closeLightbox() {
 function initLightbox360(data, container) {
     const imgElement = container.querySelector('#lightbox-360-img');
     const hintElement = container.querySelector('.viewer-360-hint');
-    
     if (!imgElement) return;
 
     const images = [];
@@ -272,7 +271,7 @@ function initLightbox360(data, container) {
         img.onload = () => {
             loadedCount++;
             if (loadedCount === data.count) {
-                hintElement.innerHTML = `<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px;">360</span>Arraste para rodar`;
+                hintElement.innerHTML = `[ ROTATE ]<br>ARRASTE PARA EXAMINAR`;
                 setupInteraction();
             }
         };
@@ -283,19 +282,20 @@ function initLightbox360(data, container) {
         let isDragging = false;
         let startX = 0;
         let currentFrameIndex = 0;
-        
         let autoRotateInterval, autoRotateTimeout;
         let isAutoRotating = true;
 
         function startAutoRotate() {
             isAutoRotating = true;
             clearInterval(autoRotateInterval);
+            // Ajustar velocidade baseada no número de frames (mais frames = intervalo menor para manter fluidez)
+            const speed = data.count > 36 ? 60 : 120;
             autoRotateInterval = setInterval(() => {
                 if (isAutoRotating && !isDragging) {
                     currentFrameIndex = (currentFrameIndex + 1) % data.count;
                     imgElement.src = images[currentFrameIndex].src;
                 }
-            }, 120);
+            }, speed);
         }
 
         function stopAutoRotate() {
@@ -316,8 +316,7 @@ function initLightbox360(data, container) {
         const handleMove = (clientX) => {
             if (!isDragging) return;
             const deltaX = clientX - startX;
-            
-            if (Math.abs(deltaX) > 10) { 
+            if (Math.abs(deltaX) > 5) { 
                 stopAutoRotate();
                 const direction = deltaX > 0 ? -1 : 1; 
                 currentFrameIndex = (currentFrameIndex + direction + data.count) % data.count;
@@ -329,15 +328,15 @@ function initLightbox360(data, container) {
         const startDrag = (clientX) => {
             isDragging = true;
             startX = clientX;
-            container.style.cursor = 'grabbing';
+            container.style.cursor = 'crosshair';
             stopAutoRotate();
-            hintElement.style.opacity = '0'; // Esconde a dica ao arrastar
+            // hintElement.style.opacity = '0';
         };
 
         const endDrag = () => {
             if (isDragging) {
                 isDragging = false;
-                container.style.cursor = 'grab';
+                container.style.cursor = 'crosshair';
                 resumeAutoRotateDelay();
             }
         };
@@ -346,7 +345,6 @@ function initLightbox360(data, container) {
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('mousemove', (e) => handleMove(e.clientX));
         document.addEventListener('mouseleave', endDrag);
-
         container.addEventListener('touchstart', (e) => e.touches.length && startDrag(e.touches[0].clientX), { passive: true });
         container.addEventListener('touchend', endDrag);
         container.addEventListener('touchcancel', endDrag);
