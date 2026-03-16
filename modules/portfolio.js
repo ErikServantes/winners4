@@ -114,20 +114,21 @@ function setActiveFilter(filtersContainer, activeFilter) {
 }
 
 function renderGrid(gridContainer, filter) {
-    gridContainer.innerHTML = ''; // Clear current grid
+    gridContainer.innerHTML = ''; // Limpar grelha
 
     const items = [];
 
     if (filter === 'todos') {
         for (const folder in inventoryCache) {
             const data = inventoryCache[folder];
-            if (data && data.length > 0) {
+            if (Array.isArray(data)) {
                 data.forEach(item => items.push({ folder, item }));
             }
         }
     } else {
-        if (inventoryCache[filter] && inventoryCache[filter].length > 0) {
-            inventoryCache[filter].forEach(item => items.push({ folder: filter, item }));
+        const data = inventoryCache[filter];
+        if (Array.isArray(data)) {
+            data.forEach(item => items.push({ folder: filter, item }));
         }
     }
 
@@ -135,21 +136,21 @@ function renderGrid(gridContainer, filter) {
         const div = document.createElement('div');
         div.className = 'portfolio-item';
         div.dataset.folder = folder;
-        div.dataset.file = item.file;
         div.dataset.type = item.type;
 
         if (item.type === 'image') {
             const img = document.createElement('img');
-            img.src = `assets/${folder}/${item.file}`;
+            img.src = item.src;
             img.loading = 'lazy';
             img.alt = `Portefólio ${folder}`;
             div.appendChild(img);
         } else if (item.type === 'video') {
+            // Miniatura estática para vídeo para poupar memória/CPU
+            // Como não temos poster gerado, usamos a primeira frame (browser tenta carregar mas sem autoplay)
             const video = document.createElement('video');
-            video.src = `assets/${folder}/${item.file}`;
+            video.src = item.src + "#t=0.1"; // Sugestão para mostrar o início
+            video.preload = "metadata";
             video.muted = true;
-            video.loop = true;
-            video.autoplay = true;
             video.playsInline = true;
             div.appendChild(video);
             
@@ -158,8 +159,9 @@ function renderGrid(gridContainer, filter) {
             icon.textContent = 'play_circle';
             div.appendChild(icon);
         } else if (item.type === '360') {
+            // Miniatura estática para 360
             const img = document.createElement('img');
-            img.src = `assets/${folder}/${item.folder}/frame_00.webp`; // Fallback image
+            img.src = `${item.folder}frame_00.webp`;
             img.loading = 'lazy';
             img.alt = `Portefólio 360 ${folder}`;
             div.appendChild(img);
@@ -170,7 +172,7 @@ function renderGrid(gridContainer, filter) {
             div.appendChild(icon);
         }
 
-        // Adicionar Lightbox click (A implementar na próxima sub-fase)
+        // Lightbox será implementado na próxima fase
         div.addEventListener('click', () => {
              console.log('Abrir Lightbox para:', folder, item);
         });
