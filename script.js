@@ -7,146 +7,76 @@ import { initializeGlobalParticles } from './modules/global-particles.js';
 import { initializeGlassEffect } from './modules/glass-effect.js';
 import { initializeHeroAnimation } from './modules/hero-animation.js';
 
+// Função principal de arranque
+function init() {
+    console.log("A inicializar site...");
 
-// Espera que o DOM esteja completamente carregado para executar o código
-document.addEventListener('DOMContentLoaded', function() {
     // Regista o plugin ScrollTrigger do GSAP
     gsap.registerPlugin(ScrollTrigger);
 
-    // Inicializa o Smooth Scroll (Lenis) e garante sincronização com GSAP
+    // Inicializa o Smooth Scroll primeiro
     initializeSmoothScroll();
 
-    // Quando usamos "Absolute Scroll", é prudente forçar o ScrollTrigger a recalcular as suas
-    // âncoras (start/end) após o Lenis e o DOM estabilizarem, especialmente em refreshes a meio da página.
+    // Pequeno delay para garantir que o Lenis calculou a altura da página
     setTimeout(() => {
+        initializeScrollytelling();
+        initializeModal();
+        initializePortfolio();
+        initializeGlobalParticles();
+        initializeGlassEffect();
+        initializeHeroAnimation();
+        
+        // Forçar recalculo das posições de scroll
         ScrollTrigger.refresh();
+        console.log("Site pronto.");
     }, 100);
 
-    // Inicializa os restantes módulos
-    initializeScrollytelling();
-    initializeModal();
-    initializePortfolio();
-    // Inicia o novo sistema de partículas 3D globais em vez do laser isolado
-    initializeGlobalParticles();
+    // --- Navegação Inteligente (Header e Side Nav) ---
+    setupNavigation();
+}
 
-
-
-    // --- CABEÇALHO FROSTED GLASS DINÂMICO SUAVE ---
+function setupNavigation() {
     const header = document.getElementById('main-header');
     if (header) {
         ScrollTrigger.create({
             trigger: '#hero-4winners',
-            start: 'top -50px', // Ativamos cedo para eles começarem logo a subir
+            start: 'top -50px',
             onEnter: () => header.classList.add('header-scrolled'),
             onLeaveBack: () => header.classList.remove('header-scrolled')
         });
     }
 
-    initializeGlassEffect();
-    initializeHeroAnimation();
-
-    // --- Navegação Inteligente (Header e Side Nav) ---
-    
-    // 1. Scroll Suave para Links Internos
-    // O Lenis trata do scroll, mas precisamos de intercetar os cliques
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
-            
-            // Ignora links que são apenas "#" (para os modais não serem afetados)
             if (!targetId || targetId === '#') return; 
-            
             e.preventDefault();
-            
-            try {
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.lenis?.scrollTo(targetElement);
-                }
-            } catch (err) {
-                // Se o utilizador clicar num anchor inválido, ignora silenciosamente
-                // em vez de rebentar com o erro 'querySelector' no terminal
+            const targetElement = document.querySelector(targetId);
+            if (targetElement && window.lenis) {
+                window.lenis.scrollTo(targetElement);
             }
         });
     });
 
-    // 2. Indicador Ativo na Side Nav
-    // A estrutura do HTML mudou. A classe .active deve estar na tag <a> e não no <span>.dot
     const navLinks = document.querySelectorAll('#side-nav ul li a');
     const sections = gsap.utils.toArray('.fullscreen-section');
 
     sections.forEach((section, i) => {
         ScrollTrigger.create({
             trigger: section,
-            // Ajustado para disparar quando a secção atinge 50% do ecrã (centro)
             start: 'top center',
             end: 'bottom center',
             onToggle: self => {
                 if (self.isActive && navLinks[i]) {
-                    // Remove a classe active de todas as tags 'a'
                     navLinks.forEach(link => link.classList.remove('active'));
-                    // Adiciona a classe active à tag 'a' correspondente à secção atual
                     navLinks[i].classList.add('active');
                 }
             }
         });
     });
+}
 
-    // --- Animações Genéricas de Conteúdo ---
-    const allSections = gsap.utils.toArray('.fullscreen-section');
-    // Filtra usando o novo ID correto que começa com uma letra
-    // Filtra o Hero (que tem SVG próprio) e a secção de Background Layers para evitar crashs
-    const serviceSections = allSections.filter(section => 
-        section.id !== 'hero-4winners' && 
-        section.id !== 'background-layers'
-    );
-    
-    serviceSections.forEach((section) => {
-        // Seleciona apenas os elementos de texto puros dentro do content, ignora qualquer SVG injetado ou imagens
-        const textElements = gsap.utils.toArray(section.querySelectorAll('.content h1:not(:has(svg)), .content p'));
-        const buttonElement = section.querySelector('.content .details-btn');
-
-        const commonScrollTrigger = {
-            trigger: section,
-            start: 'top 70%',
-            // Mesmo para animações simples, é mais seguro atrelar aos estados do viewport
-            // em vez de "play once" para garantir coerência se o user fizer refresh num scroll profundo.
-            toggleActions: 'play reverse play reverse',
-        };
-
-        // NOTA: Para animações simples (fade-in), .to() com estados iniciais no CSS é aceitável,
-        // mas as animações complexas ("Scrollytelling") DEVEM usar o paradigma Absolute Scroll (.fromTo + scrub)
-        if (textElements.length > 0) {
-            // Estado inicial garantido antes de animar (previne flashes em refreshes a meio da página)
-            gsap.set(textElements, { opacity: 0, y: 30 });
-            
-            gsap.to(textElements, {
-                scrollTrigger: commonScrollTrigger,
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: 'power3.out',
-                stagger: 0.2,
-            });
-        }
-
-        if (buttonElement) {
-            gsap.set(buttonElement, { opacity: 0, y: 30 });
-
-            gsap.to(buttonElement, {
-                scrollTrigger: commonScrollTrigger,
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: 'power3.out',
-                delay: 0.4,
-            });
-        }
-    });
-
-    console.log("Navigation & Absolute Scroll Sync fully operational.");
-});
-// Ocultação Inteligente de Partículas (Fase 1 do Plano)
+// Ocultação Inteligente de Partículas
 function setupParticleFading() {
     const bgParticles = document.getElementById('particles-bg');
     const fgParticles = document.getElementById('particles-fg');
@@ -176,9 +106,12 @@ function setupParticleFading() {
     });
 }
 
+// Inicia quando o DOM estiver pronto
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
 
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Wait slightly to ensure GSAP is ready and other init scripts ran
-    setTimeout(setupParticleFading, 200);
-});
+// Inicia partículas com delay para performance
+setTimeout(setupParticleFading, 500);
