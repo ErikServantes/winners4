@@ -37,36 +37,24 @@ export async function initializePortfolio() {
     const lightbox = document.getElementById('portfolio-lightbox');
     if (lightbox) {
         lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+        
         lightbox.querySelector('.lightbox-prev').addEventListener('click', (e) => {
             e.stopPropagation();
             if (currentLightboxIndex > 0) openLightbox(currentLightboxIndex - 1);
         });
+        
         lightbox.querySelector('.lightbox-next').addEventListener('click', (e) => {
             e.stopPropagation();
             if (currentLightboxIndex < lightboxItems.length - 1) openLightbox(currentLightboxIndex + 1);
         });
-        
-        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-        
+
         document.addEventListener('keydown', (e) => {
             if (!lightbox.classList.contains('visible')) return;
             if (e.key === 'Escape') closeLightbox();
             if (e.key === 'ArrowLeft' && currentLightboxIndex > 0) openLightbox(currentLightboxIndex - 1);
             if (e.key === 'ArrowRight' && currentLightboxIndex < lightboxItems.length - 1) openLightbox(currentLightboxIndex + 1);
         });
-
-        let touchStartX = 0;
-        lightbox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-        lightbox.addEventListener('touchend', e => {
-            const diff = e.changedTouches[0].screenX - touchStartX;
-            if (Math.abs(diff) > 50) {
-                if (diff > 0 && currentLightboxIndex > 0) openLightbox(currentLightboxIndex - 1);
-                else if (diff < 0 && currentLightboxIndex < lightboxItems.length - 1) openLightbox(currentLightboxIndex + 1);
-            }
-        }, {passive: true});
     }
-
-    modal.addEventListener('click', (e) => { if (e.target === modal) closePortfolio(modal); });
 }
 
 function openPortfolio(modal, gridContainer) {

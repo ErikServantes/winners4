@@ -1,5 +1,5 @@
 /**
- * MEDIA ENGINE V2.2 - Gestão de Media Dinâmica com Auto-Resumo 360
+ * MEDIA ENGINE V2.4 - Estabilidade de Animação e Limpeza
  */
 
 export const MediaEngine = {
@@ -52,11 +52,12 @@ export const MediaEngine = {
         function startAutoRotate() {
             clearInterval(rotateInterval);
             rotateInterval = setInterval(() => {
-                if (!isDragging) {
-                    currentIndex = (currentIndex + 1) % data.count;
+                // SEGURANÇA: Só atualiza se o frames ainda existir
+                if (!isDragging && frames.length > 0 && frames[currentIndex]) {
                     img.src = frames[currentIndex].src;
+                    currentIndex = (currentIndex + 1) % data.count;
                 }
-            }, 143); // 30% mais lento
+            }, 143); 
         }
 
         function stopAutoRotate() {
@@ -84,7 +85,7 @@ export const MediaEngine = {
                 if (Math.abs(diff) > 10) { 
                     const dir = diff > 0 ? -1 : 1;
                     currentIndex = (currentIndex + dir + data.count) % data.count;
-                    img.src = frames[currentIndex].src;
+                    if (frames[currentIndex]) img.src = frames[currentIndex].src;
                     startX = x;
                 }
             };
@@ -96,7 +97,6 @@ export const MediaEngine = {
                 document.body.style.userSelect = '';
                 document.body.style.webkitUserSelect = '';
                 
-                // Retoma a rotação após 1 segundo de inatividade
                 clearTimeout(resumeTimeout);
                 resumeTimeout = setTimeout(startAutoRotate, 1000);
             };
@@ -117,7 +117,9 @@ export const MediaEngine = {
 
         return () => {
             stopAutoRotate();
+            isDragging = false;
             document.body.style.userSelect = '';
+            document.body.style.webkitUserSelect = '';
             frames.length = 0;
         };
     },
