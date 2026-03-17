@@ -1,15 +1,15 @@
 import { serviceConfig } from './services-config.js';
 import { MediaEngine } from './media-engine.js';
 
-// Guarda o inventário carregado na memória
 let mediaInventory = null;
 let currentCleanup = null;
 
 async function loadInventory() {
     if (mediaInventory) return mediaInventory;
     try {
-        const response = await fetch('./assets/inventory.json?v=' + new Date().getTime());
-        mediaInventory = await response.json();
+        const response = await fetch('./assets/inventory.json?v=' + Date.now());
+        const data = await response.json();
+        mediaInventory = data?.meta?.services || {};
         return mediaInventory;
     } catch (error) {
         console.error('❌ Erro inventário:', error);
@@ -32,7 +32,7 @@ export async function initializeModal() {
     if (!modal) return;
 
     document.querySelectorAll('.details-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
+        btn.onclick = async (e) => {
             const serviceKey = btn.dataset.service;
             if (!serviceKey) return;
             if (btn.tagName === 'A' && serviceKey === 'contacto') e.preventDefault();
@@ -46,12 +46,12 @@ export async function initializeModal() {
             if (serviceKey !== 'contacto') {
                 loadMedia(serviceKey);
             }
-        });
+        };
     });
 
-    modal.addEventListener('click', (e) => {
+    modal.onclick = (e) => {
         if (e.target === modal) closeModal(modal);
-    });
+    };
 }
 
 function renderModal(modal, key, data) {
@@ -117,19 +117,18 @@ function loadMedia(key) {
     const container = document.getElementById('dynamic-media-container');
     if (!container) return;
 
-    const list = mediaInventory[key] || [];
+    const sData = mediaInventory[key];
+    const list = sData ? sData.items : [];
     const week = getWeekNumber();
     
-    // Escolha Inteligente: se houver ficheiros com menos de 14 dias, mostramos o mais recente.
-    // Caso contrário, rotação semanal.
     const NOW = Date.now();
     const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000;
     const recent = list.filter(item => (NOW - item.timestamp) < TWO_WEEKS);
     
     const selected = recent.length > 0 ? recent[0] : (list.length > 0 ? list[(week - 1) % list.length] : null);
     
-    // Fallback para capa 00 se nada for encontrado
-    const finalMedia = selected || { type: 'image', src: `assets/${key}/00.webp` };
+    const fallback = sData?.cover || { type: 'image', src: `assets/${key}/00.webp` };
+    const finalMedia = selected || fallback;
 
     if (currentCleanup) currentCleanup();
 

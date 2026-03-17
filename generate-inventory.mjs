@@ -3,9 +3,9 @@ import fs from 'fs';
 import path from 'path';
 
 /**
- * GENERATE INVENTORY V2 - Flexível e Inteligente
+ * GENERATE INVENTORY V2.1
  * Regras:
- * 1. '00.webp' (ou .mp4) é a Capa.
+ * 1. Deteta a Capa (ficheiro começado por '00').
  * 2. Pastas terminadas em '_360' são sequências de frames.
  * 3. Ficheiros webp/mp4 com qualquer nome são aceites.
  * 4. Ordenação por data (Mais recente primeiro).
@@ -14,9 +14,12 @@ import path from 'path';
 const baseDir = './assets';
 const outputFile = './assets/inventory.json';
 
-const inventory = {};
-
-console.log(`🔍 A iniciar scan inteligente na diretoria: ${baseDir}`);
+const inventory = {
+    meta: {
+        lastUpdated: Date.now(),
+        services: {}
+    }
+};
 
 try {
     const serviceFolders = fs.readdirSync(baseDir);
@@ -25,10 +28,25 @@ try {
         const servicePath = path.join(baseDir, service);
         
         if (fs.lstatSync(servicePath).isDirectory()) {
-            console.log(`\t- A processar o serviço: ${service}`);
+            const serviceData = {
+                cover: null,
+                items: []
+            };
+
+            const allFiles = fs.readdirSync(servicePath);
             
-            const mediaFiles = fs.readdirSync(servicePath)
-                // Ignorar capa '00' e ficheiros ocultos
+            // 1. Procurar a Capa (00)
+            const coverFile = allFiles.find(f => f.startsWith('00.'));
+            if (coverFile) {
+                const ext = path.extname(coverFile).toLowerCase();
+                serviceData.cover = {
+                    src: `assets/${service}/${coverFile}`,
+                    type: (ext === '.mp4' || ext === '.webm') ? 'video' : 'image'
+                };
+            }
+
+            // 2. Processar o resto dos itens
+            serviceData.items = allFiles
                 .filter(file => !file.startsWith('00.') && !file.startsWith('.'))
                 .map(file => {
                     const mediaPath = path.join(servicePath, file);
@@ -36,7 +54,6 @@ try {
                     const fileName = path.parse(file).name;
                     const extension = path.extname(file).toLowerCase();
 
-                    // CASO 1: Pasta de Frames 360 (ex: 'peça_360/')
                     if (fileStat.isDirectory()) {
                         if (fileName.toLowerCase().endsWith('_360') && fs.existsSync(path.join(mediaPath, 'frame_00.webp'))) {
                             return {
@@ -49,39 +66,22 @@ try {
                                 timestamp: fileStat.mtimeMs
                             };
                         }
-                    } 
-                    // CASO 2: Vídeos normais
-                    else if (extension === '.mp4' || extension === '.webm') {
-                        return {
-                            name: fileName,
-                            type: 'video',
-                            src: `assets/${service}/${file}`,
-                            timestamp: fileStat.mtimeMs
-                        };
-                    } 
-                    // CASO 3: Imagens normais
-                    else if (extension === '.webp' || extension === '.jpg' || extension === '.png') {
-                        return {
-                            name: fileName,
-                            type: 'image',
-                            src: `assets/${service}/${file}`,
-                            timestamp: fileStat.mtimeMs
-                        };
+                    } else if (extension === '.mp4' || extension === '.webm') {
+                        return { name: fileName, type: 'video', src: `assets/${service}/${file}`, timestamp: fileStat.mtimeMs };
+                    } else if (['.webp', '.jpg', '.png'].includes(extension)) {
+                        return { name: fileName, type: 'image', src: `assets/${service}/${file}`, timestamp: fileStat.mtimeMs };
                     }
-                    
                     return null;
                 })
-                .filter(Boolean);
-
-            // Ordena pela data (Mais recentes primeiro)
-            mediaFiles.sort((a, b) => b.timestamp - a.timestamp);
+                .filter(Boolean)
+                .sort((a, b) => b.timestamp - a.timestamp);
             
-            inventory[service] = mediaFiles;
+            inventory.meta.services[service] = serviceData;
         }
     }
 
     fs.writeFileSync(outputFile, JSON.stringify(inventory, null, 2));
-    console.log(`\n✅ Inventário inteligente gerado em: ${outputFile}`);
+    console.log(`\n✅ Inventário V2.1 gerado com sucesso.`);
 
 } catch (error) {
     console.error(`❌ Erro ao gerar o inventário: ${error.message}`);

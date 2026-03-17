@@ -1,30 +1,78 @@
 {
-  "corte-laser": [],
-  "estampagem": [],
-  "gravacao-laser": [],
-  "impressao-3d": [
-    {
-      "name": "02",
-      "type": "video",
-      "src": "assets/impressao-3d/02.mp4",
-      "timestamp": 1773673412758.0945
-    },
-    {
-      "name": "03",
-      "type": "image",
-      "src": "assets/impressao-3d/03.webp",
-      "timestamp": 1773673332539.3364
-    },
-    {
-      "name": "Afonso_360",
-      "type": "360",
-      "folder": "assets/impressao-3d/Afonso_360/",
-      "prefix": "frame_",
-      "extension": ".webp",
-      "count": 36,
-      "timestamp": 1773656972695.172
+  "meta": {
+    "lastUpdated": 1773759528495,
+    "services": {
+      "corte-laser": {
+        "cover": {
+          "src": "assets/corte-laser/00.webp",
+          "type": "image"
+        },
+        "items": []
+      },
+      "estampagem": {
+        "cover": {
+          "src": "assets/estampagem/00.webp",
+          "type": "image"
+        },
+        "items": [
+          {
+            "name": "03",
+            "type": "image",
+            "src": "assets/estampagem/03.webp",
+            "timestamp": 1773759157721.9368
+          }
+        ]
+      },
+      "gravacao-laser": {
+        "cover": {
+          "src": "assets/gravacao-laser/00.webp",
+          "type": "image"
+        },
+        "items": []
+      },
+      "impressao-3d": {
+        "cover": {
+          "src": "assets/impressao-3d/00.webp",
+          "type": "image"
+        },
+        "items": [
+          {
+            "name": "Afonso_360",
+            "type": "360",
+            "folder": "assets/impressao-3d/Afonso_360/",
+            "prefix": "frame_",
+            "extension": ".webp",
+            "count": 36,
+            "timestamp": 1773757142377.0984
+          },
+          {
+            "name": "02",
+            "type": "video",
+            "src": "assets/impressao-3d/02.mp4",
+            "timestamp": 1773673412758.0945
+          },
+          {
+            "name": "03",
+            "type": "image",
+            "src": "assets/impressao-3d/03.webp",
+            "timestamp": 1773673332539.3364
+          }
+        ]
+      },
+      "maquinacao-cnc": {
+        "cover": {
+          "src": "assets/maquinacao-cnc/00.webp",
+          "type": "image"
+        },
+        "items": []
+      },
+      "modelacao-3d": {
+        "cover": {
+          "src": "assets/modelacao-3d/00.webp",
+          "type": "image"
+        },
+        "items": []
+      }
     }
-  ],
-  "maquinacao-cnc": [],
-  "modelacao-3d": []
+  }
 }

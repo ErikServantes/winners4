@@ -1074,7 +1074,7 @@ html.modal-open, body.modal-open {
 
 #portfolio-title {
     text-align: center;
-    font-size: 2rem;
+    font-size: 1rem;
     letter-spacing: 2px;
     color: #d4af37;
     margin-top: 0;
@@ -1118,7 +1118,7 @@ html.modal-open, body.modal-open {
 
 .portfolio-category-title {
     margin: 0 0 15px 0;
-    font-size: 1.5rem;
+    font-size: 0.8rem;
     color: #fff;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 10px;

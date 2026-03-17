@@ -6,6 +6,18 @@ let currentLightboxCleanup = null;
 let lightboxItems = [];
 let currentLightboxIndex = 0;
 
+async function loadInventory() {
+    try {
+        const response = await fetch('assets/inventory.json?v=' + Date.now());
+        if (!response.ok) throw new Error("HTTP error " + response.status);
+        const data = await response.json();
+        return data?.meta?.services || {};
+    } catch (error) {
+        console.error('❌ Erro Carregamento Inventário:', error);
+        return {};
+    }
+}
+
 export async function initializePortfolio() {
     const btn = document.getElementById('portfolio-btn');
     const modal = document.getElementById('portfolio-modal');
@@ -14,31 +26,27 @@ export async function initializePortfolio() {
     const closeBtn = modal.querySelector('.portfolio-close');
     const gridContainer = document.getElementById('portfolio-grid');
 
-    try {
-        const response = await fetch('assets/inventory.json?v=' + Date.now());
-        inventoryCache = await response.json();
-    } catch (error) {
-        console.error('❌ Erro Portefólio:', error);
-        return;
-    }
-
-    btn.onclick = (e) => {
+    btn.addEventListener('click', async (e) => {
         e.preventDefault();
+        inventoryCache = await loadInventory();
         openPortfolio(modal, gridContainer);
-    };
+    });
 
-    closeBtn.onclick = () => closePortfolio(modal);
+    closeBtn.addEventListener('click', () => closePortfolio(modal));
 
     const lightbox = document.getElementById('portfolio-lightbox');
     if (lightbox) {
-        lightbox.querySelector('.lightbox-close').onclick = closeLightbox;
-        lightbox.querySelector('.lightbox-prev').onclick = () => {
+        lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+        lightbox.querySelector('.lightbox-prev').addEventListener('click', (e) => {
+            e.stopPropagation();
             if (currentLightboxIndex > 0) openLightbox(currentLightboxIndex - 1);
-        };
-        lightbox.querySelector('.lightbox-next').onclick = () => {
+        });
+        lightbox.querySelector('.lightbox-next').addEventListener('click', (e) => {
+            e.stopPropagation();
             if (currentLightboxIndex < lightboxItems.length - 1) openLightbox(currentLightboxIndex + 1);
-        };
-        lightbox.onclick = (e) => { if (e.target === lightbox) closeLightbox(); };
+        });
+        
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
         
         document.addEventListener('keydown', (e) => {
             if (!lightbox.classList.contains('visible')) return;
@@ -46,9 +54,19 @@ export async function initializePortfolio() {
             if (e.key === 'ArrowLeft' && currentLightboxIndex > 0) openLightbox(currentLightboxIndex - 1);
             if (e.key === 'ArrowRight' && currentLightboxIndex < lightboxItems.length - 1) openLightbox(currentLightboxIndex + 1);
         });
+
+        let touchStartX = 0;
+        lightbox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+        lightbox.addEventListener('touchend', e => {
+            const diff = e.changedTouches[0].screenX - touchStartX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0 && currentLightboxIndex > 0) openLightbox(currentLightboxIndex - 1);
+                else if (diff < 0 && currentLightboxIndex < lightboxItems.length - 1) openLightbox(currentLightboxIndex + 1);
+            }
+        }, {passive: true});
     }
 
-    modal.onclick = (e) => { if (e.target === modal) closePortfolio(modal); };
+    modal.addEventListener('click', (e) => { if (e.target === modal) closePortfolio(modal); });
 }
 
 function openPortfolio(modal, gridContainer) {
@@ -75,7 +93,7 @@ function renderGrid(container) {
     let globalIndex = 0;
 
     for (const serviceKey in inventoryCache) {
-        const items = inventoryCache[serviceKey];
+        const items = inventoryCache[serviceKey].items || [];
         if (items.length === 0) continue;
 
         const title = document.createElement('h3');
@@ -93,7 +111,7 @@ function renderGrid(container) {
 
             const div = document.createElement('div');
             div.className = 'portfolio-item';
-            div.onclick = () => openLightbox(index);
+            div.addEventListener('click', () => openLightbox(index));
 
             if (item.type === 'image') {
                 div.innerHTML = `<img src="${item.src}" loading="lazy">`;
@@ -129,7 +147,8 @@ function openLightbox(index) {
         currentLightboxCleanup = MediaEngine.initImage(item, contentArea);
     } else if (item.type === 'video') {
         currentLightboxCleanup = MediaEngine.initVideo(item, contentArea);
-        contentArea.querySelector('video').controls = true;
+        const v = contentArea.querySelector('video');
+        if (v) v.controls = true;
     } else if (item.type === '360') {
         currentLightboxCleanup = MediaEngine.init360(item, contentArea);
     }
