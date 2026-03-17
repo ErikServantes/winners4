@@ -9,7 +9,7 @@ const outputFile = './assets/inventory.json';
 
 const inventory = {};
 
-console.log(`🔍 A iniciar scan na diretoria: ${baseDir}`);
+console.log(`🔍 A iniciar scan inteligente na diretoria: ${baseDir}`);
 
 try {
     // Lê todas as entradas na diretoria 'assets'
@@ -17,55 +17,47 @@ try {
 
     for (const service of serviceFolders) {
         const servicePath = path.join(baseDir, service);
+        
         // Verifica se a entrada é uma diretoria
         if (fs.lstatSync(servicePath).isDirectory()) {
             console.log(`\t- A processar o serviço: ${service}`);
             
-            // Lê todos os ficheiros/pastas dentro da diretoria do serviço
+            // Lê todos os ficheiros dentro da diretoria do serviço
             const mediaFiles = fs.readdirSync(servicePath)
-                // Filtra para remover a imagem de capa '00.webp' e outros ficheiros de sistema (ex: .DS_Store)
+                // Filtra para remover a imagem de capa '00.webp' e outros ficheiros de sistema
                 .filter(file => file !== '00.webp' && !file.startsWith('.'))
-                // Mapeia para um formato mais rico em dados
                 .map(file => {
                     const mediaPath = path.join(servicePath, file);
                     const fileStat = fs.lstatSync(mediaPath);
-                    const fileNameWithoutExt = path.parse(file).name;
+                    
+                    // Ignorar sub-diretórios (o antigo sistema de frames 360)
+                    if (fileStat.isDirectory()) return null;
 
-                    // Deteta se é uma diretoria (para 360) ou um ficheiro (imagem/vídeo)
-                    if (fileStat.isDirectory()) {
-                        // Verifica se é um visualizador 360 válido (se tem pelo menos 'frame_00.webp')
-                        if (fs.existsSync(path.join(mediaPath, 'frame_00.webp'))) {
-                            return {
-                                index: parseInt(fileNameWithoutExt, 10),
-                                type: '360',
-                                folder: `assets/${service}/${file}/`,
-                                prefix: 'frame_',
-                                extension: '.webp',
-                                count: fs.readdirSync(mediaPath).filter(f => f.startsWith('frame_')).length
-                            };
-                        }
-                    } else {
-                        const extension = path.extname(file).toLowerCase();
-                        if (extension === '.mp4') {
-                            return {
-                                index: parseInt(fileNameWithoutExt, 10),
-                                type: 'video',
-                                src: `assets/${service}/${file}`
-                            };
-                        } else if (extension === '.webp') {
-                            return {
-                                index: parseInt(fileNameWithoutExt, 10),
-                                type: 'image',
-                                src: `assets/${service}/${file}`
-                            };
-                        }
+                    const extension = path.extname(file).toLowerCase();
+                    const fileName = path.parse(file).name;
+                    const is360 = fileName.toLowerCase().endsWith('_360');
+
+                    const item = {
+                        name: fileName,
+                        src: `assets/${service}/${file}`,
+                        timestamp: fileStat.mtimeMs, // Data de modificação para lógica "New First"
+                        date: fileStat.mtime // Para debug humano se necessário
+                    };
+
+                    if (extension === '.mp4' || extension === '.webm') {
+                        item.type = is360 ? 'video360' : 'video';
+                        return item;
+                    } else if (extension === '.webp' || extension === '.jpg' || extension === '.png') {
+                        item.type = 'image';
+                        return item;
                     }
+
                     return null;
                 })
-                .filter(Boolean); // Remove quaisquer entradas nulas (ficheiros não suportados)
+                .filter(Boolean); // Remove entradas nulas
 
-            // Ordena os ficheiros pelo seu índice numérico
-            mediaFiles.sort((a, b) => a.index - b.index);
+            // Ordena os ficheiros pela data de modificação (Mais recentes primeiro)
+            mediaFiles.sort((a, b) => b.timestamp - a.timestamp);
             
             inventory[service] = mediaFiles;
         }
@@ -73,7 +65,8 @@ try {
 
     // Escreve o objeto de inventário completo para o ficheiro JSON
     fs.writeFileSync(outputFile, JSON.stringify(inventory, null, 2));
-    console.log(`\n✅ Inventário gerado com sucesso em: ${outputFile}`);
+    console.log(`\n✅ Inventário inteligente gerado com sucesso em: ${outputFile}`);
+    console.log(`💡 Regra: Ficheiros com '_360' no nome são tratados como visualizadores interativos.`);
 
 } catch (error) {
     console.error(`❌ Erro ao gerar o inventário: ${error.message}`);
