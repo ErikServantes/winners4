@@ -1,5 +1,5 @@
 /**
- * MEDIA ENGINE V2.1 - Gestão de Media Dinâmica com Proteção de Seleção
+ * MEDIA ENGINE V2.2 - Gestão de Media Dinâmica com Auto-Resumo 360
  */
 
 export const MediaEngine = {
@@ -9,17 +9,16 @@ export const MediaEngine = {
     init360(data, container) {
         container.innerHTML = '';
         container.className = 'viewer-360-container';
-        // Impedir seleção de texto e arrasto de imagem nativo
         container.style.userSelect = 'none';
         container.style.webkitUserSelect = 'none';
-        container.style.touchAction = 'none'; // Importante para mobile
+        container.style.touchAction = 'none';
         
         const img = document.createElement('img');
         img.src = `${data.folder}${data.prefix}00${data.extension}`;
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'contain';
-        img.style.pointerEvents = 'none'; // Evita que o browser tente arrastar a imagem
+        img.style.pointerEvents = 'none';
 
         const hint = document.createElement('div');
         hint.className = 'viewer-360-hint';
@@ -34,8 +33,8 @@ export const MediaEngine = {
         let startX = 0;
         let currentIndex = 0;
         let rotateInterval;
+        let resumeTimeout;
 
-        // Preload
         for (let i = 0; i < data.count; i++) {
             const f = new Image();
             const idx = i.toString().padStart(2, '0');
@@ -50,25 +49,31 @@ export const MediaEngine = {
             frames.push(f);
         }
 
-        function setupEvents() {
+        function startAutoRotate() {
+            clearInterval(rotateInterval);
             rotateInterval = setInterval(() => {
                 if (!isDragging) {
                     currentIndex = (currentIndex + 1) % data.count;
                     img.src = frames[currentIndex].src;
                 }
-            }, 100);
+            }, 143); // 30% mais lento
+        }
+
+        function stopAutoRotate() {
+            clearInterval(rotateInterval);
+            clearTimeout(resumeTimeout);
+        }
+
+        function setupEvents() {
+            startAutoRotate();
 
             const startDrag = (e, x) => {
-                // Impedir comportamentos padrão do browser (seleção)
                 if (e.cancelable) e.preventDefault();
-                
                 isDragging = true;
                 startX = x;
                 container.style.cursor = 'grabbing';
                 hint.style.opacity = '0';
-                clearInterval(rotateInterval);
-                
-                // Adicionar classe global para desativar seleção no body
+                stopAutoRotate();
                 document.body.style.userSelect = 'none';
                 document.body.style.webkitUserSelect = 'none';
             };
@@ -76,7 +81,7 @@ export const MediaEngine = {
             const moveDrag = (e, x) => {
                 if (!isDragging) return;
                 const diff = x - startX;
-                if (Math.abs(diff) > 10) { // Sensibilidade aumentada
+                if (Math.abs(diff) > 10) { 
                     const dir = diff > 0 ? -1 : 1;
                     currentIndex = (currentIndex + dir + data.count) % data.count;
                     img.src = frames[currentIndex].src;
@@ -90,14 +95,16 @@ export const MediaEngine = {
                 container.style.cursor = 'grab';
                 document.body.style.userSelect = '';
                 document.body.style.webkitUserSelect = '';
+                
+                // Retoma a rotação após 1 segundo de inatividade
+                clearTimeout(resumeTimeout);
+                resumeTimeout = setTimeout(startAutoRotate, 1000);
             };
 
-            // Eventos de Rato
             container.addEventListener('mousedown', e => startDrag(e, e.clientX));
             window.addEventListener('mousemove', e => moveDrag(e, e.clientX));
             window.addEventListener('mouseup', stopDrag);
 
-            // Eventos de Touch
             container.addEventListener('touchstart', e => startDrag(e, e.touches[0].clientX), {passive: false});
             container.addEventListener('touchmove', e => {
                 if (isDragging) {
@@ -109,15 +116,12 @@ export const MediaEngine = {
         }
 
         return () => {
-            clearInterval(rotateInterval);
+            stopAutoRotate();
             document.body.style.userSelect = '';
             frames.length = 0;
         };
     },
 
-    /**
-     * Renderiza Vídeo
-     */
     initVideo(data, container) {
         container.innerHTML = `<video src="${data.src}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>`;
         return () => {
@@ -126,9 +130,6 @@ export const MediaEngine = {
         };
     },
 
-    /**
-     * Renderiza Imagem
-     */
     initImage(data, container) {
         container.innerHTML = `<img src="${data.src}" style="width:100%; height:100%; object-fit:cover;">`;
         return null;

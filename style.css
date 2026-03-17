@@ -1354,3 +1354,21 @@ html.modal-open, body.modal-open {
     letter-spacing: 1px;
     text-align: center;
 }
+
+/* --- Ajustes Mobile Portefólio (Fase 5) --- */
+@media (max-width: 768px) {
+    .portfolio-category-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 10px;
+    }
+    
+    .lightbox-content img, .lightbox-content video, .lightbox-content .viewer-360-container {
+        max-width: 95vw;
+        max-height: 70vh;
+    }
+    
+    .lightbox-caption {
+        font-size: 0.7rem;
+        padding: 10px;
+    }
+}
