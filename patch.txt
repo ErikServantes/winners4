@@ -1,0 +1,49 @@
+PLAN DE ATUALIZAÇÃO E ESTABILIZAÇÃO DO PROJETO
+--------------------------------------------
+
+OBJETIVO: Retornar à base estável (commit 0741480), manter a estética clássica e implementar as funcionalidades de inteligência de media sem introduzir erros.
+
+FASE 1: RETROCESSÃO E LIMPEZA (ESTABILIDADE BASE)
+--------------------------------------------------
+1. Executar 'git reset --hard 074148082804e7b58f37f2e08e3f023e7b3b5702'.
+2. Eliminar ficheiros experimentais (ex: modules/media-engine.js se existir, backups antigos).
+3. Testar o site: Verificar se o scroll, os glows e os modais básicos (sem media dinâmica) funcionam perfeitamente.
+   * TESTE: Abrir o modal de "Contacto" e verificar se o botão 'X' e o scroll interno funcionam.
+
+FASE 2: SISTEMA DE INVENTÁRIO FLEXÍVEL (FUNDO INTELIGENTE)
+----------------------------------------------------------
+1. Recriar o script 'generate-inventory.mjs' com as seguintes regras:
+   - Capa fixa em '00.webp'.
+   - Suporte a nomes genéricos para imagens e vídeos (ex: 'leme-barco.webp').
+   - Deteção de 360º por pastas com sufixo '_360' (contendo sequências de frames).
+   - Inclusão de 'timestamp' (mtime) para cada item.
+   - Ordenação automática: Ficheiros mais recentes no topo da lista JSON.
+2. Gerar o ficheiro 'assets/inventory.json'.
+   * TESTE: Inspecionar o JSON e confirmar se a ordem segue a data e se as pastas 360 estão identificadas corretamente.
+
+FASE 3: MOTOR DE MEDIA ROBUSTO (NOVO MEDIA-ENGINE)
+--------------------------------------------------
+1. Criar 'modules/media-engine.js' focado exclusivamente em:
+   - Carregar Imagens/Vídeos normais.
+   - Visualizador 360º por sequência de imagens (WebP) - Reinstaurar código de arrasto manual.
+   - Funções de 'cleanup()' universais para prevenir memory leaks.
+2. Integrar este motor nos modais de serviço.
+   * TESTE: Abrir um serviço com imagem, um com vídeo e um com pasta 360. Confirmar que a interação 360 funciona sem saltos e que a memória limpa ao fechar.
+
+FASE 4: PORTEFÓLIO GLOBAL E LIGHTBOX (CONSOLIDAÇÃO)
+---------------------------------------------------
+1. Implementar o Modal de Portefólio que lê o inventário completo.
+2. Criar a grelha dinâmica com títulos de categorias automáticos.
+3. Lógica "New First" no Portefólio: Os itens mais recentes de cada categoria aparecem primeiro.
+4. Lightbox: Garantir que ao clicar numa miniatura, o motor de media da Fase 3 é usado para mostrar o conteúdo em ecrã inteiro.
+   * TESTE: Abrir o Portefólio, navegar entre categorias e abrir itens no Lightbox usando as setas do teclado e os botões de navegação.
+
+FASE 5: OTIMIZAÇÃO FINAL E PREVENÇÃO DE ERROS
+---------------------------------------------
+1. Limpeza total do 'style.css': Remover classes órfãs.
+2. Verificação de Performance: Garantir que vídeos em pausa são removidos do DOM.
+3. Validação Mobile: Testar toque (touch) no 360 e navegação do portefólio.
+   * TESTE: Abrir o site no telemóvel e confirmar que os botões de fechar (clássicos) são fáceis de carregar.
+
+--------------------------------------------
+ESTADO ATUAL: Aguardando início da Fase 1.
