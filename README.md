@@ -1,72 +1,77 @@
-# Landing Page Industrial-Chic - Scrollytelling
+# 4Winners Industrial-Chic Platform (V2)
 
-Este projeto é uma Single Page Application (SPA) estática com foco em uma experiência de scrollytelling fluida e visualmente impactante, seguindo uma estética "Industrial-Chic" premium.
-
-## DNA Visual (The Master Style)
-
-- **Background:** Preto Obsidiana Infinito (`#000000`) com grelha técnica a 150º.
-- **Iluminação:** Chiaroscuro com Rim Lighting.
-- **Paleta Temática:** Dourado Premium (`#d4af37`) unificado em todo o site.
-- **Elementos Físicos:** Painéis de vidro fumado translúcidos (Glasmorphism) com cortes de luz oblíquos a 150º.
-- **Iconografia:** Marcas de água gigantes de símbolos técnicos (Material Symbols).
-- **Ambiente:** Sistema global de partículas 3D em parallax (Brasas industriais lentas ao fundo, Bokeh rápido na frente).
+Este é o repositório da plataforma digital da 4Winners, desenvolvida com uma arquitetura de alta performance focada na fluidez visual ("Luxurious Inertia") e na facilidade de gestão de conteúdos ("Drop & Forget").
 
 ---
 
-## Arquitetura de Animação: O Padrão "Absolute Scroll"
+## 🏗 Estrutura do Projeto
 
-Para garantir que animações complexas baseadas em scroll funcionam sem falhas, implementámos o paradigma de **Absolute Scroll Sync**:
-
-1.  **Lenis RAF Sync:** O motor de smooth scroll (Lenis) está diretamente acoplado à *ticker* interna do GSAP para zero desfasamento sub-frame.
-2.  **Inércia Luxuosa no Desktop:** O Lenis está afinado com `duration: 2.5` e `mouseMultiplier: 1.5`. Isto substitui o frustrante "Scroll Snap" por uma física pesada e amanteigada. Um rodar de rato desliza o ecrã longamente até à próxima secção, mantendo o controlo na mão do utilizador.
-3.  **A Regra do `.fromTo` + `scrub: true`:** Animações ligadas ao scroll usam sempre `.fromTo()` para definir rigidamente estados (em vez de herdar estados atuais, o que quebra em refreshes).
-4.  **Isolamento de Estado Inicial:** Animações de carregamento (ex: montagem do título) são canceladas se a página for carregada abaixo do topo, entregando o controlo puramente à linha de scroll.
+```text
+.
+├── assets/                  # Base de Media e Assets
+│   ├── [serviço]/           # Pastas por categoria (ex: corte-laser)
+│   │   ├── 00.webp          # Capa principal (pode ser .mp4 para vídeo em loop)
+│   │   ├── peca-final.webp  # Media genérica (detetada automaticamente)
+│   │   └── peca_360/        # Sequência de frames WebP para visualização 360
+│   └── inventory.json       # Manifesto de media gerado automaticamente
+├── modules/                 # Lógica Modular (Vanilla JS ES6)
+│   ├── media-engine.js      # Motor unificado de media (Performance e 360)
+│   ├── modal.js             # Gestão dinâmica dos modais de serviço
+│   ├── portfolio.js         # Galeria global com lógica New-First
+│   ├── smooth-scroll.js     # Motor Lenis (Sincronização absoluta com GSAP)
+│   ├── services-config.js   # Especificações técnicas e títulos dos serviços
+│   ├── glass-effect.js      # Lógica dos painéis Frosted Glass
+│   ├── global-particles.js  # Sistema de partículas 3D em camadas
+│   ├── hero-animation.js    # Animação de entrada do logótipo SVG
+│   └── scrollytelling.js    # Orquestração de animações baseadas em scroll
+├── vendor/                  # Bibliotecas externas (GSAP, Lenis, Model-Viewer)
+├── generate-inventory.mjs   # Script Node.js de automação de inventário
+├── script.js                # Inicializador e orquestrador dinâmico
+├── style.css                # Design System, Layouts e Media Queries
+└── index.html               # Estrutura semântica e placeholders
+```
 
 ---
 
-## Funcionalidades Implementadas (Changelog Recente)
+## 🚀 Funcionalidades e Problemas Resolvidos
 
-A aplicação sofreu uma transformação estrutural profunda ("Fase 2" e "Fase 3" do Plano de Transformação) para melhorar a apresentação dos serviços e a experiência do utilizador:
+### 1. Sistema "Drop & Forget" (Gestão Automatizada)
+*   **Vantagem:** Elimina a necessidade de editar código HTML/JS para atualizar o site.
+*   **Problema Resolvido:** Antigamente, mudar uma imagem de capa ou adicionar um vídeo exigia mexer no código. Agora, o site adapta-se ao que estiver na pasta.
+*   **Suporte Híbrido:** O sistema deteta automaticamente se a capa (`00`) é uma imagem ou vídeo e injeta a tag correta (`<img>` ou `<video>`) com as propriedades de performance adequadas.
 
-### 1. Novo Layout ZigZag para Serviços
-- Transição de descrições escondidas em modais para a página principal (fluxo de scroll).
-- Implementação de um layout "Split" (ZigZag) elegante e intercalado para Desktop (Esquerda/Direita).
-- Empilhamento vertical otimizado para Mobile (Imagem em cima, texto colado em baixo).
-- Integração de imagens reais de alta qualidade (`.webp`) para os principais serviços (Estampagem, Corte Laser, Gravação Laser, Impressão 3D, Maquinação CNC, Modelação 3D).
+### 2. Motor de Media V2.5 (Estabilidade e Performance)
+*   **Problema Resolvido:** O uso intensivo de vídeos e sequências 360º pode causar "Memory Leaks", tornando o site lento ou provocando o crash do browser em mobile.
+*   **Solução:** Implementámos uma gestão de ciclo de vida rigorosa. Ao fechar qualquer conteúdo, o motor:
+    1.  Interrompe carregamentos em curso (Abort).
+    2.  Limpa fontes de vídeo (`src = ""`) e descarrega buffers.
+    3.  Destrói timers e referências de memória.
+    4.  Garante que nenhuma animação tenta aceder a objetos já removidos (Prevenção de erros `null/undefined`).
 
-### 2. O Novo Modal "Deep-Dive Técnico" (Split Layout)
-O modal evoluiu de uma simples caixa de texto para uma ficha técnica interativa avançada:
-- **Layout Split:** O ecrã do modal agora divide-se entre Media (Esquerda) e Dados Técnicos (Direita) no Desktop.
-- **Especificações Técnicas (B2B):** Injeção de tabelas geradas dinamicamente via JS com dados concretos (Tolerâncias, Áreas de Corte, Eixos, etc.).
-- **Visualizador 360º Nativo:** Implementação de um sistema de renderização de sequência de imagens (Sprite/Sequence) com suporte a interação por arrasto (Drag/Touch) para a Impressão 3D.
-- **Visualizador 3D GLB:** Integração da tag `<model-viewer>` do Google para inspecionar peças modeladas em 3D em tempo real.
-- **Otimização Media:** Suporte nativo para Imagens, Vídeos (`autoplay loop muted`), Visões 360º e Modelos 3D Genéricos, tudo gerido por um único JSON no ficheiro `modules/modal.js`.
+### 3. Inércia Luxuosa (Experiência Premium)
+*   **Vantagem:** Navegação suave que simula a massa de um objeto físico.
+*   **Sincronização GSAP:** O motor de scroll está ligado ao ciclo de renderização do GSAP (`ticker`), garantindo que os efeitos de profundidade e as animações de texto não têm "jitter" (trepidação).
 
-### 3. Melhorias Visuais e de Performance
-- **Comportamento Inteligente das Partículas:** As partículas globais (brasas) agora fazem fade-out automático ao entrar na zona de leitura dos serviços e fade-in no Hero e Contactos, reduzindo o ruído visual e poupando bateria/CPU (ScrollTrigger).
-- **Hero & Slogan:** Adição e animação fluída do Slogan ("Excelência em Transformação de Metal") e correção de bugs ("Logo Fantasma" e espaçamentos) na renderização inicial do logótipo SVG.
-- **Correções CSS/UI:** Isolamento do título principal, fixação da altura da janela no telemóvel para evitar saltos (100vh dinâmico), e remoção de barras de scroll horizontais extra introduzidas pelo modal.
-- **Ritmo de Leitura (Espaçamento):** Ajuste fino da cadência de *scroll*. Redução do espaço vertical vazio (`min-height`, `margin`, e `padding`) entre secções e dentro dos cartões, gerando uma densidade de informação B2B mais coesa tanto no Desktop como no Mobile.
-- **Auto-Rotação 360º:** O visualizador 360º de imagens (Impressão 3D) agora roda automaticamente para chamar a atenção. Inclui lógica de interrupção instantânea ao toque e um *standby* inteligente que retoma a rotação 1 segundo após o utilizador largar a peça.
+### 4. Inteligência de Conteúdo (Smart Selection)
+*   **Lógica New-First:** O inventário rastreia a data de criação dos ficheiros. O site prioriza automaticamente novidades dos últimos 14 dias para manter o conteúdo sempre fresco para o utilizador recorrente.
+*   **Rotação Semanal:** Caso não existam novidades, a media dos serviços roda automaticamente todas as segundas-feiras, garantindo dinamismo visual.
 
-### 4. Funcionalidades de Contacto & Segurança
-- **Segurança Anti-Bot:** Implementação de ofuscação (concatenação de strings em execução) no JS para proteger o Email e o Telefone de web scrapers/bots de spam.
-- **Blindagem de Scripts (Vendor Lock-in):** As dependências externas (GSAP, ScrollTrigger, Lenis e Model-Viewer) foram descarregadas e servidas localmente a partir da pasta `vendor/`. Isto imuniza o site contra injeções de código provenientes de CDNs comprometidas (Subresource Integrity protection) e mitiga quedas de rede de terceiros.
-- **Layout Modal de Contacto:** O modal de contacto tem agora um design em ecrã inteiro focado puramente na ação rápida ("Ligar Agora" CTA) e direções de GPS.
 ---
 
-## Próximos Passos (Backlog)
+## 🛠 Guia de Atualização
 
-### Implementação do Portefólio e Dinamismo Rotativo
-Todo o detalhe arquitetónico desta evolução está documentado no ficheiro `PLANO_GALERIA.md`. O resumo da implementação a decorrer:
-- [ ] **Fase 1 (Estrutura de Assets):** Criar sub-pastas por serviço e migrar ficheiros numéricos (`01.webp`, `02.mp4`).
-- [ ] **Fase 2 (Auto-Discovery):** Javascript com injeção por *fallback* cego para descobrir os ficheiros de forma dinâmica, rotacionando a média semanalmente.
-- [ ] **Fase 3 (Cartões Dinâmicos):** Propagar o sistema da Fase 2 para os thumbnails dos serviços na *landing page*.
-- [ ] **Fase 4 (Showroom Portefólio):** Construir o Modal Global com Grelha, Filtros, Slideshow Interativo (Pinch-to-zoom) e Suporte nativo ao 360º.
-- [ ] **Fase 5 (Performance):** Controlo e *garbage collection* para não causar vazamento de memória com reproduções múltiplas no Lightbox.
+### Como adicionar novos trabalhos:
+1.  **Imagens/Vídeos:** Arrastar para a pasta do serviço em `assets/[serviço]/`. Pode ter qualquer nome.
+2.  **Interação 360º:** Criar uma pasta que termine em `_360` (ex: `medalha_360/`) e colocar os frames lá dentro (`frame_00.webp`, `frame_01.webp`, etc.).
+3.  **Atualizar o Site:** No terminal, executar:
+    ```bash
+    node generate-inventory.mjs
+    ```
+    Isto gera o novo `inventory.json`. O site reflete as mudanças instantaneamente após o próximo refresh.
 
-- [ ] **Efeitos Visuais Específicos:**
-    - [ ] Montagem de Medalhas: Animar a vista explodida dos componentes a unirem-se com o scroll.
+---
 
-- [ ] **Finalização e Deploy:**
-    - [ ] Configurar Firebase Hosting para Testes Q/A.
+## 💎 Design System
+*   **Paleta:** Black Industrial (#000000) e Premium Gold (#d4af37).
+*   **Tipografia:** Helvetica Neue / Monospace para dados técnicos.
+*   **Interatividade:** Foco total em gestos de arrasto para o 360 e navegação por teclado (Setas/ESC) no Lightbox.

@@ -1372,3 +1372,15 @@ html.modal-open, body.modal-open {
         padding: 10px;
     }
 }
+
+/* --- Polimento Final Fase 3 --- */
+@media (max-width: 480px) {
+    #portfolio-title {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+    .portfolio-category-title {
+        font-size: 0.7rem;
+        margin-top: 20px;
+    }
+}
