@@ -16,14 +16,19 @@ async function init() {
     // Regista o plugin ScrollTrigger do GSAP
     gsap.registerPlugin(ScrollTrigger);
 
-    // 1. Carregar Inventário primeiro que tudo para as capas
+    // 1. Tentar carregar Inventário
     try {
-        const resp = await fetch('assets/inventory.json?v=' + Date.now());
-        const data = await resp.json();
-        inventory = data.meta.services;
-        applyDynamicCovers();
+        // Usar ./ para garantir caminhos relativos corretos no GitHub Pages
+        const resp = await fetch('./assets/inventory.json?v=' + Date.now());
+        if (resp.ok) {
+            const data = await resp.json();
+            inventory = data?.meta?.services || null;
+            if (inventory) applyDynamicCovers();
+        } else {
+            console.warn("⚠️ Inventário não encontrado (404). Usando capas estáticas.");
+        }
     } catch (e) {
-        console.error("❌ Erro ao carregar inventário para capas:", e);
+        console.error("❌ Erro ao carregar inventário:", e);
     }
 
     // Inicializa o Smooth Scroll
@@ -38,13 +43,13 @@ async function init() {
         initializeGlassEffect();
         initializeHeroAnimation();
         
-        // Reativar as animações de conteúdo (Fase 1 - Correção)
+        // CRÍTICO: Garantir que as animações arrancam MESMO que o inventário falhe
         setupContentAnimations();
 
         // Forçar recalculo das posições de scroll
         ScrollTrigger.refresh();
         console.log("Site pronto.");
-    }, 100);
+    }, 150);
 
     // --- Navegação Inteligente (Header e Side Nav) ---
     setupNavigation();
@@ -108,6 +113,7 @@ function setupContentAnimations() {
         };
 
         if (textElements.length > 0) {
+            // Garantimos o estado inicial antes da animação
             gsap.set(textElements, { opacity: 0, y: 30 });
             gsap.to(textElements, {
                 scrollTrigger: commonScrollTrigger,
