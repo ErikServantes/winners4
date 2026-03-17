@@ -97,19 +97,27 @@ function renderGrid(gridContainer) {
                     img.src = item.src;
                     img.loading = 'lazy';
                     div.appendChild(img);
-                } else {
+                } else if (item.type === '360') {
+                    const img = document.createElement('img');
+                    img.src = `${item.folder}frame_00.webp`;
+                    img.loading = 'lazy';
+                    div.appendChild(img);
+                    
                     const icon = document.createElement('span');
                     icon.className = 'item-type-icon';
-                    icon.textContent = item.type === 'video360' ? '[ 360 ]' : '[ > ]';
+                    icon.textContent = '[ 360 ]';
                     div.appendChild(icon);
-                    
-                    if (item.type === 'video' || item.type === 'video360') {
-                         const v = document.createElement('video');
-                         v.src = item.src + "#t=0.1";
-                         v.preload = "metadata";
-                         v.muted = true;
-                         div.appendChild(v);
-                    }
+                } else if (item.type === 'video') {
+                    const v = document.createElement('video');
+                    v.src = item.src + "#t=0.1";
+                    v.preload = "metadata";
+                    v.muted = true;
+                    div.appendChild(v);
+
+                    const icon = document.createElement('span');
+                    icon.className = 'item-type-icon';
+                    icon.textContent = '[ > ]';
+                    div.appendChild(icon);
                 }
 
                 div.addEventListener('click', () => openLightbox(itemIndex));
@@ -148,8 +156,8 @@ function openLightbox(index) {
             const v = contentArea.querySelector('video');
             if (v) { v.pause(); v.src = ""; v.load(); v.remove(); }
         };
-    } else if (itemData.item.type === 'video360') {
-        currentLightboxCleanup = MediaEngine.initVideo360(itemData.item, contentArea);
+    } else if (itemData.item.type === '360') {
+        currentLightboxCleanup = MediaEngine.initImage360(itemData.item, contentArea);
     }
 
     lightbox.classList.add('visible');

@@ -127,10 +127,9 @@ function loadDynamicMedia(serviceKey, data) {
 
     if (currentCleanup) currentCleanup(); // Limpar anterior
 
-    if (finalMedia.type === 'video360') {
-        currentCleanup = MediaEngine.initVideo360(finalMedia, container);
+    if (finalMedia.type === '360') {
+        currentCleanup = MediaEngine.initImage360(finalMedia, container);
     } else if (finalMedia.type === 'video') {
-        // CORREÇÃO: Usar o src diretamente na tag video permite ao browser detetar o MIME type corretamente
         container.innerHTML = `<video src="${finalMedia.src}" autoplay loop muted playsinline class="modal-video"></video>`;
         currentCleanup = () => {
             const v = container.querySelector('video');

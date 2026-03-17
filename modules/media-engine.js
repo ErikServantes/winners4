@@ -1,120 +1,152 @@
 
 /**
  * MEDIA ENGINE - Módulo unificado para visualização de media
- * Gere vídeos, imagens e o novo sistema de 360 por vídeo (scrubbing)
+ * Gere vídeos, imagens e o sistema de 360 por frames (WebP)
  */
 
 export const MediaEngine = {
     /**
-     * Cria e configura um visualizador 360 baseado em vídeo
-     * @param {Object} data - Dados do item (src, etc)
+     * Cria e configura um visualizador 360 baseado em sequência de imagens
+     * @param {Object} data - Dados do item (folder, prefix, extension, count)
      * @param {HTMLElement} container - Onde injetar o visualizador
      */
-    initVideo360(data, container) {
+    initImage360(data, container) {
         container.innerHTML = '';
-        container.className = 'viewer-360-container video-360';
-        container.style.cursor = 'ew-resize';
+        container.className = 'viewer-360-container image-360';
+        container.style.cursor = 'grab';
+        container.style.userSelect = 'none';
 
-        const video = document.createElement('video');
-        video.src = data.src;
-        video.preload = 'auto';
-        video.loop = true;
-        video.muted = true;
-        video.playsInline = true;
-        video.style.width = '100%';
-        video.style.height = '100%';
-        video.style.objectFit = 'contain';
-        video.style.pointerEvents = 'none'; // Importante para o drag no container funcionar
-
+        const imgElement = document.createElement('img');
+        imgElement.src = `${data.folder}${data.prefix}00${data.extension}`;
+        imgElement.style.width = '100%';
+        imgElement.style.height = '100%';
+        imgElement.style.objectFit = 'contain';
+        imgElement.style.pointerEvents = 'none';
+        
         const hint = document.createElement('div');
         hint.className = 'viewer-360-hint';
-        hint.innerHTML = '<span class="material-symbols-outlined">360</span> Arraste para analisar';
+        hint.innerHTML = 'A carregar interação...';
         
-        container.appendChild(video);
+        container.appendChild(imgElement);
         container.appendChild(hint);
 
+        const images = [];
+        let loadedCount = 0;
         let isDragging = false;
         let startX = 0;
-        let startFrameTime = 0;
-        let videoDuration = 0;
+        let currentFrameIndex = 0;
+        let autoRotateInterval, autoRotateTimeout;
+        let isAutoRotating = true;
 
-        // Ao carregar metadados, sabemos a duração
-        video.addEventListener('loadedmetadata', () => {
-            videoDuration = video.duration;
-            video.currentTime = 0;
-        });
+        // Pré-carregamento das imagens
+        for (let i = 0; i < data.count; i++) {
+            const img = new Image();
+            const formattedIndex = i.toString().padStart(2, '0');
+            img.src = `${data.folder}${data.prefix}${formattedIndex}${data.extension}`;
+            img.onload = () => {
+                loadedCount++;
+                if (loadedCount === data.count) {
+                    hint.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 5px;">360</span>Arraste para rodar';
+                    setupInteraction();
+                }
+            };
+            images.push(img);
+        }
 
-        const handleStart = (clientX) => {
-            isDragging = true;
-            startX = clientX;
-            startFrameTime = video.currentTime;
-            container.classList.add('is-dragging');
-            hint.style.opacity = '0';
-        };
+        function startAutoRotate() {
+            isAutoRotating = true;
+            clearInterval(autoRotateInterval);
+            autoRotateInterval = setInterval(() => {
+                if (isAutoRotating && !isDragging) {
+                    currentFrameIndex = (currentFrameIndex + 1) % data.count;
+                    imgElement.src = images[currentFrameIndex].src;
+                }
+            }, 120);
+        }
 
-        const handleMove = (clientX) => {
-            if (!isDragging || !videoDuration) return;
+        function stopAutoRotate() {
+            isAutoRotating = false;
+            clearInterval(autoRotateInterval);
+            clearTimeout(autoRotateTimeout);
+        }
+        
+        function resumeAutoRotateDelay() {
+            clearTimeout(autoRotateTimeout);
+            autoRotateTimeout = setTimeout(startAutoRotate, 1000);
+        }
+
+        function setupInteraction() {
+            startAutoRotate();
             
-            const deltaX = clientX - startX;
-            // Sensibilidade: mover a largura total do container percorre o vídeo todo
-            const percentageChange = deltaX / container.offsetWidth;
-            let newTime = startFrameTime - (percentageChange * videoDuration);
-            
-            // Loop infinito do tempo do vídeo
-            while (newTime < 0) newTime += videoDuration;
-            while (newTime > videoDuration) newTime -= videoDuration;
-            
-            video.currentTime = newTime;
-        };
+            const sensitivity = 15;
 
-        const handleEnd = () => {
-            isDragging = false;
-            container.classList.remove('is-dragging');
-        };
+            const handleMove = (clientX) => {
+                if (!isDragging) return;
+                const diffX = clientX - startX;
+                if (Math.abs(diffX) > sensitivity) {
+                    const direction = diffX > 0 ? -1 : 1;
+                    currentFrameIndex = (currentFrameIndex + direction + data.count) % data.count;
+                    imgElement.src = images[currentFrameIndex].src;
+                    startX = clientX;
+                }
+            };
 
-        // Eventos de Rato
-        container.addEventListener('mousedown', (e) => handleStart(e.clientX));
-        window.addEventListener('mousemove', (e) => handleMove(e.clientX));
-        window.addEventListener('mouseup', handleEnd);
+            const startDrag = (clientX) => {
+                isDragging = true;
+                startX = clientX;
+                container.style.cursor = 'grabbing';
+                hint.style.opacity = '0';
+                stopAutoRotate();
+            };
 
-        // Eventos de Touch
-        container.addEventListener('touchstart', (e) => handleStart(e.touches[0].clientX), { passive: true });
-        container.addEventListener('touchmove', (e) => {
-            if (isDragging) e.preventDefault();
-            handleMove(e.touches[0].clientX);
-        }, { passive: false });
-        container.addEventListener('touchend', handleEnd);
+            const endDrag = () => {
+                if (isDragging) {
+                    isDragging = false;
+                    container.style.cursor = 'grab';
+                    resumeAutoRotateDelay();
+                }
+            };
 
-        // Função de limpeza para evitar memory leaks
+            container.addEventListener('mousedown', (e) => startDrag(e.clientX));
+            window.addEventListener('mousemove', (e) => handleMove(e.clientX));
+            window.addEventListener('mouseup', endDrag);
+
+            container.addEventListener('touchstart', (e) => handleStart(e.touches[0].clientX), { passive: true });
+            container.addEventListener('touchmove', (e) => {
+                if (isDragging) e.preventDefault();
+                handleMove(e.touches[0].clientX);
+            }, { passive: false });
+            container.addEventListener('touchend', endDrag);
+        }
+
+        // Função de limpeza
         return () => {
-            video.pause();
-            video.src = "";
-            video.load();
-            video.remove();
+            stopAutoRotate();
+            // Limpar referências
+            images.length = 0;
         };
     },
 
     /**
      * Lógica de escolha de media inteligente (Smart Selection)
-     * @param {Array} mediaList - Lista de media do serviço
-     * @param {number} weekNum - Número da semana atual
-     * @returns {Object} O item de media selecionado
      */
     smartSelect(mediaList, weekNum) {
         if (!mediaList || mediaList.length === 0) return null;
 
+        // O novo sistema usa timestamps, o antigo usava index. 
+        // Vamos suportar ambos para garantir compatibilidade durante a transição.
+        
         const NOW = Date.now();
         const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000;
 
-        // 1. Procurar novidades (menos de 14 dias)
-        const recentMedia = mediaList.filter(item => (NOW - item.timestamp) < TWO_WEEKS_MS);
+        // 1. Procurar novidades por timestamp se existir
+        const recentMedia = mediaList.filter(item => item.timestamp && (NOW - item.timestamp) < TWO_WEEKS_MS);
         
         if (recentMedia.length > 0) {
-            // Se houver novidades, mostra a mais recente de todas
-            return recentMedia[0]; // O inventário já vem ordenado por timestamp desc
+            return recentMedia[0];
         }
 
-        // 2. Se não houver novidades, carrossel semanal
+        // 2. Fallback para carrossel semanal
         const index = (weekNum - 1) % mediaList.length;
         return mediaList[index];
     }
