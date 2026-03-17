@@ -7,14 +7,26 @@ import { initializeGlobalParticles } from './modules/global-particles.js';
 import { initializeGlassEffect } from './modules/glass-effect.js';
 import { initializeHeroAnimation } from './modules/hero-animation.js';
 
+let inventory = null;
+
 // Função principal de arranque
-function init() {
-    console.log("A inicializar site...");
+async function init() {
+    console.log("🚀 A inicializar site dinâmico...");
 
     // Regista o plugin ScrollTrigger do GSAP
     gsap.registerPlugin(ScrollTrigger);
 
-    // Inicializa o Smooth Scroll primeiro
+    // 1. Carregar Inventário primeiro que tudo para as capas
+    try {
+        const resp = await fetch('assets/inventory.json?v=' + Date.now());
+        const data = await resp.json();
+        inventory = data.meta.services;
+        applyDynamicCovers();
+    } catch (e) {
+        console.error("❌ Erro ao carregar inventário para capas:", e);
+    }
+
+    // Inicializa o Smooth Scroll
     initializeSmoothScroll();
 
     // Pequeno delay para garantir que o Lenis calculou a altura da página
@@ -26,6 +38,9 @@ function init() {
         initializeGlassEffect();
         initializeHeroAnimation();
         
+        // Reativar as animações de conteúdo (Fase 1 - Correção)
+        setupContentAnimations();
+
         // Forçar recalculo das posições de scroll
         ScrollTrigger.refresh();
         console.log("Site pronto.");
@@ -33,6 +48,89 @@ function init() {
 
     // --- Navegação Inteligente (Header e Side Nav) ---
     setupNavigation();
+}
+
+/**
+ * FASE 1: Injeta as capas (00) dinamicamente baseadas no inventory.json
+ */
+function applyDynamicCovers() {
+    if (!inventory) return;
+
+    const mediaContainers = document.querySelectorAll('.section-media[data-service-folder]');
+    
+    mediaContainers.forEach(container => {
+        const folder = container.dataset.serviceFolder;
+        const serviceData = inventory[folder];
+
+        if (serviceData && serviceData.cover) {
+            container.innerHTML = ''; 
+            
+            if (serviceData.cover.type === 'video') {
+                const video = document.createElement('video');
+                video.src = serviceData.cover.src;
+                video.autoplay = true;
+                video.loop = true;
+                video.muted = true;
+                video.playsInline = true;
+                video.style.width = '100%';
+                video.style.height = '100%';
+                video.style.objectFit = 'cover';
+                container.appendChild(video);
+            } else {
+                const img = document.createElement('img');
+                img.src = serviceData.cover.src;
+                img.loading = 'lazy';
+                img.alt = folder;
+                container.appendChild(img);
+            }
+        }
+    });
+}
+
+/**
+ * Restaura as animações de entrada dos painéis de serviço
+ */
+function setupContentAnimations() {
+    const allSections = gsap.utils.toArray('.fullscreen-section');
+    const serviceSections = allSections.filter(section => 
+        section.id !== 'hero-4winners' && 
+        section.id !== 'background-layers'
+    );
+    
+    serviceSections.forEach((section) => {
+        const textElements = gsap.utils.toArray(section.querySelectorAll('.content h1:not(:has(svg)), .content p'));
+        const buttonElement = section.querySelector('.content .details-btn');
+
+        const commonScrollTrigger = {
+            trigger: section,
+            start: 'top 70%',
+            toggleActions: 'play reverse play reverse',
+        };
+
+        if (textElements.length > 0) {
+            gsap.set(textElements, { opacity: 0, y: 30 });
+            gsap.to(textElements, {
+                scrollTrigger: commonScrollTrigger,
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                stagger: 0.2,
+            });
+        }
+
+        if (buttonElement) {
+            gsap.set(buttonElement, { opacity: 0, y: 30 });
+            gsap.to(buttonElement, {
+                scrollTrigger: commonScrollTrigger,
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                delay: 0.4,
+            });
+        }
+    });
 }
 
 function setupNavigation() {
