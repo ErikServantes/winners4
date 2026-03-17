@@ -14,6 +14,15 @@
       "type": "image",
       "src": "assets/impressao-3d/03.webp",
       "timestamp": 1773673332539.3364
+    },
+    {
+      "name": "Afonso_360",
+      "type": "360",
+      "folder": "assets/impressao-3d/Afonso_360/",
+      "prefix": "frame_",
+      "extension": ".webp",
+      "count": 36,
+      "timestamp": 1773656972695.172
     }
   ],
   "maquinacao-cnc": [],
