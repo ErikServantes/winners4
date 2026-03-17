@@ -4,22 +4,16 @@
   "gravacao-laser": [],
   "impressao-3d": [
     {
-      "index": 1,
-      "type": "360",
-      "folder": "assets/impressao-3d/01/",
-      "prefix": "frame_",
-      "extension": ".webp",
-      "count": 36
-    },
-    {
-      "index": 2,
+      "name": "02",
       "type": "video",
-      "src": "assets/impressao-3d/02.mp4"
+      "src": "assets/impressao-3d/02.mp4",
+      "timestamp": 1773673412758.0945
     },
     {
-      "index": 3,
+      "name": "03",
       "type": "image",
-      "src": "assets/impressao-3d/03.webp"
+      "src": "assets/impressao-3d/03.webp",
+      "timestamp": 1773673332539.3364
     }
   ],
   "maquinacao-cnc": [],
