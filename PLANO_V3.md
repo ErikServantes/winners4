@@ -1,44 +1,56 @@
 # PLANO DE IMPLEMENTAÇÃO - V3 (Arquitetura de Catálogo Agrupado)
 
-Este plano descreve a transição de uma landing page de serviços individuais para um sistema de grupos de serviços com navegação por listas dinâmicas.
+Este plano descreve a transição de uma landing page de serviços individuais para um sistema de 6 grupos industriais com navegação por listas dinâmicas e efeitos visuais avançados.
 
 ---
 
-## FASE 1: Reestruturação de Dados (Configuração)
-**Objetivo:** Organizar os serviços em categorias lógicas no código.
+## FASE 1: Reestruturação de Dados e Infraestrutura
+**Objetivo:** Preparar as pastas e a configuração lógica para a nova hierarquia.
 
-1.  **Refatorar `modules/services-config.js`:**
-    - Criar um novo objeto `serviceGroups` que mapeia IDs de grupos para uma lista de serviços.
-    - Manter o objeto `serviceConfig` para os detalhes técnicos de cada sub-serviço.
-2.  **Definição das Capas de Grupo:**
-    - Decidir se cada grupo tem uma pasta própria de assets (ex: `assets/grupo-acabamentos/00.webp`) ou se usa a capa do primeiro serviço da lista.
+1.  **Criação de Novas Pastas em `assets/`:**
+    - `desenho-vectorial/`, `fundicao/`, `polimento/`, `evaporacao-vacuo/`, `pintura-envernizamento/`, `gravacao-fresa/`.
+2.  **Atualização do `modules/services-config.js`:**
+    - Implementar o objeto `serviceGroups` com a nova taxonomia.
+    - Corrigir terminologias: "Abrilhantamento" e "Gravação por fresa".
+    - Manter/Atualizar as especificações técnicas para cada um dos 18 sub-serviços.
 
 ## FASE 2: Transformação da Interface (Landing Page)
-**Objetivo:** Atualizar o `index.html` para mostrar grupos e listas clicáveis.
+**Objetivo:** Reduzir as 12+ secções atuais para apenas 6 secções de impacto (Grupos).
 
 1.  **Redesenho dos Cartões no `index.html`:**
-    - Substituir os blocos de texto individuais por títulos de grupos (ex: "ACABAMENTOS DE SUPERFÍCIE").
-    - Injetar uma lista `<ul>` em cada cartão onde cada `<li>` representa um serviço.
-2.  **Atributos de Gatilho:**
-    - Cada item da lista terá um `data-service="ID-DO-SERVICO"` para que o JavaScript saiba qual modal abrir.
-3.  **Ajustes de CSS:**
-    - Estilizar a lista para que os itens pareçam botões elegantes e tenham uma área de clique (hitbox) confortável para mobile.
+    - Substituir textos longos por listas `<ul>` interativas.
+    - Cada `<li>` terá um atributo `data-service="slug-do-servico"`.
+2.  **Ajustes de Layout:**
+    - Garantir que os painéis de vidro (Glass Effect) acomodam bem as listas.
+    - Manter a alternância Zig-Zag para os 6 blocos principais.
 
-## FASE 3: Lógica de Navegação e Media
-**Objetivo:** Adaptar o `script.js` e `modules/modal.js` para a nova forma de navegar.
+## FASE 3: Interatividade Dinâmica (Mouseover & Modais)
+**Objetivo:** Criar o efeito "Wow" e a navegação funcional.
 
-1.  **Interceção de Cliques na Lista:**
-    - O `script.js` deve ouvir cliques nos itens da lista e disparar a abertura do modal correspondente.
-2.  **Sincronização de Capas Dinâmicas:**
-    - Garantir que o fundo do cartão do grupo carrega a media correta do inventário.
-3.  **Consolidação do Modal:**
-    - Ajustar o título e o corpo do modal para refletir o serviço específico selecionado na lista.
+1.  **Efeito Mouseover (Desktop):**
+    - Implementar lógica no `script.js`: ao passar o rato num item da lista, a imagem/vídeo de fundo do cartão (`section-media`) muda suavemente para a capa desse sub-serviço.
+2.  **Gatilho de Modais Dinâmicos:**
+    - Cliques nos itens da lista abrem o modal correspondente com as especificações técnicas e media específica (usando o `MediaEngine V2.6`).
+3.  **Sincronização com o Inventário:**
+    - O `generate-inventory.mjs` continuará a alimentar todo o sistema automaticamente.
 
-## FASE 4: Testes de UX e Responsividade
-**Objetivo:** Garantir que a lista é fácil de usar em todos os dispositivos.
+## FASE 4: UX Mobile e Otimização Final
+**Objetivo:** Garantir que o catálogo é funcional em todos os contextos.
 
-1.  **Feedback Visual:** Adicionar efeitos de hover/active nos itens da lista para o utilizador saber que são clicáveis.
-2.  **Scroll Interno:** Garantir que se a lista for muito longa, o cartão lida bem com isso (ou colunas duplas).
+1.  **Adaptabilidade Mobile:**
+    - Em touch, a imagem de fundo será a do primeiro serviço do grupo por defeito.
+    - Garantir que os itens da lista têm altura suficiente para cliques precisos.
+2.  **Limpeza de Memória:**
+    - Reforçar que a troca de imagens no mouseover também respeita a política de performance e não acumula lixo no DOM.
 
 ---
-**ESTADO:** Aguardando lista oficial de Grupos e Serviços para iniciar FASE 1.
+**LISTA OFICIAL DE GRUPOS E SERVIÇOS:**
+1. **Design**: Desenho Vectorial, Modelação 3D.
+2. **Manufactura Aditiva**: Impressão 3D, Fundição Metais/Resina.
+3. **Manufatura Subtrativa**: Corte Laser, Maquinação CNC, Torneamento.
+4. **Conformação**: Estampagem/Ambutissagem, Repuxamento, Quinagem, Calandragem.
+5. **Acabamento de Superfícies**: Polimento/Abrilhantamento, Evaporação Metálica, Processos Galvânicos, Pintura/Envernizamento.
+6. **Personalização**: Gravação Laser, Gravação por Fresa, Impressão Directa.
+
+---
+**ESTADO:** Plano atualizado. Pronto para iniciar FASE 1.
