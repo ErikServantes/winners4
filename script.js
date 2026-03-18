@@ -66,6 +66,7 @@ function applyDynamicCovers() {
 
         if (serviceData && serviceData.cover) {
             container.innerHTML = ''; 
+            container.classList.remove('media-empty');
             
             if (serviceData.cover.type === 'video') {
                 const video = document.createElement('video');
@@ -85,13 +86,16 @@ function applyDynamicCovers() {
                 img.alt = folder;
                 container.appendChild(img);
             }
+        } else {
+            // Fallback se não houver capa na pasta do serviço
+            container.classList.add('media-empty');
+            container.innerHTML = '<div class="technical-placeholder"><span>B2B INDUSTRIAL SOLUTIONS</span></div>';
         }
     });
 }
 
 /**
  * Restaura as animações de entrada dos painéis de serviço
- * Simplificado para máxima compatibilidade
  */
 function setupContentAnimations() {
     const serviceSections = gsap.utils.toArray('section.fullscreen-section').filter(section => 
@@ -99,7 +103,6 @@ function setupContentAnimations() {
     );
     
     serviceSections.forEach((section) => {
-        // Selecionar os elementos de texto e o botão
         const content = section.querySelector('.content');
         if (!content) return;
 
@@ -110,7 +113,6 @@ function setupContentAnimations() {
         const elementsToAnimate = [title, text, button].filter(Boolean);
 
         if (elementsToAnimate.length > 0) {
-            // Garantir que começam invisíveis antes da animação ScrollTrigger
             gsap.set(elementsToAnimate, { opacity: 0, y: 30 });
 
             gsap.to(elementsToAnimate, {
