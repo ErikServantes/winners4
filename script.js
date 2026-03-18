@@ -21,11 +21,11 @@ async function init() {
         const resp = await fetch('./assets/inventory.json?v=' + Date.now());
         if (resp.ok) {
             const data = await resp.json();
-            inventory = data?.meta?.services || null;
-            if (inventory) applyDynamicCovers();
+            inventory = data; // Objeto completo
+            applyDynamicCovers(data);
         }
     } catch (e) {
-        console.error("❌ Erro ao carregar inventário:", e);
+        console.error("❌ Erro ao carregar inventário para capas:", e);
     }
 
     // Inicializa o Smooth Scroll
@@ -40,7 +40,6 @@ async function init() {
         initializeGlassEffect();
         initializeHeroAnimation();
         
-        // Ativar as animações de conteúdo
         setupContentAnimations();
 
         // Forçar recalculo das posições de scroll
@@ -53,39 +52,40 @@ async function init() {
 }
 
 /**
- * FASE 1 & 3: Injeta as capas e gere o Efeito Mouseover V3
+ * FASE 3: Gere o Efeito Mouseover V3 e as Capas Centrais (Pasta 'servicos')
  */
-function applyDynamicCovers() {
-    if (!inventory) return;
+function applyDynamicCovers(data) {
+    if (!data || !data.meta) return;
 
-    // Apanha todas as secções fullscreen que tenham ID (ex: #design, #conformacao)
+    // SEGURANÇA: Inicializar objetos se não existirem no JSON
+    const groupCovers = data.meta.groupCovers || {};
+    const services = data.meta.services || {};
+
     const sections = document.querySelectorAll('section.fullscreen-section[id]');
     
     sections.forEach(section => {
         const container = section.querySelector('.section-media');
         if (!container) return;
 
-        const groupId = section.id; // O ID do grupo (ex: 'acabamento')
+        const groupId = section.id;
         
-        // Se houver uma capa específica para o grupo, usamos essa (ex: assets/acabamento/00.webp)
-        // Se não houver, tentamos usar a capa do primeiro serviço da lista desse grupo
-        let groupCoverData = null;
-        if (inventory[groupId] && inventory[groupId].cover) {
-            groupCoverData = inventory[groupId].cover;
-        } else {
-            // Procura o primeiro <li> e tenta usar a capa desse serviço como fallback de grupo
-            const firstServiceLi = section.querySelector('.service-list li');
-            if (firstServiceLi) {
-                const firstServiceKey = firstServiceLi.dataset.service;
-                if (inventory[firstServiceKey] && inventory[firstServiceKey].cover) {
-                    groupCoverData = inventory[firstServiceKey].cover;
+        // 1. Prioridade: Capa Central de Grupo
+        let groupCoverData = groupCovers[groupId] || null;
+
+        // 2. Fallback: Capa do primeiro serviço da lista desse grupo
+        if (!groupCoverData) {
+            const firstLi = section.querySelector('.service-list li');
+            if (firstLi) {
+                const sKey = firstLi.dataset.service;
+                if (services[sKey] && services[sKey].cover) {
+                    groupCoverData = services[sKey].cover;
                 }
             }
         }
 
-        // 1. Aplica a Capa Inicial (Grupo ou Fallback)
+        // Aplicar Capa Inicial (Estática)
         if (groupCoverData) {
-            container.innerHTML = ''; 
+            container.innerHTML = '';
             container.classList.remove('media-empty');
             renderCover(groupCoverData, container);
         } else {
@@ -93,37 +93,23 @@ function applyDynamicCovers() {
             container.innerHTML = '<div class="technical-placeholder"><span>4WINNERS</span></div>';
         }
 
-        // 2. Aplica o Efeito Mouseover nos <li> da lista de serviços
-        const listItems = section.querySelectorAll('.service-list li');
-        
-        listItems.forEach(li => {
-            const serviceKey = li.dataset.service;
+        // 3. Efeito Mouseover na lista de serviços
+        section.querySelectorAll('.service-list li').forEach(li => {
+            const sKey = li.dataset.service;
             
             li.addEventListener('mouseenter', () => {
-                const sData = inventory[serviceKey];
-                
-                if (sData && sData.cover) {
+                if (services[sKey] && services[sKey].cover) {
                     container.innerHTML = '';
                     container.classList.remove('media-empty');
-                    renderCover(sData.cover, container);
-                    
-                    // Transição suave GSAP (Fade-in + Zoom-out)
-                    gsap.fromTo(container.firstChild, 
-                        { opacity: 0.4, scale: 1.05 }, 
-                        { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" }
-                    );
+                    renderCover(services[sKey].cover, container);
+                    gsap.fromTo(container.firstChild, { opacity: 0.5 }, { opacity: 1, duration: 0.4 });
                 }
             });
 
             li.addEventListener('mouseleave', () => {
-                // Quando o rato sai, volta suavemente à capa do grupo
                 if (groupCoverData) {
                     container.innerHTML = '';
                     renderCover(groupCoverData, container);
-                    gsap.fromTo(container.firstChild, 
-                        { opacity: 0.6 }, 
-                        { opacity: 1, duration: 0.4, ease: "power2.out" }
-                    );
                 } else {
                     container.innerHTML = '';
                     container.classList.add('media-empty');
@@ -134,7 +120,6 @@ function applyDynamicCovers() {
     });
 }
 
-// Função utilitária para renderizar img/video sem repetir código
 function renderCover(coverData, container) {
     if (coverData.type === 'video') {
         const video = document.createElement('video');
