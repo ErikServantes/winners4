@@ -1,3 +1,4 @@
+body, html { overflow-x: hidden !important; position: relative; width: 100%; }
 body, html {
     margin: 0;
     padding: 0;
@@ -402,7 +403,7 @@ section[class*="theme-glass"] .details-btn:hover {
     }
 
     .content h1 {
-        font-size: 2.5rem; 
+        font-size: 1.8rem; 
         letter-spacing: 2px;
     }
 
@@ -726,7 +727,7 @@ section:not([class*="theme-"]) .details-btn:hover {
 .layout-split .glass-panel {
     width: 45%; /* Texto é mais estreito */
     /* SOBREPOSIÇÃO: O painel tem margem negativa para "montar" em cima da imagem */
-    margin-left: -10%; 
+    margin-left: 0; 
     z-index: 10; /* Fica por cima da imagem */
     padding: 40px 30px;
     text-align: left; /* No split layout, o texto fica melhor alinhado à esquerda do que ao centro */
@@ -735,7 +736,7 @@ section:not([class*="theme-"]) .details-btn:hover {
 .layout-split.zigzag-right .glass-panel {
     /* Se a imagem está à direita, o painel encosta-se à direita puxando margem negativa */
     margin-left: 0;
-    margin-right: -10%;
+    margin-right: 0;
 }
 
 .layout-split .glass-panel h1 {
@@ -758,10 +759,10 @@ section:not([class*="theme-"]) .details-btn:hover {
     }
     .layout-split .glass-panel {
         width: 55%;
-        margin-left: -10%;
+        margin-left: 0;
     }
     .layout-split.zigzag-right .glass-panel {
-        margin-right: -10%;
+        margin-right: 0;
     }
 }
 
