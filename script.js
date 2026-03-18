@@ -21,7 +21,7 @@ async function init() {
         const resp = await fetch('./assets/inventory.json?v=' + Date.now());
         if (resp.ok) {
             const data = await resp.json();
-            inventory = data; // Objeto completo
+            inventory = data; 
             applyDynamicCovers(data);
         }
     } catch (e) {
@@ -52,15 +52,13 @@ async function init() {
 }
 
 /**
- * FASE 3: Gere o Efeito Mouseover V3 e as Capas Centrais (Pasta 'servicos')
+ * FASE 3: Gere o Efeito Mouseover V3 com Memória de 3 segundos e Cross-Fade
  */
 function applyDynamicCovers(data) {
     if (!data || !data.meta) return;
 
-    // SEGURANÇA: Inicializar objetos se não existirem no JSON
     const groupCovers = data.meta.groupCovers || {};
     const services = data.meta.services || {};
-
     const sections = document.querySelectorAll('section.fullscreen-section[id]');
     
     sections.forEach(section => {
@@ -68,11 +66,9 @@ function applyDynamicCovers(data) {
         if (!container) return;
 
         const groupId = section.id;
-        
-        // 1. Prioridade: Capa Central de Grupo
         let groupCoverData = groupCovers[groupId] || null;
 
-        // 2. Fallback: Capa do primeiro serviço da lista desse grupo
+        // Fallback inicial do Grupo
         if (!groupCoverData) {
             const firstLi = section.querySelector('.service-list li');
             if (firstLi) {
@@ -83,44 +79,110 @@ function applyDynamicCovers(data) {
             }
         }
 
-        // Aplicar Capa Inicial (Estática)
+        // Estado inicial sem animação
         if (groupCoverData) {
             container.innerHTML = '';
             container.classList.remove('media-empty');
-            renderCover(groupCoverData, container);
+            const el = createMediaElement(groupCoverData);
+            el.classList.add('active-media');
+            el.style.width = '100%';
+            el.style.height = '100%';
+            el.style.objectFit = 'cover';
+            container.appendChild(el);
         } else {
             container.classList.add('media-empty');
             container.innerHTML = '<div class="technical-placeholder"><span>4WINNERS</span></div>';
         }
 
-        // 3. Efeito Mouseover na lista de serviços
+        let lastRequestedSrc = groupCoverData ? groupCoverData.src : '';
+        let revertTimeout = null; // Temporizador para cada secção
+
+        const transitionTo = (mediaData, isReverting = false) => {
+            if (!mediaData || mediaData.src === lastRequestedSrc) return;
+            
+            lastRequestedSrc = mediaData.src;
+
+            const newEl = createMediaElement(mediaData);
+            newEl.style.position = 'absolute';
+            newEl.style.top = '0';
+            newEl.style.left = '0';
+            newEl.style.width = '100%';
+            newEl.style.height = '100%';
+            newEl.style.opacity = '0';
+            newEl.style.zIndex = '2';
+            newEl.classList.add('active-media');
+            newEl.style.objectFit = 'cover';
+            
+            container.appendChild(newEl);
+
+            // Se for troca entre serviços, a transição é rápida (0.5s)
+            // Se for o regresso à capa padrão, podemos ser um pouco mais lentos (0.8s)
+            const duration = isReverting ? 0.8 : 0.5;
+
+            gsap.to(newEl, {
+                opacity: 1,
+                duration: duration,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    // Limpar media antiga com segurança
+                    Array.from(container.children).forEach(child => {
+                        if (child !== newEl) {
+                            if (child.tagName === 'VIDEO') {
+                                child.pause();
+                                child.src = "";
+                                child.load();
+                            }
+                            child.remove();
+                        }
+                    });
+                    newEl.style.zIndex = '1';
+                }
+            });
+
+            // Efeito de zoom-out subtil apenas na entrada de serviços
+            if (!isReverting) {
+                gsap.fromTo(newEl, { scale: 1.05 }, { scale: 1, duration: 1, ease: "power2.out" });
+            }
+        };
+
+        // 1. Mouseover nos serviços
         section.querySelectorAll('.service-list li').forEach(li => {
             const sKey = li.dataset.service;
             
             li.addEventListener('mouseenter', () => {
-                if (services[sKey] && services[sKey].cover) {
-                    container.innerHTML = '';
-                    container.classList.remove('media-empty');
-                    renderCover(services[sKey].cover, container);
-                    gsap.fromTo(container.firstChild, { opacity: 0.5 }, { opacity: 1, duration: 0.4 });
+                // Cancelar qualquer ordem de regresso à capa padrão
+                if (revertTimeout) {
+                    clearTimeout(revertTimeout);
+                    revertTimeout = null;
                 }
-            });
 
-            li.addEventListener('mouseleave', () => {
-                if (groupCoverData) {
-                    container.innerHTML = '';
-                    renderCover(groupCoverData, container);
-                } else {
-                    container.innerHTML = '';
-                    container.classList.add('media-empty');
-                    container.innerHTML = '<div class="technical-placeholder"><span>4WINNERS</span></div>';
+                const sData = services[sKey];
+                if (sData && sData.cover) {
+                    transitionTo(sData.cover);
                 }
             });
         });
+
+        // 2. Lógica de saída: Manter por 3 segundos antes de voltar ao padrão do grupo
+        const listContainer = section.querySelector('.service-list');
+        if (listContainer) {
+            listContainer.addEventListener('mouseleave', () => {
+                if (groupCoverData) {
+                    // Agendar o regresso
+                    revertTimeout = setTimeout(() => {
+                        transitionTo(groupCoverData, true);
+                        revertTimeout = null;
+                    }, 3000); // 3 SEGUNDOS DE MEMÓRIA
+                }
+            });
+        }
     });
 }
 
-function renderCover(coverData, container) {
+/**
+ * Cria o elemento de media (Img ou Video) baseado nos dados do inventário
+ */
+function createMediaElement(coverData) {
     if (coverData.type === 'video') {
         const video = document.createElement('video');
         video.src = coverData.src;
@@ -128,18 +190,12 @@ function renderCover(coverData, container) {
         video.loop = true;
         video.muted = true;
         video.playsInline = true;
-        video.style.width = '100%';
-        video.style.height = '100%';
-        video.style.objectFit = 'cover';
-        container.appendChild(video);
+        return video;
     } else {
         const img = document.createElement('img');
         img.src = coverData.src;
         img.loading = 'lazy';
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.objectFit = 'cover';
-        container.appendChild(img);
+        return img;
     }
 }
 

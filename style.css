@@ -714,15 +714,10 @@ section:not([class*="theme-"]) .details-btn:hover {
     height: 100%;
     object-fit: cover;
     /* Efeito de escurecer ligeiramente a imagem para não chocar com o ambiente dark */
-    filter: brightness(0.8) contrast(1.1); 
-    transition: filter 0.5s ease, transform 1s ease;
+     
+    
 }
 
-/* Efeito ao fazer hover na secção toda para dar vida à imagem */
-.layout-split:hover .section-media img {
-    filter: brightness(1) contrast(1.1);
-    transform: scale(1.03);
-}
 
 .layout-split .glass-panel {
     width: 45%; /* Texto é mais estreito */
