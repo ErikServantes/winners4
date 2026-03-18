@@ -8,11 +8,12 @@ async function loadInventory() {
     if (mediaInventory) return mediaInventory;
     try {
         const response = await fetch('./assets/inventory.json?v=' + Date.now());
+        if (!response.ok) throw new Error("Erro HTTP: " + response.status);
         const data = await response.json();
         mediaInventory = data?.meta?.services || {};
         return mediaInventory;
     } catch (error) {
-        console.error('❌ Erro inventário:', error);
+        console.error('❌ Erro inventário Modal:', error);
         mediaInventory = {};
         return mediaInventory;
     }
@@ -29,29 +30,47 @@ export function getWeekNumber() {
 export async function initializeModal() {
     await loadInventory();
     const modal = document.getElementById('details-modal');
-    if (!modal) return;
+    if (!modal) {
+        console.error("❌ Modal container não encontrado no DOM!");
+        return;
+    }
 
-    document.querySelectorAll('.details-btn, .service-list li').forEach(btn => {
-        btn.onclick = async (e) => {
-            const serviceKey = btn.dataset.service;
-            if (!serviceKey) return;
-            if (btn.tagName === 'A' && serviceKey === 'contacto') e.preventDefault();
+    console.log("✅ Sistema de Modais V3 ativo. A escutar cliques...");
 
-            const data = serviceConfig[serviceKey];
-            if (!data) return;
+    document.addEventListener('click', async (e) => {
+        // Encontra o elemento com data-service (pode ser o li ou o a/button)
+        const trigger = e.target.closest('[data-service]');
+        
+        if (!trigger) return; // Não é um gatilho de serviço
+        
+        // Exceção para o Portefólio (ele tem a sua própria lógica noutro lado)
+        if (trigger.id === 'portfolio-btn') return;
 
-            renderModal(modal, serviceKey, data);
-            openModalUI(modal);
-            
-            if (serviceKey !== 'contacto') {
-                loadMedia(serviceKey);
-            }
-        };
+        const serviceKey = trigger.dataset.service;
+        console.log(`🖱️ Clique detetado para o serviço: ${serviceKey}`);
+        
+        if (trigger.tagName === 'A' && serviceKey === 'contacto') e.preventDefault();
+
+        const data = serviceConfig[serviceKey];
+        if (!data) {
+            console.error(`❌ Configuração em falta no services-config.js para a chave: '${serviceKey}'`);
+            return;
+        }
+
+        renderModal(modal, serviceKey, data);
+        openModalUI(modal);
+        
+        if (serviceKey !== 'contacto') {
+            loadMedia(serviceKey);
+        }
     });
 
-    modal.onclick = (e) => {
-        if (e.target === modal) closeModal(modal);
-    };
+    modal.addEventListener('click', (e) => {
+        // Clicar fora ou no botão fechar
+        if (e.target === modal || e.target.closest('.modal-close')) {
+            closeModal(modal);
+        }
+    });
 }
 
 function renderModal(modal, key, data) {
@@ -110,7 +129,8 @@ function renderModal(modal, key, data) {
         </div>
     `;
     
-    modal.querySelector('.modal-close').onclick = () => closeModal(modal);
+    // Recolar evento fechar depois de reconstruir o innerHTML
+    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
 }
 
 function loadMedia(key) {
