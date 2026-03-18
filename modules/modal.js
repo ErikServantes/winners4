@@ -31,7 +31,7 @@ export async function initializeModal() {
     const modal = document.getElementById('details-modal');
     if (!modal) return;
 
-    document.querySelectorAll('.details-btn').forEach(btn => {
+    document.querySelectorAll('.details-btn, .service-list li').forEach(btn => {
         btn.onclick = async (e) => {
             const serviceKey = btn.dataset.service;
             if (!serviceKey) return;

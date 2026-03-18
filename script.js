@@ -11,7 +11,7 @@ let inventory = null;
 
 // Função principal de arranque
 async function init() {
-    console.log("🚀 A inicializar site dinâmico...");
+    console.log("🚀 A inicializar site dinâmico V3...");
 
     // Regista o plugin ScrollTrigger do GSAP
     gsap.registerPlugin(ScrollTrigger);
@@ -40,7 +40,6 @@ async function init() {
         initializeGlassEffect();
         initializeHeroAnimation();
         
-        // CRÍTICO: Garantir que as animações arrancam
         setupContentAnimations();
 
         // Forçar recalculo das posições de scroll
@@ -53,45 +52,93 @@ async function init() {
 }
 
 /**
- * FASE 1: Injeta as capas (00) dinamicamente baseadas no inventory.json
+ * FASE 1: Injeta as capas (00) dinamicamente e gere o Efeito Mouseover
  */
 function applyDynamicCovers() {
     if (!inventory) return;
 
-    const mediaContainers = document.querySelectorAll('.section-media[data-service-folder]');
+    // Procura por todas as secções principais (Grupos)
+    const sections = document.querySelectorAll('section.fullscreen-section[id]');
     
-    mediaContainers.forEach(container => {
-        const folder = container.dataset.serviceFolder;
-        const serviceData = inventory[folder];
+    sections.forEach(section => {
+        // Encontra o contentor de media dentro da secção
+        const container = section.querySelector('.section-media');
+        if (!container) return;
 
-        if (serviceData && serviceData.cover) {
+        const groupId = section.id;
+        // Na V3, a capa padrão do grupo pode vir do inventário se usarmos o ID do grupo
+        // Se o grupo não tiver pasta, podemos usar a capa do primeiro serviço dele
+        const groupData = inventory[groupId];
+
+        // 1. Aplicar a Capa Padrão
+        if (groupData && groupData.cover) {
             container.innerHTML = ''; 
             container.classList.remove('media-empty');
-            
-            if (serviceData.cover.type === 'video') {
-                const video = document.createElement('video');
-                video.src = serviceData.cover.src;
-                video.autoplay = true;
-                video.loop = true;
-                video.muted = true;
-                video.playsInline = true;
-                video.style.width = '100%';
-                video.style.height = '100%';
-                video.style.objectFit = 'cover';
-                container.appendChild(video);
-            } else {
-                const img = document.createElement('img');
-                img.src = serviceData.cover.src;
-                img.loading = 'lazy';
-                img.alt = folder;
-                container.appendChild(img);
-            }
+            renderCover(groupData.cover, container);
         } else {
-            // Fallback se não houver capa na pasta do serviço
             container.classList.add('media-empty');
             container.innerHTML = '<div class="technical-placeholder"><span>4WINNERS</span></div>';
         }
+
+        // 2. Efeito Mouseover nas Listas (<li>)
+        const listItems = section.querySelectorAll('.service-list li');
+        
+        listItems.forEach(li => {
+            const serviceKey = li.dataset.service;
+            
+            li.addEventListener('mouseenter', () => {
+                const sData = inventory[serviceKey];
+                // Se o sub-serviço tiver uma capa, trocamos a imagem
+                if (sData && sData.cover) {
+                    container.innerHTML = '';
+                    container.classList.remove('media-empty');
+                    renderCover(sData.cover, container);
+                    
+                    // Transição suave
+                    gsap.fromTo(container.firstChild, 
+                        { opacity: 0.5, scale: 1.05 }, 
+                        { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }
+                    );
+                }
+            });
+
+            li.addEventListener('mouseleave', () => {
+                // Ao sair, volta à imagem padrão do grupo
+                if (groupData && groupData.cover) {
+                    container.innerHTML = '';
+                    renderCover(groupData.cover, container);
+                } else {
+                    container.innerHTML = '';
+                    container.classList.add('media-empty');
+                    container.innerHTML = '<div class="technical-placeholder"><span>4WINNERS</span></div>';
+                }
+            });
+        });
     });
+}
+
+// Função utilitária para criar imgs e videos
+function renderCover(coverData, container) {
+    if (coverData.type === 'video') {
+        const video = document.createElement('video');
+        video.src = coverData.src;
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        container.appendChild(video);
+    } else {
+        const img = document.createElement('img');
+        img.src = coverData.src;
+        img.loading = 'lazy';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        container.appendChild(img);
+    }
 }
 
 /**
@@ -108,9 +155,10 @@ function setupContentAnimations() {
 
         const title = content.querySelector('h1');
         const text = content.querySelector('p');
+        const list = content.querySelector('.service-list');
         const button = content.querySelector('.details-btn');
         
-        const elementsToAnimate = [title, text, button].filter(Boolean);
+        const elementsToAnimate = [title, text, list, button].filter(Boolean);
 
         if (elementsToAnimate.length > 0) {
             gsap.set(elementsToAnimate, { opacity: 0, y: 30 });
@@ -179,7 +227,7 @@ function setupParticleFading() {
     if (!bgParticles || !fgParticles) return;
 
     ScrollTrigger.create({
-        trigger: '#corte-laser', 
+        trigger: '#design', 
         start: 'top 70%',        
         endTrigger: '#contacto', 
         end: 'top 80%',          

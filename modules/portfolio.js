@@ -1,4 +1,4 @@
-import { serviceConfig } from './services-config.js';
+import { serviceConfig, serviceGroups } from './services-config.js';
 import { MediaEngine } from './media-engine.js';
 
 let inventoryCache = null;
@@ -37,17 +37,17 @@ export async function initializePortfolio() {
     const lightbox = document.getElementById('portfolio-lightbox');
     if (lightbox) {
         lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
-        
         lightbox.querySelector('.lightbox-prev').addEventListener('click', (e) => {
             e.stopPropagation();
             if (currentLightboxIndex > 0) openLightbox(currentLightboxIndex - 1);
         });
-        
         lightbox.querySelector('.lightbox-next').addEventListener('click', (e) => {
             e.stopPropagation();
             if (currentLightboxIndex < lightboxItems.length - 1) openLightbox(currentLightboxIndex + 1);
         });
-
+        
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+        
         document.addEventListener('keydown', (e) => {
             if (!lightbox.classList.contains('visible')) return;
             if (e.key === 'Escape') closeLightbox();
@@ -55,6 +55,8 @@ export async function initializePortfolio() {
             if (e.key === 'ArrowRight' && currentLightboxIndex < lightboxItems.length - 1) openLightbox(currentLightboxIndex + 1);
         });
     }
+
+    modal.addEventListener('click', (e) => { if (e.target === modal) closePortfolio(modal); });
 }
 
 function openPortfolio(modal, gridContainer) {
@@ -80,39 +82,50 @@ function renderGrid(container) {
     lightboxItems = [];
     let globalIndex = 0;
 
-    for (const serviceKey in inventoryCache) {
-        const items = inventoryCache[serviceKey].items || [];
-        if (items.length === 0) continue;
-
-        const title = document.createElement('h3');
-        title.className = 'portfolio-category-title';
-        title.textContent = serviceConfig[serviceKey]?.title || serviceKey;
-        container.appendChild(title);
+    for (const [groupId, groupData] of Object.entries(serviceGroups)) {
+        const groupTitle = groupData.title;
+        let hasAnyItems = false;
+        const groupContainer = document.createElement('div');
+        
+        const titleEl = document.createElement('h3');
+        titleEl.className = 'portfolio-category-title';
+        titleEl.textContent = groupTitle;
+        groupContainer.appendChild(titleEl);
 
         const grid = document.createElement('div');
         grid.className = 'portfolio-category-grid';
-        container.appendChild(grid);
+        groupContainer.appendChild(grid);
 
-        items.forEach(item => {
-            const index = globalIndex++;
-            lightboxItems.push({ serviceKey, item });
+        groupData.services.forEach(serviceKey => {
+            const inventoryData = inventoryCache[serviceKey];
+            if (inventoryData && inventoryData.items && inventoryData.items.length > 0) {
+                hasAnyItems = true;
+                inventoryData.items.forEach(item => {
+                    const index = globalIndex++;
+                    lightboxItems.push({ serviceKey, item, groupTitle });
 
-            const div = document.createElement('div');
-            div.className = 'portfolio-item';
-            div.addEventListener('click', () => openLightbox(index));
+                    const div = document.createElement('div');
+                    div.className = 'portfolio-item';
+                    div.addEventListener('click', () => openLightbox(index));
 
-            if (item.type === 'image') {
-                div.innerHTML = `<img src="${item.src}" loading="lazy">`;
-            } else if (item.type === 'video') {
-                div.innerHTML = `<video src="${item.src}#t=0.1" muted playsinline></video>
-                                 <span class="item-type-icon material-symbols-outlined">play_circle</span>`;
-            } else if (item.type === '360') {
-                div.innerHTML = `<img src="${item.folder}frame_00.webp" loading="lazy">
-                                 <span class="item-type-icon material-symbols-outlined">360</span>`;
+                    if (item.type === 'image') {
+                        div.innerHTML = `<img src="${item.src}" loading="lazy">`;
+                    } else if (item.type === 'video') {
+                        div.innerHTML = `<video src="${item.src}#t=0.1" muted playsinline></video>
+                                         <span class="item-type-icon material-symbols-outlined">play_circle</span>`;
+                    } else if (item.type === '360') {
+                        div.innerHTML = `<img src="${item.folder}frame_00.webp" loading="lazy">
+                                         <span class="item-type-icon material-symbols-outlined">360</span>`;
+                    }
+
+                    grid.appendChild(div);
+                });
             }
-
-            grid.appendChild(div);
         });
+
+        if (hasAnyItems) {
+            container.appendChild(groupContainer);
+        }
     }
 }
 
@@ -125,11 +138,11 @@ function openLightbox(index) {
     if (currentLightboxCleanup) currentLightboxCleanup();
 
     currentLightboxIndex = index;
-    const { serviceKey, item } = lightboxItems[index];
+    const { serviceKey, item, groupTitle } = lightboxItems[index];
     const sName = serviceConfig[serviceKey]?.title || serviceKey;
 
     contentArea.innerHTML = '';
-    caption.textContent = `${sName.toUpperCase()} // ${item.name || 'ITEM'}`;
+    caption.textContent = `${groupTitle.toUpperCase()} / ${sName.toUpperCase()}`;
 
     if (item.type === 'image') {
         currentLightboxCleanup = MediaEngine.initImage(item, contentArea);
