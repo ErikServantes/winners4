@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": 1773825356918,
+    "lastUpdated": 1773830546368,
     "services": {
       "corte-laser": {
         "cover": {
@@ -28,7 +28,17 @@
           "src": "assets/gravacao-laser/00.webp",
           "type": "image"
         },
-        "items": []
+        "items": [
+          {
+            "name": "AfonMeta_360",
+            "type": "360",
+            "folder": "assets/gravacao-laser/AfonMeta_360/",
+            "prefix": "frame_",
+            "extension": ".webp",
+            "count": 50,
+            "timestamp": 1773830011284.1306
+          }
+        ]
       },
       "impressao-3d": {
         "cover": {
