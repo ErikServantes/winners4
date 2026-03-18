@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": 1773759528495,
+    "lastUpdated": 1773825356918,
     "services": {
       "corte-laser": {
         "cover": {
@@ -19,7 +19,7 @@
             "name": "03",
             "type": "image",
             "src": "assets/estampagem/03.webp",
-            "timestamp": 1773759157721.9368
+            "timestamp": 1773761716791.4678
           }
         ]
       },
@@ -43,7 +43,7 @@
             "prefix": "frame_",
             "extension": ".webp",
             "count": 36,
-            "timestamp": 1773757142377.0984
+            "timestamp": 1773761716807.469
           },
           {
             "name": "02",
@@ -64,7 +64,17 @@
           "src": "assets/maquinacao-cnc/00.webp",
           "type": "image"
         },
-        "items": []
+        "items": [
+          {
+            "name": "AfonsoHD_360",
+            "type": "360",
+            "folder": "assets/maquinacao-cnc/AfonsoHD_360/",
+            "prefix": "frame_",
+            "extension": ".webp",
+            "count": 50,
+            "timestamp": 1773824653479.891
+          }
+        ]
       },
       "modelacao-3d": {
         "cover": {
