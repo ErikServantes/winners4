@@ -18,14 +18,11 @@ async function init() {
 
     // 1. Tentar carregar Inventário
     try {
-        // Usar ./ para garantir caminhos relativos corretos no GitHub Pages
         const resp = await fetch('./assets/inventory.json?v=' + Date.now());
         if (resp.ok) {
             const data = await resp.json();
             inventory = data?.meta?.services || null;
             if (inventory) applyDynamicCovers();
-        } else {
-            console.warn("⚠️ Inventário não encontrado (404). Usando capas estáticas.");
         }
     } catch (e) {
         console.error("❌ Erro ao carregar inventário:", e);
@@ -43,13 +40,13 @@ async function init() {
         initializeGlassEffect();
         initializeHeroAnimation();
         
-        // CRÍTICO: Garantir que as animações arrancam MESMO que o inventário falhe
+        // CRÍTICO: Garantir que as animações arrancam
         setupContentAnimations();
 
         // Forçar recalculo das posições de scroll
         ScrollTrigger.refresh();
         console.log("Site pronto.");
-    }, 150);
+    }, 200);
 
     // --- Navegação Inteligente (Header e Side Nav) ---
     setupNavigation();
@@ -94,46 +91,39 @@ function applyDynamicCovers() {
 
 /**
  * Restaura as animações de entrada dos painéis de serviço
+ * Simplificado para máxima compatibilidade
  */
 function setupContentAnimations() {
-    const allSections = gsap.utils.toArray('.fullscreen-section');
-    const serviceSections = allSections.filter(section => 
-        section.id !== 'hero-4winners' && 
-        section.id !== 'background-layers'
+    const serviceSections = gsap.utils.toArray('section.fullscreen-section').filter(section => 
+        section.id !== 'hero-4winners' && section.id !== 'background-layers'
     );
     
     serviceSections.forEach((section) => {
-        const textElements = gsap.utils.toArray(section.querySelectorAll('.content h1:not(:has(svg)), .content p'));
-        const buttonElement = section.querySelector('.content .details-btn');
+        // Selecionar os elementos de texto e o botão
+        const content = section.querySelector('.content');
+        if (!content) return;
 
-        const commonScrollTrigger = {
-            trigger: section,
-            start: 'top 70%',
-            toggleActions: 'play reverse play reverse',
-        };
+        const title = content.querySelector('h1');
+        const text = content.querySelector('p');
+        const button = content.querySelector('.details-btn');
+        
+        const elementsToAnimate = [title, text, button].filter(Boolean);
 
-        if (textElements.length > 0) {
-            // Garantimos o estado inicial antes da animação
-            gsap.set(textElements, { opacity: 0, y: 30 });
-            gsap.to(textElements, {
-                scrollTrigger: commonScrollTrigger,
+        if (elementsToAnimate.length > 0) {
+            // Garantir que começam invisíveis antes da animação ScrollTrigger
+            gsap.set(elementsToAnimate, { opacity: 0, y: 30 });
+
+            gsap.to(elementsToAnimate, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 75%',
+                    toggleActions: 'play reverse play reverse',
+                },
                 opacity: 1,
                 y: 0,
                 duration: 0.8,
                 ease: 'power3.out',
-                stagger: 0.2,
-            });
-        }
-
-        if (buttonElement) {
-            gsap.set(buttonElement, { opacity: 0, y: 30 });
-            gsap.to(buttonElement, {
-                scrollTrigger: commonScrollTrigger,
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: 'power3.out',
-                delay: 0.4,
+                stagger: 0.15
             });
         }
     });
@@ -163,7 +153,7 @@ function setupNavigation() {
     });
 
     const navLinks = document.querySelectorAll('#side-nav ul li a');
-    const sections = gsap.utils.toArray('.fullscreen-section');
+    const sections = gsap.utils.toArray('section.fullscreen-section');
 
     sections.forEach((section, i) => {
         ScrollTrigger.create({
