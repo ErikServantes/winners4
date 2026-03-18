@@ -1,6 +1,12 @@
 {
   "meta": {
-    "lastUpdated": 1773836497934,
+    "lastUpdated": 1773849324692,
+    "groupCovers": {
+      "design": {
+        "src": "assets/servicos/01.webp",
+        "type": "image"
+      }
+    },
     "services": {
       "calandragem": {
         "cover": {
@@ -16,6 +22,13 @@
         },
         "items": []
       },
+      "desenho-vectorial": {
+        "cover": {
+          "src": "assets/desenho-vectorial/00.webp",
+          "type": "image"
+        },
+        "items": []
+      },
       "estampagem": {
         "cover": {
           "src": "assets/estampagem/00.webp",
@@ -26,15 +39,27 @@
             "name": "03",
             "type": "image",
             "src": "assets/estampagem/03.webp",
-            "timestamp": 1773761716791.4678
+            "timestamp": 1773841888596.4233
           }
         ]
+      },
+      "evaporacao-vacuo": {
+        "cover": null,
+        "items": []
+      },
+      "fundicao": {
+        "cover": null,
+        "items": []
       },
       "galvanizacao": {
         "cover": {
           "src": "assets/galvanizacao/00.webp",
           "type": "image"
         },
+        "items": []
+      },
+      "gravacao-fresa": {
+        "cover": null,
         "items": []
       },
       "gravacao-laser": {
@@ -49,8 +74,8 @@
             "folder": "assets/gravacao-laser/01AfonMeta_360/",
             "prefix": "frame_",
             "extension": ".webp",
-            "count": 48,
-            "timestamp": 1773831378992.4446
+            "timestamp": 1773831378992.4446,
+            "count": 48
           }
         ]
       },
@@ -61,25 +86,25 @@
         },
         "items": [
           {
+            "name": "03",
+            "type": "image",
+            "src": "assets/impressao-3d/03.webp",
+            "timestamp": 1773841890940.6106
+          },
+          {
             "name": "Afonso_360",
             "type": "360",
             "folder": "assets/impressao-3d/Afonso_360/",
             "prefix": "frame_",
             "extension": ".webp",
-            "count": 36,
-            "timestamp": 1773761716807.469
+            "timestamp": 1773761716807.469,
+            "count": 36
           },
           {
             "name": "02",
             "type": "video",
             "src": "assets/impressao-3d/02.mp4",
             "timestamp": 1773673412758.0945
-          },
-          {
-            "name": "03",
-            "type": "image",
-            "src": "assets/impressao-3d/03.webp",
-            "timestamp": 1773673332539.3364
           }
         ]
       },
@@ -102,8 +127,8 @@
             "folder": "assets/maquinacao-cnc/AfonsoHD_360/",
             "prefix": "frame_",
             "extension": ".webp",
-            "count": 50,
-            "timestamp": 1773824653479.891
+            "timestamp": 1773824653479.891,
+            "count": 50
           }
         ]
       },
@@ -112,6 +137,14 @@
           "src": "assets/modelacao-3d/00.webp",
           "type": "image"
         },
+        "items": []
+      },
+      "pintura-envernizamento": {
+        "cover": null,
+        "items": []
+      },
+      "polimento": {
+        "cover": null,
         "items": []
       },
       "quinagem": {
