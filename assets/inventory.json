@@ -1,7 +1,14 @@
 {
   "meta": {
-    "lastUpdated": 1773831462170,
+    "lastUpdated": 1773836497934,
     "services": {
+      "calandragem": {
+        "cover": {
+          "src": "assets/calandragem/00.webp",
+          "type": "image"
+        },
+        "items": []
+      },
       "corte-laser": {
         "cover": {
           "src": "assets/corte-laser/00.webp",
@@ -22,6 +29,13 @@
             "timestamp": 1773761716791.4678
           }
         ]
+      },
+      "galvanizacao": {
+        "cover": {
+          "src": "assets/galvanizacao/00.webp",
+          "type": "image"
+        },
+        "items": []
       },
       "gravacao-laser": {
         "cover": {
@@ -69,6 +83,13 @@
           }
         ]
       },
+      "impressao-uv": {
+        "cover": {
+          "src": "assets/impressao-uv/00.webp",
+          "type": "image"
+        },
+        "items": []
+      },
       "maquinacao-cnc": {
         "cover": {
           "src": "assets/maquinacao-cnc/00.webp",
@@ -89,6 +110,27 @@
       "modelacao-3d": {
         "cover": {
           "src": "assets/modelacao-3d/00.webp",
+          "type": "image"
+        },
+        "items": []
+      },
+      "quinagem": {
+        "cover": {
+          "src": "assets/quinagem/00.webp",
+          "type": "image"
+        },
+        "items": []
+      },
+      "repuxamento": {
+        "cover": {
+          "src": "assets/repuxamento/00.webp",
+          "type": "image"
+        },
+        "items": []
+      },
+      "torneamento": {
+        "cover": {
+          "src": "assets/torneamento/00.webp",
           "type": "image"
         },
         "items": []
