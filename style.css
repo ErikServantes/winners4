@@ -365,7 +365,7 @@ section[class*="theme-glass"] .details-btn:hover {
 }
 
 .content h1 {
-    font-size: 4rem;
+    font-size: 3.2rem;
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 3px;
@@ -403,7 +403,7 @@ section[class*="theme-glass"] .details-btn:hover {
     }
 
     .content h1 {
-        font-size: 1.8rem; 
+        font-size: 1.45rem; 
         letter-spacing: 2px;
     }
 
@@ -740,7 +740,7 @@ section:not([class*="theme-"]) .details-btn:hover {
 }
 
 .layout-split .glass-panel h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: 20px;
     text-align: left;
 }
