@@ -89,7 +89,7 @@ function applyDynamicCovers() {
         } else {
             // Fallback se não houver capa na pasta do serviço
             container.classList.add('media-empty');
-            container.innerHTML = '<div class="technical-placeholder"><span>B2B INDUSTRIAL SOLUTIONS</span></div>';
+            container.innerHTML = '<div class="technical-placeholder"><span>4WINNERS</span></div>';
         }
     });
 }

@@ -1399,7 +1399,7 @@ html.modal-open, body.modal-open {
 .technical-placeholder span {
     color: rgba(255, 255, 255, 0.05);
     font-family: monospace;
-    letter-spacing: 10px;
+    letter-spacing: 20px;
     font-size: 1rem;
     transform: rotate(-45deg);
 }

@@ -1,10 +1,10 @@
 /**
- * MEDIA ENGINE V2.5 - Gestão de Memória e Performance Crítica
+ * MEDIA ENGINE V2.6 - Carregamento Progressivo e Tolerância a Falhas
  */
 
 export const MediaEngine = {
     /**
-     * Inicializa um visualizador 360 com proteção de memória e aborto de carregamento
+     * Inicializa um visualizador 360 com carregamento inteligente
      */
     init360(data, container) {
         let isAborted = false;
@@ -23,7 +23,7 @@ export const MediaEngine = {
 
         const hint = document.createElement('div');
         hint.className = 'viewer-360-hint';
-        hint.innerHTML = 'A carregar interação...';
+        hint.innerHTML = 'A preparar análise...';
 
         container.appendChild(img);
         container.appendChild(hint);
@@ -35,40 +35,48 @@ export const MediaEngine = {
         let currentIndex = 0;
         let rotateInterval;
         let resumeTimeout;
+        let interactionEnabled = false;
 
         const totalFrames = data.count;
+        const requiredToStart = Math.ceil(totalFrames * 0.20); // Liberta interação com 20% dos frames
 
-        // Inicia carregamento dos frames
         for (let i = 0; i < totalFrames; i++) {
             if (isAborted) break;
             const f = new Image();
             const idx = i.toString().padStart(2, '0');
             f.src = `${data.folder}${data.prefix}${idx}${data.extension}`;
+            
             f.onload = () => {
                 if (isAborted) return;
                 loaded++;
-                if (loaded === totalFrames) {
+                frames[i] = f; 
+
+                if (!interactionEnabled && loaded >= requiredToStart) {
+                    interactionEnabled = true;
                     hint.innerHTML = '<span class="material-symbols-outlined">360</span> Arraste para rodar';
                     setupEvents();
                 }
             };
-            frames.push(f);
+
+            f.onerror = () => {
+                if (isAborted) return;
+                loaded++; 
+                console.warn(`⚠️ Frame ${i} falhou.`);
+            };
         }
 
         function startAutoRotate() {
             if (isAborted) return;
             clearInterval(rotateInterval);
             rotateInterval = setInterval(() => {
-                if (!isDragging && frames.length > 0 && frames[currentIndex]) {
-                    img.src = frames[currentIndex].src;
-                    currentIndex = (currentIndex + 1) % totalFrames;
+                if (!isDragging && interactionEnabled) {
+                    const nextIndex = (currentIndex + 1) % totalFrames;
+                    if (frames[nextIndex]) {
+                        currentIndex = nextIndex;
+                        img.src = frames[currentIndex].src;
+                    }
                 }
             }, 143); 
-        }
-
-        function stopAutoRotate() {
-            clearInterval(rotateInterval);
-            clearTimeout(resumeTimeout);
         }
 
         function setupEvents() {
@@ -81,7 +89,8 @@ export const MediaEngine = {
                 startX = x;
                 container.style.cursor = 'grabbing';
                 hint.style.opacity = '0';
-                stopAutoRotate();
+                clearInterval(rotateInterval);
+                clearTimeout(resumeTimeout);
                 document.body.style.userSelect = 'none';
                 document.body.style.webkitUserSelect = 'none';
             };
@@ -91,9 +100,12 @@ export const MediaEngine = {
                 const diff = x - startX;
                 if (Math.abs(diff) > 10) { 
                     const dir = diff > 0 ? -1 : 1;
-                    currentIndex = (currentIndex + dir + totalFrames) % totalFrames;
-                    if (frames[currentIndex]) img.src = frames[currentIndex].src;
-                    startX = x;
+                    const nextIndex = (currentIndex + dir + totalFrames) % totalFrames;
+                    if (frames[nextIndex]) {
+                        currentIndex = nextIndex;
+                        img.src = frames[currentIndex].src;
+                        startX = x;
+                    }
                 }
             };
 
@@ -123,8 +135,9 @@ export const MediaEngine = {
 
         return () => {
             isAborted = true;
-            stopAutoRotate();
-            frames.forEach(f => { f.src = ''; f.onload = null; });
+            clearInterval(rotateInterval);
+            clearTimeout(resumeTimeout);
+            frames.forEach(f => { if(f) { f.src = ''; f.onload = null; f.onerror = null; } });
             frames = [];
             img.src = '';
             container.innerHTML = '';
