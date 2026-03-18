@@ -236,7 +236,7 @@ body {
     backdrop-filter: blur(16px) saturate(120%);
     -webkit-backdrop-filter: blur(16px) saturate(120%);
     border-radius: 8px;
-    padding: 60px 40px;
+    padding: 35px 40px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
     overflow: hidden; 
 }
@@ -521,7 +521,6 @@ section:not([class*="theme-"]) .details-btn:hover {
 .modal-layout-container {
     display: flex;
     flex-direction: row;
-    min-height: 500px; /* Garante uma altura mínima elegante mesmo sem muito texto */
 }
 
 /* Secção da Imagem/Media (Lado Esquerdo) */
@@ -683,7 +682,6 @@ section:not([class*="theme-"]) .details-btn:hover {
     
     /* override some inherited fullscreen properties */
     height: auto; /* let it adapt to content + margin */
-    min-height: 50vh; /* at least full height */
     box-sizing: border-box;
     padding-top: 40px; padding-bottom: 40px; /* Leave space for header */
 }
@@ -720,18 +718,20 @@ section:not([class*="theme-"]) .details-btn:hover {
 
 
 .layout-split .glass-panel {
-    width: 45%; /* Texto é mais estreito */
-    /* SOBREPOSIÇÃO: O painel tem margem negativa para "montar" em cima da imagem */
-    margin-left: 0; 
-    z-index: 10; /* Fica por cima da imagem */
+    width: 45%;
+    min-height: 48vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: -10%;
+    z-index: 10;
     padding: 40px 30px;
-    text-align: left; /* No split layout, o texto fica melhor alinhado à esquerda do que ao centro */
+    text-align: left;
 }
 
 .layout-split.zigzag-right .glass-panel {
-    /* Se a imagem está à direita, o painel encosta-se à direita puxando margem negativa */
     margin-left: 0;
-    margin-right: 0;
+    margin-right: -10%;
 }
 
 .layout-split .glass-panel h1 {
@@ -752,13 +752,21 @@ section:not([class*="theme-"]) .details-btn:hover {
     .layout-split .section-media {
         width: 55%;
     }
-    .layout-split .glass-panel {
-        width: 55%;
-        margin-left: 0;
-    }
-    .layout-split.zigzag-right .glass-panel {
-        margin-right: 0;
-    }
+.layout-split .glass-panel {
+    width: 45%;
+    min-height: 48vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: -10%;
+    z-index: 10;
+    padding: 40px 30px;
+    text-align: left;
+}
+.layout-split.zigzag-right .glass-panel {
+    margin-left: 0;
+    margin-right: -10%;
+}
 }
 
 @media (max-width: 768px) {
@@ -770,13 +778,11 @@ section:not([class*="theme-"]) .details-btn:hover {
         padding: 0 5%; /* Mais controlável que pixels fixos */
         justify-content: center;
         align-items: center;
-        min-height: 80vh; /* Para preencher quase todo o ecrã mas deixar respirar */
     }
 
     .layout-split .section-media {
         width: 100%;
         height: 35vh; /* Um pouco mais alta */
-        min-height: 280px;
         border-radius: 12px; /* Em mobile, arredondar tudo fica mais "Card" style */
         /* O truque do Feather/Fading edge na base da imagem usando pseudo-elemento (mask) */
         -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
@@ -784,18 +790,17 @@ section:not([class*="theme-"]) .details-btn:hover {
         margin-bottom: -50px; /* Puxa o painel de vidro mais para cima da máscara */
     }
 
-    .layout-split .glass-panel {
-        width: 95%; /* 95% para criar uma pequena margem em relação à imagem */
-        margin: 0;
-        /* Como a imagem tem o mask a esfumar em baixo, o painel entra de forma natural */
-        border-radius: 12px;
-        padding: 25px 20px;
-        text-align: center; 
-        z-index: 10;
-        /* Limpar a margem do zigzag para garantir que fica centrado */
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-    }
+.layout-split .glass-panel {
+    width: 45%;
+    min-height: 48vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: -10%;
+    z-index: 10;
+    padding: 40px 30px;
+    text-align: left;
+}
     
     .layout-split .glass-panel h1,
     .layout-split .glass-panel p {
@@ -943,7 +948,6 @@ section:not([class*="theme-"]) .details-btn:hover {
 @media (max-width: 768px) {
     .modal-media-wrapper {
         height: 30vh !important; /* Altura proporcional ao ecrã em vez de fixa */
-        min-height: 200px !important;
         max-height: 250px !important;
         flex-shrink: 0; /* Garante que a imagem/3D não é esmagada pelo texto */
     }
@@ -1411,7 +1415,7 @@ html.modal-open, body.modal-open {
     margin: 20px 0 0 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 .service-list li {
@@ -1453,5 +1457,22 @@ html.modal-open, body.modal-open {
     .service-list li {
         font-size: 0.85rem;
         padding: 12px 15px; 
+    }
+}
+
+/* --- V3: Correção do Layout Mobile --- */
+@media (max-width: 768px) {
+    .layout-split .glass-panel,
+    .layout-split.zigzag-right .glass-panel {
+        width: 90% !important; /* Ocupa quase toda a largura */
+        min-height: auto; /* Altura baseada no conteúdo */
+        margin: -50px auto 0 auto !important; /* Sobe e centra, anula margens negativas */
+        transform: none !important; /* Remove qualquer translação do desktop */
+        text-align: center;
+    }
+
+    .layout-split .glass-panel h1,
+    .layout-split .glass-panel .service-list {
+        text-align: center;
     }
 }

@@ -35,6 +35,7 @@ async function init() {
         initializeHeroAnimation();
         
         setupContentAnimations();
+        setupParallaxEffects(); // Efeito parallax restaurado
 
         ScrollTrigger.refresh();
         console.log("Site pronto.");
@@ -54,7 +55,7 @@ function applyDynamicCovers(data) {
     const sections = document.querySelectorAll('section.fullscreen-section[id]');
     
     sections.forEach(section => {
-        let isTransitioning = false; // Flag de bloqueio para esta secção
+        let isTransitioning = false;
         let revertTimeout = null;
 
         const container = section.querySelector('.section-media');
@@ -77,6 +78,7 @@ function applyDynamicCovers(data) {
             container.innerHTML = '';
             container.classList.remove('media-empty');
             const el = createMediaElement(groupCoverData);
+            el.classList.add('active-media');
             container.appendChild(el);
         } else {
             container.classList.add('media-empty');
@@ -88,7 +90,7 @@ function applyDynamicCovers(data) {
         const transitionTo = (mediaData, isReverting = false) => {
             if (isTransitioning || !mediaData || mediaData.src === lastRequestedSrc) return;
             
-            isTransitioning = true; // BLOQUEIA novas animações
+            isTransitioning = true; 
             lastRequestedSrc = mediaData.src;
 
             const newEl = createMediaElement(mediaData);
@@ -97,6 +99,7 @@ function applyDynamicCovers(data) {
             newEl.style.left = '0';
             newEl.style.opacity = '0';
             newEl.style.zIndex = '2';
+            newEl.classList.add('active-media');
             
             container.appendChild(newEl);
 
@@ -115,7 +118,7 @@ function applyDynamicCovers(data) {
                     });
                     newEl.style.zIndex = '1';
                     newEl.style.position = 'relative';
-                    isTransitioning = false; // DESBLOQUEIA para a próxima
+                    isTransitioning = false; 
                 }
             });
 
@@ -127,6 +130,7 @@ function applyDynamicCovers(data) {
         const listItems = section.querySelectorAll('.service-list li');
         listItems.forEach(li => {
             const sKey = li.dataset.service;
+            
             li.addEventListener('mouseenter', () => {
                 clearTimeout(revertTimeout);
                 revertTimeout = null;
@@ -165,6 +169,9 @@ function createMediaElement(coverData) {
     return el;
 }
 
+/**
+ * EFEITO PARALLAX: Move o vidro e a imagem a velocidades diferentes no scroll
+ */
 function setupParallaxEffects() {
     gsap.utils.toArray('.layout-split').forEach(section => {
         const media = section.querySelector('.section-media');
@@ -172,16 +179,26 @@ function setupParallaxEffects() {
 
         if (media) {
             gsap.to(media, {
-                yPercent: -15,
+                yPercent: -10, // Movimento subtil para cima
                 ease: "none",
-                scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true }
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                }
             });
         }
         if (content) {
             gsap.to(content, {
-                yPercent: 15,
+                yPercent: 10, // Movimento subtil para baixo
                 ease: "none",
-                scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true }
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                }
             });
         }
     });
@@ -251,6 +268,7 @@ function setupNavigation() {
     });
 }
 
+// Ocultação Inteligente de Partículas
 function setupParticleFading() {
     const bgParticles = document.getElementById('particles-bg');
     const fgParticles = document.getElementById('particles-fg');
