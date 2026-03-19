@@ -337,8 +337,7 @@ section[class*="theme-glass"] .details-btn:hover {
     text-align: center;
 }
 
-#hero-4winners.fullscreen-section,
-#contacto.fullscreen-section {
+#hero-4winners.fullscreen-section {
     height: 100vh;
 }
 
@@ -1480,7 +1479,7 @@ html.modal-open, body.modal-open {
 /* --- V3.1 - Rodapé Minimalista Industrial --- */
 #site-footer {
     width: 100%;
-    min-height: 25vh; /* Ocupa o espaço morto que tínhamos no fundo */
+    min-height: 10vh; /* Ocupa o espaço morto que tínhamos no fundo */
     display: flex;
     justify-content: center;
     align-items: flex-end; /* Encosta o texto à base do ecrã */
