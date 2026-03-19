@@ -56,26 +56,26 @@ export const serviceConfig = {
         tags: ['Prototipagem Funcional', 'Originais para Moldes', 'Peças Finais de Produção']
     },
     'fundicao': {
-        title: 'Fundição (Metais ou Resina)',
-        specs: { 'Processo': 'Cera Perdida, Moldagem em Areia', 'Capacidade': 'Por consulta' },
-        materials: ['Bronze', 'Alumínio', 'Zamac', 'Resinas Técnicas']
+        title: 'Fundição',
+        description: 'Aliamos a arte milenar da moldagem às necessidades da engenharia moderna. Produzimos peças complexas e resistentes através do vazamento de materiais fundidos em moldes de precisão, adaptando o processo desde peças únicas a lotes de produção.',
+        tags: ['Ligas Metálicas Diversas', 'Resinas Técnicas']
     },
 
     // --- SUBTRATIVA ---
     'corte-laser': {
-        title: 'Corte de Laser (Metais ou Acrílicos)',
-        specs: { 'Área Máx.': '1500x3000 mm', 'Precisão': '± 0.1 mm' },
-        materials: ['Aço Inox', 'Ferro', 'Alumínio', 'Acrílico', 'Madeira']
+        title: 'Corte de Laser',
+        description: 'Utilizamos tecnologia laser avançada para efetuar cortes de extrema precisão e acabamentos limpos. Este processo permite materializar desde formas geométricas simples até aos detalhes mais complexos, garantindo eficiência e uma qualidade de topo sem desgaste mecânico da peça.',
+        tags: ['Metal', 'Acrílico', 'Madeira']
     },
     'maquinacao-cnc': {
         title: 'Maquinação Computadorizada (CNC)',
-        specs: { 'Eixos': '3 e 4 eixos simultâneos', 'Rotação': 'Até 24.000 RPM' },
-        materials: ['Metais Ferrosos', 'Latão', 'Alumínio', 'Plásticos Técnicos']
+        description: 'Recorremos a centros de maquinação controlados por computador para esculpir blocos sólidos com tolerâncias rigorosas. Removemos o excesso de material com máxima eficácia, produzindo peças tridimensionais complexas e de alta fiabilidade estrutural.',
+        tags: ['Metal', 'Acrílico', 'Madeira']
     },
     'torneamento': {
-        title: 'Torneamento (Manual e CNC)',
-        specs: { 'Diâmetro Máx.': '400 mm', 'Comprimento Máx.': '1000 mm' },
-        materials: ['Aços', 'Inox', 'Bronze', 'Alumínio', 'Nylon']
+        title: 'Torneamento',
+        description: 'Através da rotação controlada da peça contra ferramentas de corte especializadas, moldamos componentes cilíndricos e de revolução perfeitos. Uma técnica essencial, executada com tecnologia CNC para assegurar total repetibilidade e rigor geométrico.',
+        tags: ['Metal', 'Acrílico', 'Madeira']
     },
 
     // --- CONFORMAÇÃO ---
