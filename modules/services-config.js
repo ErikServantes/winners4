@@ -80,46 +80,46 @@ export const serviceConfig = {
 
     // --- CONFORMAÇÃO ---
     'estampagem': {
-        title: 'Estampagem de Chapa ou Ambutissagem',
-        specs: { 'Capacidade': 'Até 400 toneladas', 'Série Mínima': '50 unidades' },
-        materials: ['Ferro', 'Inox', 'Latão', 'Alumínio']
+        title: 'Estampagem',
+        description: 'Um processo de excelência para a produção em massa e consistência estrutural. Através da aplicação de força e matrizes de precisão, deformamos chapas planas criando componentes tridimensionais complexos e de elevada resistência mecânica.',
+        tags: ['Metal']
     },
     'repuxamento': {
-        title: 'Repuxamento (Manual ou CNC)',
-        specs: { 'Diâmetro Máx.': '1200 mm', 'Espessura Máx.': '5 mm (Alumínio)' },
-        materials: ['Alumínio', 'Cobre', 'Latão', 'Ferro']
+        title: 'Repuxamento',
+        description: 'Moldamos a chapa progressivamente sobre um mandril em rotação, um processo ideal para criar formas cónicas e cilíndricas ocas. Garantimos simetria perfeita e paredes sem costuras para aplicações que exigem pureza de forma.',
+        tags: ['Metal']
     },
     'quinagem': {
         title: 'Quinagem',
-        specs: { 'Comprimento Máx.': '3000 mm', 'Força': '100 toneladas' },
-        materials: ['Chapas Metálicas até 6mm']
+        description: 'Através de prensas de precisão, realizamos a dobragem linear e rigorosa de chapas em ângulos exatos. Um método fundamental para a construção de estruturas, invólucros e peças angulares com tolerâncias mínimas.',
+        tags: ['Metal', 'Acrílico']
     },
     'calandragem': {
         title: 'Calandragem',
-        specs: { 'Largura Máx.': '1500 mm', 'Diâmetro Mín.': '100 mm' },
-        materials: ['Chapa de Ferro', 'Inox', 'Alumínio']
+        description: 'Curvamos chapas de forma contínua e suave através de um sistema de rolos. Essencial para criar formas cilíndricas amplas, anéis e curvas progressivas, garantindo um raio consistente ao longo de toda a superfície.',
+        tags: ['Metal']
     },
 
     // --- ACABAMENTO ---
     'polimento': {
         title: 'Polimento e Abrilhantamento',
-        specs: { 'Tipo': 'Manual e Vibratório', 'Acabamento': 'Espelhado, Acetinado' },
-        materials: ['Inox', 'Latão', 'Alumínio', 'Cobre']
+        description: 'Elevamos a qualidade tátil e visual dos materiais. Através da utilização minuciosa de lamelas de lixa e discos de pano, as superfícies são progressivamente amaciadas e lustradas até atingirem o nível de brilho exato pretendido pelo seu projeto.',
+        tags: ['Metal', 'Acrílico']
     },
     'evaporacao-vacuo': {
         title: 'Evaporação Metálica em Vácuo',
-        specs: { 'Processo': 'PVD (Physical Vapor Deposition)', 'Cores': 'Ouro, Prata, Cobre, Rainbow' },
-        materials: ['Plásticos', 'Vidro', 'Metais']
+        description: 'Uma solução de vanguarda que transcende os limites dos materiais tradicionais. Aplicamos um finíssimo revestimento metálico a peças que não são naturalmente condutoras de energia, permitindo criar um acabamento luxuoso e premium em qualquer substrato.',
+        tags: ['Metal', 'Resina', 'Vidro', 'Cerâmica', 'Plástico']
     },
     'galvanizacao': {
         title: 'Processos Galvânicos',
-        specs: { 'Banhos': 'Niquelagem, Latonagem, Cobreagem, Prata', 'Tamanho': 'Tanques de 600mm' },
-        materials: ['Metais Condutores']
+        description: 'Através de processos eletroquímicos especializados, adicionamos um revestimento metálico de precisão a peças eletricamente condutoras. Este processo aumenta exponencialmente a resistência anticorrosiva e permite uma personalização estética absoluta (como ouro, prata e cobre).',
+        tags: ['Metal']
     },
     'pintura-envernizamento': {
         title: 'Pintura e Envernizamento',
-        specs: { 'Tipo': 'Electrostática (Pó) e Líquida', 'Cura': 'Estufa de Alta Temperatura' },
-        materials: ['Todos os Metais', 'Plásticos Resistentes']
+        description: 'A camada final de proteção e cor. Utilizamos tintas líquidas ou termoendurecíveis (pintura a pó) com cura em estufa, assegurando um acabamento duradouro, resistente a impactos e intempéries, e perfeitamente alinhado com o pantone da sua marca.',
+        tags: ['Metal', 'Plástico Resistente', 'Madeira']
     },
 
     // --- PERSONALIZAÇÃO ---
