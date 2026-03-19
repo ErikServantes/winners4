@@ -26,7 +26,7 @@ export const serviceGroups = {
     },
     'acabamento': {
         title: 'Acabamento de Superfícies',
-        icon: 'shimmer',
+        icon: 'format_paint',
         services: ['polimento', 'evaporacao-vacuo', 'galvanizacao', 'pintura-envernizamento']
     },
     'personalizacao': {
