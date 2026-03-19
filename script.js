@@ -41,6 +41,11 @@ async function init() {
         console.log("Site pronto.");
     }, 200);
 
+    
+    // Atualiza o ano no rodape
+    const yearEl = document.getElementById("current-year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
     setupNavigation();
 }
 

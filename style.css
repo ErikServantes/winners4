@@ -1476,3 +1476,51 @@ html.modal-open, body.modal-open {
         text-align: center;
     }
 }
+
+/* --- V3.1 - Rodapé Minimalista Industrial --- */
+#site-footer {
+    width: 100%;
+    min-height: 25vh; /* Ocupa o espaço morto que tínhamos no fundo */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Encosta o texto à base do ecrã */
+    padding-bottom: 40px;
+    background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%);
+    position: relative;
+    z-index: 10;
+}
+
+.footer-content {
+    text-align: center;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.footer-content p {
+    font-size: 0.85rem;
+    margin: 5px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.footer-content .disclaimer {
+    font-size: 0.65rem;
+    color: rgba(212, 175, 55, 0.6); /* Um dourado muito suave e apagado */
+    letter-spacing: 0.5px;
+    max-width: 80%;
+    margin: 15px auto 0 auto;
+    text-transform: none;
+    font-family: monospace; /* Dá um aspeto de "Nota Técnica" */
+}
+
+@media (max-width: 768px) {
+    #site-footer {
+        padding-bottom: 30px;
+    }
+    .footer-content p {
+        font-size: 0.75rem;
+    }
+    .footer-content .disclaimer {
+        font-size: 0.6rem;
+    }
+}
