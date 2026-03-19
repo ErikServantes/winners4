@@ -7,12 +7,13 @@ import { initializeGlassEffect } from './modules/glass-effect.js';
 import { initializeHeroAnimation } from './modules/hero-animation.js';
 import { serviceGroups } from './modules/services-config.js';
 
+let inventory = null;
+
 // Função principal de arranque V3.5 (Estável)
 async function init() {
     console.log("🚀 A inicializar V3 com Arquitetura Estável...");
     gsap.registerPlugin(ScrollTrigger);
 
-    let inventory = null;
     try {
         const resp = await fetch('./assets/inventory.json?v=' + Date.now());
         if (!resp.ok) throw new Error('Inventário não encontrado.');
@@ -42,7 +43,7 @@ async function init() {
 }
 
 /**
- * V3.5 - Lógica de Capas e Mouseover com "Lock" (Corrigida e Estável)
+ * V3.6 - Lógica de Capas com Fallback Dinâmico (Corrigido)
  */
 function applyDynamicCovers(data) {
     if (!data || !data.meta) return;
@@ -58,7 +59,7 @@ function applyDynamicCovers(data) {
         const groupInfo = serviceGroups[groupId];
         if (!groupInfo) return;
 
-        let isTransitioning = false; // Flag de bloqueio para esta secção
+        let isTransitioning = false;
         let revertTimeout = null;
         
         let groupCoverData = groupCovers[groupId] || null;
@@ -121,9 +122,18 @@ function applyDynamicCovers(data) {
         section.querySelectorAll('.service-list li').forEach(li => {
             const sKey = li.dataset.service;
             li.addEventListener('mouseenter', () => {
-                clearTimeout(revertTimeout);
+                if (revertTimeout) {
+                    clearTimeout(revertTimeout);
+                    revertTimeout = null;
+                }
+
                 const sData = services[sKey];
-                if (sData && sData.cover) transitionTo(sData.cover);
+                // NOVO: Se o serviço não tem capa, força o regresso à capa de grupo
+                if (sData && sData.cover) {
+                    transitionTo(sData.cover);
+                } else if (groupCoverData) {
+                    transitionTo(groupCoverData, true);
+                }
             });
         });
 
@@ -133,6 +143,7 @@ function applyDynamicCovers(data) {
                 if (groupCoverData) {
                     revertTimeout = setTimeout(() => {
                         transitionTo(groupCoverData, true);
+                        revertTimeout = null;
                     }, 3000);
                 }
             });

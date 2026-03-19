@@ -25,12 +25,11 @@ export function openServiceModal(serviceKey, triggerElement) {
     const modal = document.getElementById('details-modal');
     renderModal(modal, serviceKey, data);
     openModalUI(modal, serviceKey);
-    if (serviceKey !== 'contacto') loadMedia(triggerElement);
+    if (serviceKey !== 'contacto') loadMedia(serviceKey, triggerElement);
 }
 
 function renderModal(modal, key, data) {
     const hasMedia = key !== 'contacto';
-    
     let mediaHTML = hasMedia ? `
         <div class="modal-media-section">
             <div id="dynamic-media-container" class="modal-media-wrapper">
@@ -75,20 +74,37 @@ function renderModal(modal, key, data) {
     modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
 }
 
-function loadMedia(trigger) {
+/**
+ * loadMedia V3.5 - Fallback Agressivo
+ */
+function loadMedia(serviceKey, trigger) {
     const container = document.getElementById('dynamic-media-container');
-    if (!container) return;
-    const serviceKey = trigger.dataset.service;
+    if (!container || !inventory) return;
+
     const services = inventory.services || {};
     const serviceData = services[serviceKey];
     
+    // 1. Tentar Media Direta (Portefólio ou Capa 00)
     let finalMedia = (serviceData?.items?.length > 0) ? serviceData.items[0] : serviceData?.cover;
     
+    // 2. Fallback: Capa do Grupo (Seja central ou o primeiro vizinho)
     if (!finalMedia) {
-        const groupSection = trigger.closest('section.fullscreen-section[id]');
-        if (groupSection) {
-            const groupId = groupSection.id;
+        const section = trigger.closest('section');
+        const groupId = section ? section.id : null;
+        
+        if (groupId) {
+            // Tenta capa central (servicos/01...)
             finalMedia = inventory.groupCovers?.[groupId];
+            
+            // Tenta o primeiro serviço desse grupo que tenha capa
+            if (!finalMedia && serviceGroups[groupId]) {
+                for (const sKey of serviceGroups[groupId].services) {
+                    if (services[sKey]?.cover) {
+                        finalMedia = services[sKey].cover;
+                        break;
+                    }
+                }
+            }
         }
     }
 
