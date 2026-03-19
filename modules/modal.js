@@ -32,7 +32,6 @@ export async function initializeModal() {
     const modal = document.getElementById('details-modal');
     if (!modal) return;
 
-    // Event Delegation para abrir modais
     document.addEventListener('click', async (e) => {
         const trigger = e.target.closest('[data-service]');
         if (!trigger || trigger.id === 'portfolio-btn' || isModalOpen) return;
@@ -50,14 +49,12 @@ export async function initializeModal() {
         }
     });
 
-    // Fechar o modal ao clicar fora ou no X
     modal.addEventListener('click', (e) => {
         if (e.target === modal || e.target.closest('.modal-close')) {
-            history.back(); // Usa a API de histórico para fechar
+            history.back(); 
         }
     });
 
-    // Listener do Botão "Retroceder" do Browser
     window.addEventListener('popstate', () => {
         if (isModalOpen) {
             closeModal(modal);
@@ -66,10 +63,9 @@ export async function initializeModal() {
 }
 
 function renderModal(modal, key, data) {
-    let mediaHTML = key !== 'contacto' ? `<div class="modal-media-wrapper" id="dynamic-media-container"><div class="media-loader"></div></div>` : '';
+    let mediaHTML = key !== 'contacto' ? `<div class="modal-media-wrapper" id="dynamic-media-container"><div class="media-loader"><span class="material-symbols-outlined">hourglass_empty</span></div></div>` : '';
     let contentHTML = '';
 
-    // LÓGICA DE CONTEÚDO RESTAURADA
     if (key === 'contacto') {
         contentHTML = `
             <div class="contact-modal-info">
@@ -80,13 +76,17 @@ function renderModal(modal, key, data) {
             </div>
             <a href="${data.phone_link}" class="details-btn cta-btn">Ligar Agora</a>`;
     } else {
+        // 1. Descrição Livre (Sem tabela, texto limpo)
+        const desc = data.description ? `<p style="font-size:1rem; line-height:1.6; color:rgba(255,255,255,0.8); margin-bottom:25px;">${data.description}</p>` : '';
+
+        // 2. Especificações Técnicas (Tabela rígida)
         const specs = data.specs ? `
             <div class="tech-specs-container">
                 <h3 class="section-subtitle">Especificações Técnicas</h3>
                 <table class="tech-specs-table">
                     <tbody>
                         ${Object.entries(data.specs).map(([k, v]) => {
-                            if (typeof v === 'object' && v.value) { // Para specs com sub-materiais
+                            if (typeof v === 'object' && v.value) { 
                                 return `<tr><td class="spec-label">${k}</td><td class="spec-value">${v.value}</td></tr>
                                         <tr><td colspan="2"><ul class="modal-materials">${v.materials.map(m => `<li>${m}</li>`).join('')}</ul></td></tr>`;
                             }
@@ -96,12 +96,20 @@ function renderModal(modal, key, data) {
                 </table>
             </div>` : '';
 
+        // 3. Materiais Suportados (Com título)
         const mats = data.materials?.length ? `
             <div class="materials-container">
                 <h3 class="section-subtitle">Materiais Suportados</h3>
                 <ul class="modal-materials">${data.materials.map(m => `<li>${m}</li>`).join('')}</ul>
             </div>` : '';
-        contentHTML = specs + mats;
+            
+        // 4. Tags Livres (Apenas as caixinhas, sem título "Materiais", ideal para serviços)
+        const tags = data.tags?.length ? `
+            <ul class="modal-materials" style="margin-top: 10px;">
+                ${data.tags.map(t => `<li>${t}</li>`).join('')}
+            </ul>` : '';
+
+        contentHTML = desc + specs + mats + tags;
     }
 
     modal.querySelector('.modal-content').innerHTML = `
@@ -170,7 +178,6 @@ function closeModal(modal) {
     }
     isModalOpen = false;
     
-    // Se o URL ainda tiver o #, voltamos para o estado limpo
     if(location.hash) {
         history.pushState(null, '', window.location.pathname + window.location.search);
     }

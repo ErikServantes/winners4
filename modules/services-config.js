@@ -39,9 +39,9 @@ export const serviceGroups = {
 export const serviceConfig = {
     // --- DESIGN ---
     'desenho-vectorial': {
-        title: 'Desenho Vectorial',
-        specs: { 'Softwares': 'Adobe Illustrator, CorelDRAW', 'Formatos': '.AI, .EPS, .DXF, .SVG' },
-        materials: ['Preparação para Laser', 'Logotipia', 'Escalabilidade Infinita']
+        title: 'Design Gráfico',
+        description: 'Transformamos a sua identidade visual em dados de precisão. Otimizamos logótipos e imagens para garantir que o resultado final reflete a sua marca com o máximo rigor e excelência.',
+        tags: ['Vetorização de Logótipos', 'Preparação para Fabrico', 'Tratamento de Imagem']
     },
     'modelacao-3d': {
         title: 'Modelação 3D',
