@@ -1,92 +1,79 @@
-// Importa as funções dos módulos que criámos
+// Importa as funções dos módulos
 import { initializeSmoothScroll } from './modules/smooth-scroll.js';
-import { initializeScrollytelling } from './modules/scrollytelling.js';
-import { initializeModal } from './modules/modal.js';
+import { initializeModal, openServiceModal } from './modules/modal.js';
 import { initializePortfolio } from './modules/portfolio.js';
 import { initializeGlobalParticles } from './modules/global-particles.js';
 import { initializeGlassEffect } from './modules/glass-effect.js';
 import { initializeHeroAnimation } from './modules/hero-animation.js';
+import { serviceGroups } from './modules/services-config.js';
 
-let inventory = null;
-
-// Função principal de arranque
+// Função principal de arranque V3.5 (Estável)
 async function init() {
-    console.log("🚀 A inicializar site dinâmico V3...");
+    console.log("🚀 A inicializar V3 com Arquitetura Estável...");
     gsap.registerPlugin(ScrollTrigger);
 
+    let inventory = null;
     try {
         const resp = await fetch('./assets/inventory.json?v=' + Date.now());
-        if (resp.ok) {
-            inventory = await resp.json();
-            applyDynamicCovers(inventory);
-        }
+        if (!resp.ok) throw new Error('Inventário não encontrado.');
+        inventory = await resp.json();
     } catch (e) {
-        console.error("❌ Erro ao carregar inventário:", e);
+        console.error("❌ Erro fatal no inventário:", e);
+        inventory = { meta: { groupCovers: {}, services: {} } }; 
     }
 
     initializeSmoothScroll();
+    applyDynamicCovers(inventory); 
+    initializeModal(inventory);
+    initializePortfolio(inventory);
+    setupClickController(); 
 
     setTimeout(() => {
-        initializeScrollytelling();
-        initializeModal();
-        initializePortfolio();
         initializeGlobalParticles();
         initializeGlassEffect();
         initializeHeroAnimation();
-        
         setupContentAnimations();
-        setupParallaxEffects(); // Efeito parallax restaurado
-
+        setupParallaxEffects();
         ScrollTrigger.refresh();
-        console.log("Site pronto.");
-    }, 200);
-
-    
-    // Atualiza o ano no rodape
-    const yearEl = document.getElementById("current-year");
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
+        console.log("✅ Site pronto.");
+    }, 150);
 
     setupNavigation();
 }
 
 /**
- * V3.1 - Gestão de Mouseover com sistema de "Lock" para evitar conflitos de animação
+ * V3.5 - Lógica de Capas e Mouseover com "Lock" (Corrigida e Estável)
  */
 function applyDynamicCovers(data) {
     if (!data || !data.meta) return;
 
     const groupCovers = data.meta.groupCovers || {};
     const services = data.meta.services || {};
-    const sections = document.querySelectorAll('section.fullscreen-section[id]');
     
-    sections.forEach(section => {
-        let isTransitioning = false;
-        let revertTimeout = null;
-
+    document.querySelectorAll('section.fullscreen-section[id]').forEach(section => {
         const container = section.querySelector('.section-media');
         if (!container) return;
 
         const groupId = section.id;
-        let groupCoverData = groupCovers[groupId] || null;
+        const groupInfo = serviceGroups[groupId];
+        if (!groupInfo) return;
 
+        let isTransitioning = false; // Flag de bloqueio para esta secção
+        let revertTimeout = null;
+        
+        let groupCoverData = groupCovers[groupId] || null;
         if (!groupCoverData) {
-            const firstLi = section.querySelector('.service-list li');
-            if (firstLi) {
-                const sKey = firstLi.dataset.service;
-                if (services[sKey] && services[sKey].cover) {
-                    groupCoverData = services[sKey].cover;
-                }
+            const firstServiceKey = groupInfo.services[0];
+            if (services[firstServiceKey] && services[firstServiceKey].cover) {
+                groupCoverData = services[firstServiceKey].cover;
             }
         }
 
         if (groupCoverData) {
             container.innerHTML = '';
-            container.classList.remove('media-empty');
             const el = createMediaElement(groupCoverData);
-            el.classList.add('active-media');
             container.appendChild(el);
         } else {
-            container.classList.add('media-empty');
             container.innerHTML = '<div class="technical-placeholder"><span>4WINNERS</span></div>';
         }
 
@@ -104,7 +91,6 @@ function applyDynamicCovers(data) {
             newEl.style.left = '0';
             newEl.style.opacity = '0';
             newEl.style.zIndex = '2';
-            newEl.classList.add('active-media');
             
             container.appendChild(newEl);
 
@@ -121,8 +107,8 @@ function applyDynamicCovers(data) {
                             child.remove();
                         }
                     });
-                    newEl.style.zIndex = '1';
                     newEl.style.position = 'relative';
+                    newEl.style.zIndex = '1';
                     isTransitioning = false; 
                 }
             });
@@ -132,13 +118,10 @@ function applyDynamicCovers(data) {
             }
         };
 
-        const listItems = section.querySelectorAll('.service-list li');
-        listItems.forEach(li => {
+        section.querySelectorAll('.service-list li').forEach(li => {
             const sKey = li.dataset.service;
-            
             li.addEventListener('mouseenter', () => {
                 clearTimeout(revertTimeout);
-                revertTimeout = null;
                 const sData = services[sKey];
                 if (sData && sData.cover) transitionTo(sData.cover);
             });
@@ -174,60 +157,37 @@ function createMediaElement(coverData) {
     return el;
 }
 
-/**
- * EFEITO PARALLAX: Move o vidro e a imagem a velocidades diferentes no scroll
- */
 function setupParallaxEffects() {
     gsap.utils.toArray('.layout-split').forEach(section => {
         const media = section.querySelector('.section-media');
         const content = section.querySelector('.glass-panel');
-
-        if (media) {
-            gsap.to(media, {
-                yPercent: -10, // Movimento subtil para cima
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-        }
-        if (content) {
-            gsap.to(content, {
-                yPercent: 10, // Movimento subtil para baixo
-                ease: "none",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-        }
+        if (media) gsap.to(media, { yPercent: -10, ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true } });
+        if (content) gsap.to(content, { yPercent: 10, ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true } });
     });
 }
 
 function setupContentAnimations() {
-    const serviceSections = gsap.utils.toArray('section.fullscreen-section:not(#hero-4winners)');
-    
-    serviceSections.forEach((section) => {
-        const elements = section.querySelectorAll('.content > *');
-        if (elements.length > 0) {
-            gsap.set(elements, { opacity: 0, y: 30 });
-            gsap.to(elements, {
-                scrollTrigger: {
-                    trigger: section,
-                    start: 'top 75%',
-                    toggleActions: 'play reverse play reverse',
-                },
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: 'power3.out',
-                stagger: 0.15
-            });
+    gsap.utils.toArray('section.fullscreen-section:not(#hero-4winners) .content > *').forEach(el => {
+        gsap.set(el, { opacity: 0, y: 30 });
+        gsap.to(el, {
+            scrollTrigger: {
+                trigger: el.closest('section'),
+                start: 'top 75%',
+                toggleActions: 'play reverse play reverse',
+            },
+            opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.15
+        });
+    });
+}
+
+function setupClickController() {
+    document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('[data-service]');
+        if (trigger && trigger.id !== 'portfolio-btn') {
+            e.preventDefault();
+            const serviceKey = trigger.dataset.service;
+            console.log(`✅ Abrindo modal para: '${serviceKey}'`);
+            openServiceModal(serviceKey, trigger);
         }
     });
 }
@@ -273,7 +233,6 @@ function setupNavigation() {
     });
 }
 
-// Ocultação Inteligente de Partículas
 function setupParticleFading() {
     const bgParticles = document.getElementById('particles-bg');
     const fgParticles = document.getElementById('particles-fg');
@@ -284,22 +243,10 @@ function setupParticleFading() {
         start: 'top 70%',        
         endTrigger: '#contacto', 
         end: 'top 80%',          
-        onEnter: () => {
-            bgParticles.classList.add('particles-hidden');
-            fgParticles.classList.add('particles-hidden');
-        },
-        onLeave: () => {
-            bgParticles.classList.remove('particles-hidden');
-            fgParticles.classList.remove('particles-hidden');
-        },
-        onEnterBack: () => {
-            bgParticles.classList.add('particles-hidden');
-            fgParticles.classList.add('particles-hidden');
-        },
-        onLeaveBack: () => {
-            bgParticles.classList.remove('particles-hidden');
-            fgParticles.classList.remove('particles-hidden');
-        }
+        onEnter: () => { bgParticles.classList.add('particles-hidden'); fgParticles.classList.add('particles-hidden'); },
+        onLeave: () => { bgParticles.classList.remove('particles-hidden'); fgParticles.classList.remove('particles-hidden'); },
+        onEnterBack: () => { bgParticles.classList.add('particles-hidden'); fgParticles.classList.add('particles-hidden'); },
+        onLeaveBack: () => { bgParticles.classList.remove('particles-hidden'); fgParticles.classList.remove('particles-hidden'); }
     });
 }
 

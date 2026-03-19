@@ -5,67 +5,40 @@ let inventory = null;
 let currentCleanup = null;
 let isModalOpen = false;
 
-async function loadInventory() {
-    if (inventory) return inventory;
-    try {
-        const response = await fetch('./assets/inventory.json?v=' + Date.now());
-        if (!response.ok) throw new Error("Erro HTTP: " + response.status);
-        const data = await response.json();
-        inventory = data?.meta || {};
-        return inventory;
-    } catch (error) {
-        console.error('❌ Erro inventário Modal:', error);
-        inventory = { services: {}, groupCovers: {} };
-        return inventory;
-    }
-}
-
-export function getWeekNumber() {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    const yearStart = new Date(d.getFullYear(), 0, 1);
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-}
-
-export async function initializeModal() {
-    await loadInventory();
+export function initializeModal(fullInventory) {
+    if (!fullInventory) return;
+    inventory = fullInventory.meta || { services: {}, groupCovers: {} };
     const modal = document.getElementById('details-modal');
     if (!modal) return;
-
-    document.addEventListener('click', async (e) => {
-        const trigger = e.target.closest('[data-service]');
-        if (!trigger || trigger.id === 'portfolio-btn' || isModalOpen) return;
-
-        e.preventDefault();
-        const serviceKey = trigger.dataset.service;
-        const data = serviceConfig[serviceKey];
-        if (!data) return;
-
-        renderModal(modal, serviceKey, data);
-        openModalUI(modal, serviceKey);
-        
-        if (serviceKey !== 'contacto') {
-            loadMedia(trigger);
-        }
-    });
-
     modal.addEventListener('click', (e) => {
-        if (e.target === modal || e.target.closest('.modal-close')) {
-            history.back(); 
-        }
+        if (e.target === modal || e.target.closest('.modal-close')) history.back();
     });
-
     window.addEventListener('popstate', () => {
-        if (isModalOpen) {
-            closeModal(modal);
-        }
+        if (isModalOpen) closeModal(modal);
     });
+}
+
+export function openServiceModal(serviceKey, triggerElement) {
+    if (isModalOpen) return;
+    const data = serviceConfig[serviceKey];
+    if (!data) return;
+    const modal = document.getElementById('details-modal');
+    renderModal(modal, serviceKey, data);
+    openModalUI(modal, serviceKey);
+    if (serviceKey !== 'contacto') loadMedia(triggerElement);
 }
 
 function renderModal(modal, key, data) {
-    let mediaHTML = key !== 'contacto' ? `<div class="modal-media-wrapper" id="dynamic-media-container"><div class="media-loader"><span class="material-symbols-outlined">hourglass_empty</span></div></div>` : '';
-    let contentHTML = '';
+    const hasMedia = key !== 'contacto';
+    
+    let mediaHTML = hasMedia ? `
+        <div class="modal-media-section">
+            <div id="dynamic-media-container" class="modal-media-wrapper">
+                <div class="media-loader"><span class="material-symbols-outlined">hourglass_empty</span></div>
+            </div>
+        </div>` : '';
 
+    let contentHTML = '';
     if (key === 'contacto') {
         contentHTML = `
             <div class="contact-modal-info">
@@ -76,72 +49,46 @@ function renderModal(modal, key, data) {
             </div>
             <a href="${data.phone_link}" class="details-btn cta-btn">Ligar Agora</a>`;
     } else {
-        // 1. Descrição Livre (Sem tabela, texto limpo)
         const desc = data.description ? `<p style="font-size:1rem; line-height:1.6; color:rgba(255,255,255,0.8); margin-bottom:25px;">${data.description}</p>` : '';
-
-        // 2. Especificações Técnicas (Tabela rígida)
         const specs = data.specs ? `
             <div class="tech-specs-container">
                 <h3 class="section-subtitle">Especificações Técnicas</h3>
                 <table class="tech-specs-table">
                     <tbody>
-                        ${Object.entries(data.specs).map(([k, v]) => {
-                            if (typeof v === 'object' && v.value) { 
-                                return `<tr><td class="spec-label">${k}</td><td class="spec-value">${v.value}</td></tr>
-                                        <tr><td colspan="2"><ul class="modal-materials">${v.materials.map(m => `<li>${m}</li>`).join('')}</ul></td></tr>`;
-                            }
-                            return `<tr><td class="spec-label">${k}</td><td class="spec-value">${v}</td></tr>`;
-                        }).join('')}
+                        ${Object.entries(data.specs).map(([k, v]) => `<tr><td class="spec-label">${k}</td><td class="spec-value">${v}</td></tr>`).join('')}
                     </tbody>
                 </table>
             </div>` : '';
-
-        // 3. Materiais Suportados (Com título)
-        const mats = data.materials?.length ? `
-            <div class="materials-container">
-                <h3 class="section-subtitle">Materiais Suportados</h3>
-                <ul class="modal-materials">${data.materials.map(m => `<li>${m}</li>`).join('')}</ul>
-            </div>` : '';
-            
-        // 4. Tags Livres (Apenas as caixinhas, sem título "Materiais", ideal para serviços)
-        const tags = data.tags?.length ? `
-            <ul class="modal-materials" style="margin-top: 10px;">
-                ${data.tags.map(t => `<li>${t}</li>`).join('')}
-            </ul>` : '';
-
-        contentHTML = desc + specs + mats + tags;
+        const tags = data.tags?.length ? `<ul class="modal-materials" style="margin-top: 10px;">${data.tags.map(t => `<li>${t}</li>`).join('')}</ul>` : '';
+        contentHTML = desc + specs + tags;
     }
 
     modal.querySelector('.modal-content').innerHTML = `
         <button class="modal-close">&times;</button>
-        <div class="modal-layout-container" data-lenis-prevent>
+        <div class="modal-layout-container ${hasMedia ? 'with-media' : 'no-media'}" data-lenis-prevent>
             ${mediaHTML}
-            <div class="modal-text-section ${mediaHTML ? 'split-width' : 'full-width'}">
+            <div class="modal-text-section">
                 <h2 id="modal-title">${data.title}</h2>
                 <div id="modal-body">${contentHTML}</div>
             </div>
         </div>`;
+    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
 }
 
 function loadMedia(trigger) {
     const container = document.getElementById('dynamic-media-container');
     if (!container) return;
-
     const serviceKey = trigger.dataset.service;
-    const serviceData = inventory.services[serviceKey];
+    const services = inventory.services || {};
+    const serviceData = services[serviceKey];
     
-    const list = serviceData?.items || [];
-    let finalMedia = list.length > 0 ? list[0] : null; 
-
-    if (!finalMedia && serviceData?.cover) {
-        finalMedia = serviceData.cover;
-    }
-
+    let finalMedia = (serviceData?.items?.length > 0) ? serviceData.items[0] : serviceData?.cover;
+    
     if (!finalMedia) {
         const groupSection = trigger.closest('section.fullscreen-section[id]');
         if (groupSection) {
             const groupId = groupSection.id;
-            finalMedia = inventory.groupCovers[groupId] || null;
+            finalMedia = inventory.groupCovers?.[groupId];
         }
     }
 
@@ -162,23 +109,15 @@ function openModalUI(modal, serviceKey) {
     document.documentElement.classList.add('modal-open');
     if (window.lenis) window.lenis.stop();
     isModalOpen = true;
-    history.pushState({ service: serviceKey }, `Serviço: ${serviceKey}`, `#${serviceKey}`);
+    history.pushState({ service: serviceKey }, "", `#${serviceKey}`);
 }
 
 function closeModal(modal) {
     if (!isModalOpen) return;
-    
     modal.classList.remove('visible');
     document.documentElement.classList.remove('modal-open');
     if (window.lenis) window.lenis.start();
-    
-    if (currentCleanup) {
-        currentCleanup();
-        currentCleanup = null;
-    }
+    if (currentCleanup) { currentCleanup(); currentCleanup = null; }
     isModalOpen = false;
-    
-    if(location.hash) {
-        history.pushState(null, '', window.location.pathname + window.location.search);
-    }
+    if(location.hash) history.pushState(null, "", window.location.pathname + window.location.search);
 }
