@@ -51,9 +51,9 @@ export const serviceConfig = {
 
     // --- ADITIVA ---
     'impressao-3d': {
-        title: 'Impressão 3D (Prototipagem Rápida)',
-        specs: { 'Tecnologias': 'FDM, SLA, SLS', 'Volume Máx.': '300x300x400 mm' },
-        materials: ['PLA', 'Resina', 'Nylon', 'ABS']
+        title: 'Impressão 3D',
+        description: 'Materializamos o mundo digital com máxima fidelidade geométrica. Convertemos os seus modelos 3D em peças físicas rigorosas, libertando o seu projeto das restrições de geometria do fabrico tradicional.',
+        tags: ['Prototipagem Funcional', 'Originais para Moldes', 'Peças Finais de Produção']
     },
     'fundicao': {
         title: 'Fundição (Metais ou Resina)',
