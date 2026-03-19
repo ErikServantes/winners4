@@ -125,18 +125,18 @@ export const serviceConfig = {
     // --- PERSONALIZAÇÃO ---
     'gravacao-laser': {
         title: 'Gravação Laser',
-        specs: { 'Tipo': 'Fibra e CO2', 'Área Máx.': '300x300 mm' },
-        materials: ['Metal', 'Madeira', 'Couro', 'Vidro']
+        description: 'Marcamos a sua identidade com precisão inalterável. Utilizamos feixes de laser de alta resolução para remover seletivamente a superfície do material, criando texturas, números de série ou logótipos complexos que resistem ao teste do tempo.',
+        tags: ['Metal', 'Acrílico', 'Madeira']
     },
     'gravacao-fresa': {
-        title: 'Gravação (Incisão) por Fresa',
-        specs: { 'Profundidade': 'Ajustável', 'Tipo': 'Mecânica Directa' },
-        materials: ['Latão', 'Alumínio', 'Plásticos Bicamada (Gravoply)']
+        title: 'Gravação por Fresa',
+        description: 'A clássica incisão mecânica levada à máxima precisão por controlo numérico (CNC). Ideal para placas de sinalética, moldes e painéis industriais onde a profundidade do sulco e a leitura tátil são requisitos críticos do projeto.',
+        tags: ['Metal']
     },
     'impressao-uv': {
-        title: 'Impressão Directa nos Materiais',
-        specs: { 'Tecnologia': 'UV Led', 'Cores': 'CMYK + Branco + Verniz' },
-        materials: ['Objectos Planos e Cilíndricos', 'Brindes', 'Painéis']
+        title: 'Impressão UV',
+        description: 'Aplicamos a sua marca e design a qualquer superfície rígida. Graças à tecnologia de cura ultra-rápida por LED UV, a tinta adere instantaneamente aos substratos, garantindo cores vibrantes, durabilidade e a possibilidade de aplicar efeitos de relevo e verniz localizado.',
+        tags: ['Todos os Materiais']
     },
 
     // --- CONTACTO ---
