@@ -45,8 +45,8 @@ export const serviceConfig = {
     },
     'modelacao-3d': {
         title: 'Modelação 3D',
-        specs: { 'Softwares': 'Solidworks, Zbrush, Rhino', 'Ficheiros': '.STEP, .IGES, .STL, .OBJ' },
-        materials: ['Engenharia de Produto', 'Escultura Digital', 'Renderização']
+        description: 'Damos volume e forma aos seus conceitos. Desenvolvemos modelos tridimensionais rigorosos para garantir que o resultado final em produção corresponda exatamente à visão inicial da sua ideia.',
+        tags: ['Design de Engenharia e Mecânica', 'Modelação Orgânica e Escultura', 'Visualização Fotorealista']
     },
 
     // --- ADITIVA ---
