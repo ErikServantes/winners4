@@ -46,7 +46,7 @@ Este plano descreve a transição de uma landing page de serviços individuais p
 ---
 **LISTA OFICIAL DE GRUPOS E SERVIÇOS:**
 1. **Design**: Desenho Vectorial, Modelação 3D.
-2. **Manufactura Aditiva**: Impressão 3D, Fundição Metais/Resina.
+2. **Manufatura Aditiva**: Impressão 3D, Fundição Metais/Resina.
 3. **Manufatura Subtrativa**: Corte Laser, Maquinação CNC, Torneamento.
 4. **Conformação**: Estampagem/Ambutissagem, Repuxamento, Quinagem, Calandragem.
 5. **Acabamento de Superfícies**: Polimento/Abrilhantamento, Evaporação Metálica, Processos Galvânicos, Pintura/Envernizamento.
