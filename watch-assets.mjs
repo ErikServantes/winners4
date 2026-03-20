@@ -17,28 +17,35 @@ const watcher = chokidar.watch(watchPath, {
     ignoreInitial: true 
 });
 
+let debounceTimeout = null;
+
 function updateInventory(filePath) {
     const isManualTrigger = filePath.includes('atualizar.now');
     
-    console.log(`✨ ${isManualTrigger ? 'MANUAL' : 'AUTO'}: Mudança em ${filePath}.`);
+    console.log(`✨ ${isManualTrigger ? 'MANUAL' : 'AUTO'}: Esperando estabilizar... (${filePath})`);
     
-    exec(`node ${inventoryScript}`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`❌ Erro: ${error.message}`);
-            return;
-        }
-        console.log(`✅ Inventário Atualizado.`);
+    if (debounceTimeout) clearTimeout(debounceTimeout);
 
-        if (isManualTrigger && fs.existsSync(triggerInAssets)) {
-            try {
-                fs.renameSync(triggerInAssets, triggerInRoot);
-                console.log(`♻️ Gatilho movido de volta para a raiz.`);
-            } catch (e) {
-                fs.unlinkSync(triggerInAssets);
-                console.log(`🗑️ Gatilho removido.`);
+    debounceTimeout = setTimeout(() => {
+        console.log(`🚀 Executando inventário (Debounce ativado).`);
+        exec(`node ${inventoryScript}`, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`❌ Erro: ${error.message}`);
+                return;
             }
-        }
-    });
+            console.log(`✅ Inventário Atualizado.`);
+
+            if (isManualTrigger && fs.existsSync(triggerInAssets)) {
+                try {
+                    fs.renameSync(triggerInAssets, triggerInRoot);
+                    console.log(`♻️ Gatilho movido de volta para a raiz.`);
+                } catch (e) {
+                    fs.unlinkSync(triggerInAssets);
+                    console.log(`🗑️ Gatilho removido.`);
+                }
+            }
+        });
+    }, 500);
 }
 
 watcher

@@ -35,6 +35,7 @@ async function init() {
         initializeHeroAnimation();
         setupContentAnimations();
         setupParallaxEffects();
+        setupParticleFading();
         ScrollTrigger.refresh();
         console.log("✅ Site pronto.");
     }, 150);
@@ -295,5 +296,3 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
-
-setTimeout(setupParticleFading, 500);

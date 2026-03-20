@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": 1773910156375,
+    "lastUpdated": 1774006397686,
     "groupCovers": {
       "design": {
         "src": "assets/servicos/01.webp",
@@ -39,27 +39,15 @@
             "name": "03",
             "type": "image",
             "src": "assets/estampagem/03.webp",
-            "timestamp": 1773841888596.4233
+            "timestamp": 1773999337130.0835
           }
         ]
-      },
-      "evaporacao-vacuo": {
-        "cover": null,
-        "items": []
-      },
-      "fundicao": {
-        "cover": null,
-        "items": []
       },
       "galvanizacao": {
         "cover": {
           "src": "assets/galvanizacao/00.webp",
           "type": "image"
         },
-        "items": []
-      },
-      "gravacao-fresa": {
-        "cover": null,
         "items": []
       },
       "gravacao-laser": {
@@ -74,7 +62,7 @@
             "folder": "assets/gravacao-laser/01AfonMeta_360/",
             "prefix": "frame_",
             "extension": ".webp",
-            "timestamp": 1773831378992.4446,
+            "timestamp": 1773996857618.1155,
             "count": 48
           }
         ]
@@ -89,7 +77,7 @@
             "name": "03",
             "type": "image",
             "src": "assets/impressao-3d/03.webp",
-            "timestamp": 1773841890940.6106
+            "timestamp": 1773999337134.7104
           },
           {
             "name": "Afonso_360",
@@ -97,14 +85,14 @@
             "folder": "assets/impressao-3d/Afonso_360/",
             "prefix": "frame_",
             "extension": ".webp",
-            "timestamp": 1773761716807.469,
+            "timestamp": 1773996857665.4915,
             "count": 36
           },
           {
             "name": "02",
             "type": "video",
             "src": "assets/impressao-3d/02.mp4",
-            "timestamp": 1773673412758.0945
+            "timestamp": 1773996857637.248
           }
         ]
       },
@@ -127,7 +115,7 @@
             "folder": "assets/maquinacao-cnc/AfonsoHD_360/",
             "prefix": "frame_",
             "extension": ".webp",
-            "timestamp": 1773824653479.891,
+            "timestamp": 1773996857739.0896,
             "count": 50
           }
         ]
@@ -137,14 +125,6 @@
           "src": "assets/modelacao-3d/00.webp",
           "type": "image"
         },
-        "items": []
-      },
-      "pintura-envernizamento": {
-        "cover": null,
-        "items": []
-      },
-      "polimento": {
-        "cover": null,
         "items": []
       },
       "quinagem": {
