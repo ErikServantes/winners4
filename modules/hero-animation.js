@@ -1,10 +1,22 @@
-export function initializeHeroAnimation() {
+export async function initializeHeroAnimation() {
     const heroSection = document.getElementById('hero-4winners');
     if (!heroSection) return;
 
-    const svgElement = document.getElementById('hero-logo-svg');
+    const logoContainer = document.getElementById('main-logo-container');
     const subtitle = document.getElementById('hero-subtitle');
     
+    if (logoContainer && !document.getElementById('hero-logo-svg')) {
+        try {
+            const resp = await fetch('./assets/hero-logo.svg');
+            const svgText = await resp.text();
+            logoContainer.innerHTML = svgText;
+        } catch (e) {
+            console.error("Erro ao carregar o logo SVG:", e);
+            return;
+        }
+    }
+
+    const svgElement = document.getElementById('hero-logo-svg');
     if (!svgElement) return;
 
     // Garante que o SVG preenche o container E está visível
@@ -15,7 +27,6 @@ export function initializeHeroAnimation() {
 
     // Força o container principal a ficar visível antes da animação GSAP sequer tocar nele
     // A MAGIA DA PROFUNDIDADE ESTAVA AQUI: Sem 'perspective', o 3D fica espalmado!
-    const logoContainer = document.getElementById('main-logo-container');
     gsap.set(logoContainer, { perspective: 1000, autoAlpha: 1 });
     gsap.set(svgElement, { autoAlpha: 1, overflow: 'visible' });
 

@@ -1,11 +1,11 @@
 // Importa as funções dos módulos
-import { initializeSmoothScroll } from './modules/smooth-scroll.js';
-import { initializeModal, openServiceModal } from './modules/modal.js';
-import { initializePortfolio } from './modules/portfolio.js';
-import { initializeGlobalParticles } from './modules/global-particles.js';
-import { initializeGlassEffect } from './modules/glass-effect.js';
-import { initializeHeroAnimation } from './modules/hero-animation.js';
-import { serviceGroups } from './modules/services-config.js';
+import { initializeSmoothScroll } from './modules/smooth-scroll.js?v=5.1';
+import { initializeModal, openServiceModal } from './modules/modal.js?v=5.1';
+import { initializePortfolio } from './modules/portfolio.js?v=5.1';
+import { initializeGlobalParticles } from './modules/global-particles.js?v=5.1';
+import { initializeGlassEffect } from './modules/glass-effect.js?v=5.1';
+import { initializeHeroAnimation } from './modules/hero-animation.js?v=5.1';
+import { serviceGroups } from './modules/services-config.js?v=5.1';
 
 let inventory = null;
 
