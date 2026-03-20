@@ -80,7 +80,7 @@ export const serviceConfig = {
 
     // --- CONFORMAÇÃO ---
     'estampagem': {
-        title: 'Estampagem',
+        title: 'Embutissagem ou Estampagem Profunda de Chapa Metálica',
         description: 'Um processo de excelência para a produção em massa e consistência estrutural. Através da aplicação de força e matrizes de precisão, deformamos chapas planas criando componentes tridimensionais complexos e de elevada resistência mecânica.',
         tags: ['Metal']
     },
