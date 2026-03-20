@@ -1,0 +1,12 @@
+INSTRUÇÕES DE ATUALIZAÇÃO MANUAL (VIA FTP)
+----------------------------------------
+
+Este ficheiro serve como um "gatilho" para forçar o site a atualizar o seu inventário de imagens e vídeos.
+
+COMO USAR:
+1. Sempre que fizer alterações na pasta 'assets' e o site não atualizar sozinho.
+2. Arraste este ficheiro 'atualizar.now' para DENTRO da pasta 'assets/'.
+3. O servidor irá detetar o ficheiro, atualizar o inventário e MOVER este ficheiro de volta para aqui (raiz) automaticamente.
+
+CONFIRMAÇÃO:
+Quando vir o ficheiro aparecer de novo aqui na raiz (e sumir de dentro dos assets), a atualização está concluída!

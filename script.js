@@ -6,6 +6,7 @@ import { initializeGlobalParticles } from './modules/global-particles.js?v=5.1';
 import { initializeGlassEffect } from './modules/glass-effect.js?v=5.1';
 import { initializeHeroAnimation } from './modules/hero-animation.js?v=5.1';
 import { serviceGroups } from './modules/services-config.js?v=5.1';
+import { initializeUIExtras } from './modules/ui-extras.js?v=5.1';
 
 let inventory = null;
 
@@ -28,6 +29,7 @@ async function init() {
     initializeModal(inventory);
     initializePortfolio(inventory);
     setupClickController(); 
+    initializeUIExtras(); 
 
     setTimeout(() => {
         window.particlesController = initializeGlobalParticles();

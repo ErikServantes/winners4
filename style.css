@@ -1310,6 +1310,167 @@ html.modal-open, body.modal-open {
     to { transform: rotate(360deg); }
 }
 
+/* SMART CONTACT BAR (MOBILE FIRST) */
+#smart-contact-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30px; /* Barra ultra-fina em mobile no estado inativo */
+    background-color: rgba(5, 5, 5, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
+    /* Removido o overflow: hidden para permitir que o ícone transborde a barra fina sem ser decepado */
+}
+
+#smart-contact-bar.active {
+    height: 56px; /* Expande para este tamanho chamativo quando ativa */
+    background-color: rgba(5, 5, 5, 0.95);
+    border-top: 1px solid rgba(212, 175, 55, 0.5);
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+}
+
+.contact-bar-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.contact-icon-btn {
+    width: 25px; /* Adequado para caber na mini-barra de 30px */
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d4af37;
+    transition: all 0.4s ease;
+    flex-shrink: 0;
+}
+
+.contact-icon-btn svg {
+    width: 18px; /* Mais contido e minimalista em mobile */
+    height: 18px;
+}
+
+/* Quando ativa (expandida) transforma o Dourado no Verde Típico do WA */
+#smart-contact-bar.active .contact-icon-btn,
+#smart-contact-bar:hover .contact-icon-btn {
+    color: #25D366; 
+}
+
+.contact-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.8rem;
+    color: #fff;
+    white-space: nowrap;
+    opacity: 0;
+    max-width: 0;
+    transform: translateX(10px);
+    transition: all 0.4s ease;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500; /* Mais visível */
+}
+
+#smart-contact-bar.active .contact-label {
+    opacity: 1;
+    max-width: 250px;
+    transform: translateX(0);
+}
+
+/* DESKTOP FLOATING ACTION BUTTON (FAB) */
+@media (min-width: 769px) {
+    #smart-contact-bar {
+        left: auto;
+        right: 36px;
+        bottom: 15%; 
+        width: 60px; /* Volta a um formato regular limpo de círculo perfeito (60x60) */
+        height: 60px; 
+        border-radius: 30px; 
+        background: rgba(10, 10, 10, 0.85);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        border-top: 1px solid rgba(212, 175, 55, 0.3);
+        justify-content: flex-end; /* ANCORAGEM CRÍTICA: o conteúdo é atirado para a direita da caixa */
+        box-shadow: 0 4px 25px rgba(0,0,0,0.6);
+        padding-right: 5px; /* Empurra o ícone os exactos 5px para o colocar no centro matemático de 60px! */
+    }
+    
+    #smart-contact-bar.active,
+    #smart-contact-bar:hover {
+        width: 295px; /* Aumentado ligeiramente para comportar o novo padding sem esmagar o texto */
+        height: 60px;
+        border-radius: 30px;
+        background: rgba(10, 10, 10, 0.95);
+        border: 1px solid #25D366; 
+        border-top: 1px solid #25D366;
+        padding-right: 5px; 
+        padding-left: 25px; /* Cria uma "parede" de proteção para a esquerda do texto */
+    }
+    
+    .contact-bar-content {
+        flex-direction: row-reverse; /* Ícone direito, texto esquerdo */
+        justify-content: flex-start; /* Obedece ao justify-content: flex-end do pai! */
+        width: auto;
+    }
+
+    .contact-icon-btn {
+        width: 50px; /* Escala Jumbo do Ícone apenas no Desktop */
+        height: 50px;
+    }
+
+    .contact-icon-btn svg {
+        width: 50px; 
+        height: 50px;
+    }
+
+    .contact-label {
+        margin: 0 15px 0 0; /* Aplica o espaço que afasta o texto do ícone! */
+        text-align: right;
+        transform: translateX(10px); 
+    }
+
+    #smart-contact-bar.active .contact-label,
+    #smart-contact-bar:hover .contact-label {
+        opacity: 1;
+        max-width: 250px; 
+        transform: translateX(0);
+    }
+}
+
+.contact-modal-info .contact-item a {
+    color: #d4af37;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border 0.3s;
+}
+
+.contact-modal-info .contact-item a:hover {
+    border-bottom: 1px solid #d4af37;
+}
+
+.cta-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.whatsapp-btn {
+    background: #25D366 !important;
+    color: #fff !important;
+    border: none !important;
+}
+
 .viewer-360-container {
     width: 100%;
     height: 100%;

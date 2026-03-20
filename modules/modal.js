@@ -1,5 +1,6 @@
 import { serviceConfig, serviceGroups } from './services-config.js';
 import { MediaEngine } from './media-engine.js';
+import { ContactEngine } from './contact-engine.js';
 
 let inventory = null;
 let currentCleanup = null;
@@ -39,14 +40,27 @@ function renderModal(modal, key, data) {
 
     let contentHTML = '';
     if (key === 'contacto') {
+        const email = ContactEngine.getEmail();
+        const mailHref = ContactEngine.getMailHref();
+        const p1 = ContactEngine.getPhone1();
+        const p1Label = ContactEngine.formatPhone(p1);
+        const p1Href = ContactEngine.getPhoneHref();
+        const p2 = ContactEngine.getPhone2();
+        const p2Label = ContactEngine.formatPhone(p2);
+        const waHref = ContactEngine.getWhatsAppHref();
+
         contentHTML = `
             <div class="contact-modal-info">
                 <div class="contact-item"><strong>Morada:</strong><a href="${data.address_link}" target="_blank">${data.address}</a></div>
-                <div class="contact-item"><strong>Email:</strong><a href="mailto:${data.email}">${data.email}</a></div>
-                <div class="contact-item"><strong>Telefone:</strong><a href="${data.phone_link}">${data.phone}</a></div>
+                <div class="contact-item"><strong>Email:</strong><a href="${mailHref}">${email}</a></div>
+                <div class="contact-item"><strong>Telefone:</strong><a href="${p1Href}">${p1Label}</a></div>
+                <div class="contact-item"><strong>WhatsApp:</strong><a href="${waHref}" target="_blank">${p2Label}</a></div>
                 <div class="contact-item"><strong>Horário:</strong><div class="schedule">${data.schedule.map(line => `<span>${line}</span>`).join('')}</div></div>
             </div>
-            <a href="${data.phone_link}" class="details-btn cta-btn">Ligar Agora</a>`;
+            <div class="cta-group">
+                <a href="${p1Href}" class="details-btn cta-btn">Ligar Agora</a>
+                <a href="${waHref}" target="_blank" class="details-btn cta-btn whatsapp-btn">WhatsApp Directo</a>
+            </div>`;
     } else {
         const desc = data.description ? `<p style="font-size:1rem; line-height:1.6; color:rgba(255,255,255,0.8); margin-bottom:25px;">${data.description}</p>` : '';
         const specs = data.specs ? `
