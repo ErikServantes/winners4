@@ -233,12 +233,13 @@ body {
 .glass-panel {
     position: relative;
     background-color: rgba(10, 10, 10, 0.3); 
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
     border-radius: 8px;
     padding: 35px 40px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
     overflow: hidden; 
+    will-change: transform;
 }
 
 .theme-glass .glass-panel {
@@ -361,6 +362,7 @@ section[class*="theme-glass"] .details-btn:hover {
 .content > * {
     opacity: 0;
     transform: translateY(30px);
+    will-change: transform, opacity;
 }
 
 .content h1 {
@@ -413,6 +415,9 @@ section[class*="theme-glass"] .details-btn:hover {
     .glass-panel {
         padding: 30px 20px;
         width: 90%;
+        backdrop-filter: blur(6px) saturate(110%);
+        -webkit-backdrop-filter: blur(6px) saturate(110%);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
     }
     
     /* Encolhe o ícone de marca de água nos telemóveis */
