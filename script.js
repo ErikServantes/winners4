@@ -30,7 +30,7 @@ async function init() {
     setupClickController(); 
 
     setTimeout(() => {
-        initializeGlobalParticles();
+        window.particlesController = initializeGlobalParticles();
         initializeGlassEffect();
         initializeHeroAnimation();
         setupContentAnimations();
@@ -247,6 +247,7 @@ function setupNavigation() {
 function setupParticleFading() {
     const bgParticles = document.getElementById('particles-bg');
     const fgParticles = document.getElementById('particles-fg');
+    const controller = window.particlesController;
     if (!bgParticles || !fgParticles) return;
 
     ScrollTrigger.create({
@@ -254,10 +255,38 @@ function setupParticleFading() {
         start: 'top 70%',        
         endTrigger: '#contacto', 
         end: 'top 80%',          
-        onEnter: () => { bgParticles.classList.add('particles-hidden'); fgParticles.classList.add('particles-hidden'); },
-        onLeave: () => { bgParticles.classList.remove('particles-hidden'); fgParticles.classList.remove('particles-hidden'); },
-        onEnterBack: () => { bgParticles.classList.add('particles-hidden'); fgParticles.classList.add('particles-hidden'); },
-        onLeaveBack: () => { bgParticles.classList.remove('particles-hidden'); fgParticles.classList.remove('particles-hidden'); }
+        onEnter: () => { 
+            bgParticles.classList.add('particles-hidden'); 
+            fgParticles.classList.add('particles-hidden'); 
+            if (controller) {
+                clearTimeout(controller.timeoutId);
+                controller.timeoutId = setTimeout(() => controller.pause(), 1000);
+            }
+        },
+        onLeave: () => { 
+            bgParticles.classList.remove('particles-hidden'); 
+            fgParticles.classList.remove('particles-hidden'); 
+            if (controller) {
+                clearTimeout(controller.timeoutId);
+                controller.resume();
+            }
+        },
+        onEnterBack: () => { 
+            bgParticles.classList.add('particles-hidden'); 
+            fgParticles.classList.add('particles-hidden'); 
+            if (controller) {
+                clearTimeout(controller.timeoutId);
+                controller.timeoutId = setTimeout(() => controller.pause(), 1000);
+            }
+        },
+        onLeaveBack: () => { 
+            bgParticles.classList.remove('particles-hidden'); 
+            fgParticles.classList.remove('particles-hidden'); 
+            if (controller) {
+                clearTimeout(controller.timeoutId);
+                controller.resume();
+            }
+        }
     });
 }
 

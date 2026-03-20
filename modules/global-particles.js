@@ -12,6 +12,9 @@ export function initializeGlobalParticles() {
     // Total de partículas dividido pelas 3 camadas lógicas
     const particleCount = 150; 
 
+    let isPaused = false;
+    let animationFrameId = null; 
+
     function resize() {
         width = window.innerWidth;
         height = window.innerHeight;
@@ -140,6 +143,8 @@ export function initializeGlobalParticles() {
     }
 
     function animate() {
+        if (isPaused) return;
+
         ctxBg.clearRect(0, 0, width, height);
         ctxFg.clearRect(0, 0, width, height);
 
@@ -151,8 +156,24 @@ export function initializeGlobalParticles() {
             p.draw();
         });
 
-        requestAnimationFrame(animate);
+        animationFrameId = requestAnimationFrame(animate);
     }
 
     init();
+
+    return {
+        pause: () => {
+            isPaused = true;
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+        },
+        resume: () => {
+            if (isPaused) {
+                isPaused = false;
+                animate();
+            }
+        }
+    };
 }
