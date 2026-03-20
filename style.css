@@ -1458,6 +1458,57 @@ html.modal-open, body.modal-open {
     border-bottom: 1px solid #d4af37;
 }
 
+/* BOTÕES DE AÇÃO DIRETA NO MODAL DE CONTACTO */
+.contact-actions-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    justify-content: center;
+    flex-wrap: wrap; 
+}
+
+/* Base idêntica aos botões "details-btn" da secção principal para total coerência */
+.contact-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 22px;
+    border: 1px solid rgba(212, 175, 55, 0.4); /* Fio de ouro estrutural */
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.03); /* Efeito vidro gelado brilhante */
+    color: #fff;
+    text-decoration: none;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.85rem; 
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+}
+
+.contact-action-btn svg,
+.contact-action-btn span.material-symbols-outlined {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #d4af37; /* Todos os ícones assumem o dourado industrial do tema base */
+    transition: all 0.3s ease;
+}
+
+/* Hover effects */
+.contact-action-btn:hover {
+    border-color: rgba(212, 175, 55, 0.8);
+    background: rgba(212, 175, 55, 0.1); 
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* O whatsapp brilha verde nativo apenas durante o hover como "surpresa", mantendo-se elegante */
+.wa-modal-btn:hover svg {
+    color: #25D366; 
+}
+
 .cta-group {
     display: flex;
     gap: 10px;
