@@ -1,58 +1,58 @@
 {
   "meta": {
-    "lastUpdated": 1774006397686,
+    "lastUpdated": 1774016021218,
     "groupCovers": {
       "design": {
-        "src": "assets/servicos/01.webp",
+        "src": "assets/servicos/01.webp?v=1773999337164.401",
         "type": "image"
       }
     },
     "services": {
       "calandragem": {
         "cover": {
-          "src": "assets/calandragem/00.webp",
+          "src": "assets/calandragem/00.webp?v=1773999337119.593",
           "type": "image"
         },
         "items": []
       },
       "corte-laser": {
         "cover": {
-          "src": "assets/corte-laser/00.webp",
+          "src": "assets/corte-laser/00.webp?v=1773999337120.7603",
           "type": "image"
         },
         "items": []
       },
       "desenho-vectorial": {
         "cover": {
-          "src": "assets/desenho-vectorial/00.webp",
+          "src": "assets/desenho-vectorial/00.webp?v=1773999337128.0686",
           "type": "image"
         },
         "items": []
       },
       "estampagem": {
         "cover": {
-          "src": "assets/estampagem/00.webp",
+          "src": "assets/estampagem/00.webp?v=1773999337129.0754",
           "type": "image"
         },
         "items": [
           {
             "name": "03",
             "type": "image",
-            "src": "assets/estampagem/03.webp",
+            "src": "assets/estampagem/03.webp?v=1773999337130",
             "timestamp": 1773999337130.0835
           }
         ]
       },
       "galvanizacao": {
         "cover": {
-          "src": "assets/galvanizacao/00.webp",
+          "src": "assets/galvanizacao/00.webp?v=1773999337131.0918",
           "type": "image"
         },
         "items": []
       },
       "gravacao-laser": {
         "cover": {
-          "src": "assets/gravacao-laser/00.webp",
+          "src": "assets/gravacao-laser/00.webp?v=1773999337132.606",
           "type": "image"
         },
         "items": [
@@ -63,20 +63,21 @@
             "prefix": "frame_",
             "extension": ".webp",
             "timestamp": 1773996857618.1155,
-            "count": 48
+            "count": 48,
+            "cacheBuster": "?v=1773996857618"
           }
         ]
       },
       "impressao-3d": {
         "cover": {
-          "src": "assets/impressao-3d/00.webp",
+          "src": "assets/impressao-3d/00.webp?v=1773999337133.703",
           "type": "image"
         },
         "items": [
           {
             "name": "03",
             "type": "image",
-            "src": "assets/impressao-3d/03.webp",
+            "src": "assets/impressao-3d/03.webp?v=1773999337135",
             "timestamp": 1773999337134.7104
           },
           {
@@ -86,26 +87,27 @@
             "prefix": "frame_",
             "extension": ".webp",
             "timestamp": 1773996857665.4915,
-            "count": 36
+            "count": 36,
+            "cacheBuster": "?v=1773996857665"
           },
           {
             "name": "02",
             "type": "video",
-            "src": "assets/impressao-3d/02.mp4",
+            "src": "assets/impressao-3d/02.mp4?v=1773996857637",
             "timestamp": 1773996857637.248
           }
         ]
       },
       "impressao-uv": {
         "cover": {
-          "src": "assets/impressao-uv/00.webp",
+          "src": "assets/impressao-uv/00.webp?v=1773999337136.8896",
           "type": "image"
         },
         "items": []
       },
       "maquinacao-cnc": {
         "cover": {
-          "src": "assets/maquinacao-cnc/00.webp",
+          "src": "assets/maquinacao-cnc/00.webp?v=1773999337138.9268",
           "type": "image"
         },
         "items": [
@@ -116,34 +118,35 @@
             "prefix": "frame_",
             "extension": ".webp",
             "timestamp": 1773996857739.0896,
-            "count": 50
+            "count": 50,
+            "cacheBuster": "?v=1773996857739"
           }
         ]
       },
       "modelacao-3d": {
         "cover": {
-          "src": "assets/modelacao-3d/00.webp",
+          "src": "assets/modelacao-3d/00.webp?v=1773999337160.4133",
           "type": "image"
         },
         "items": []
       },
       "quinagem": {
         "cover": {
-          "src": "assets/quinagem/00.webp",
+          "src": "assets/quinagem/00.webp?v=1773999337162.0427",
           "type": "image"
         },
         "items": []
       },
       "repuxamento": {
         "cover": {
-          "src": "assets/repuxamento/00.webp",
+          "src": "assets/repuxamento/00.webp?v=1773999337163.225",
           "type": "image"
         },
         "items": []
       },
       "torneamento": {
         "cover": {
-          "src": "assets/torneamento/00.webp",
+          "src": "assets/torneamento/00.webp?v=1773999337166.0547",
           "type": "image"
         },
         "items": []

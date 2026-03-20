@@ -1,9 +1,9 @@
 import { promises as fsPromises } from 'fs';
-import fs from 'fs'; // Para existsSync (não tem alternativa assíncrona simples no fsPromises sem try/catch)
+import fs from 'fs'; 
 import path from 'path';
 
 /**
- * GENERATE INVENTORY V3.1 - Arquitetura Assíncrona de Alta Performance
+ * GENERATE INVENTORY V3.2 - Assíncrono com Cache Busting Inteligente
  */
 
 const baseDir = './assets';
@@ -12,14 +12,14 @@ const outputFile = './assets/inventory.json';
 const inventory = {
     meta: {
         lastUpdated: Date.now(),
-        groupCovers: {}, // Capas vindas de assets/servicos/
-        services: {}     // Media individual de cada serviço
+        groupCovers: {}, 
+        services: {}     
     }
 };
 
 async function buildInventory() {
     try {
-        // 1. Processar Capas de Grupos Centrais (01 a 06 em assets/servicos/)
+        // 1. Processar Capas Centrais (01 a 06)
         const groupMapping = {
             '01': 'design',
             '02': 'manufatura-aditiva',
@@ -32,20 +32,24 @@ async function buildInventory() {
         const groupPath = path.join(baseDir, 'servicos');
         if (fs.existsSync(groupPath)) {
             const files = await fsPromises.readdir(groupPath);
-            files.forEach(file => {
+            for (const file of files) {
                 const prefix = file.substring(0, 2);
                 const groupId = groupMapping[prefix];
                 if (groupId) {
+                    const mediaPath = path.join(groupPath, file);
+                    const fileStat = await fsPromises.lstat(mediaPath);
                     const ext = path.extname(file).toLowerCase();
+                    const cacheBuster = `?v=${fileStat.mtimeMs}`; // <== BUSTER
+                    
                     inventory.meta.groupCovers[groupId] = {
-                        src: `assets/servicos/${file}`,
+                        src: `assets/servicos/${file}${cacheBuster}`,
                         type: (ext === '.mp4' || ext === '.webm') ? 'video' : 'image'
                     };
                 }
-            });
+            }
         }
 
-        // 2. Localizar Pastas de Serviços Individuais
+        // 2. Localizar Pastas de Serviços
         const rawRootFiles = await fsPromises.readdir(baseDir);
         const serviceFolders = [];
         
@@ -56,7 +60,7 @@ async function buildInventory() {
             }
         }
 
-        // 3. Processar Serviços Assincronamente 
+        // 3. Processar Serviços Assincronamente e Gerar Busters
         for (const service of serviceFolders) {
             const servicePath = path.join(baseDir, service);
             const serviceData = { cover: null, items: [] };
@@ -64,14 +68,17 @@ async function buildInventory() {
             
             const coverFile = allFiles.find(f => f.startsWith('00.'));
             if (coverFile) {
+                const mediaPath = path.join(servicePath, coverFile);
+                const fileStat = await fsPromises.lstat(mediaPath);
                 const ext = path.extname(coverFile).toLowerCase();
+                const cacheBuster = `?v=${fileStat.mtimeMs}`; // <== BUSTER
+                
                 serviceData.cover = {
-                    src: `assets/${service}/${coverFile}`,
+                    src: `assets/${service}/${coverFile}${cacheBuster}`,
                     type: (ext === '.mp4' || ext === '.webm') ? 'video' : 'image'
                 };
             }
 
-            // O mapeamento de Promises permite IO pararelo massivo
             const itemsPromises = allFiles
                 .filter(file => !file.startsWith('00.') && !file.startsWith('.'))
                 .map(async file => {
@@ -79,6 +86,7 @@ async function buildInventory() {
                     const fileStat = await fsPromises.lstat(mediaPath);
                     const fileName = path.parse(file).name;
                     const extension = path.extname(file).toLowerCase();
+                    const cacheBuster = `?v=${Math.round(fileStat.mtimeMs)}`; // <== BUSTER GLOBAL
 
                     if (fileStat.isDirectory()) {
                         if (fileName.toLowerCase().endsWith('_360') && fs.existsSync(path.join(mediaPath, 'frame_00.webp'))) {
@@ -87,13 +95,13 @@ async function buildInventory() {
                             return {
                                 name: fileName, type: '360', folder: `assets/${service}/${file}/`,
                                 prefix: 'frame_', extension: '.webp', timestamp: fileStat.mtimeMs,
-                                count: count
+                                count: count, cacheBuster: cacheBuster // Útil para media-engine.js se necessário
                             };
                         }
                     } else if (extension === '.mp4' || extension === '.webm') {
-                        return { name: fileName, type: 'video', src: `assets/${service}/${file}`, timestamp: fileStat.mtimeMs };
+                        return { name: fileName, type: 'video', src: `assets/${service}/${file}${cacheBuster}`, timestamp: fileStat.mtimeMs };
                     } else if (['.webp', '.jpg', '.png'].includes(extension)) {
-                        return { name: fileName, type: 'image', src: `assets/${service}/${file}`, timestamp: fileStat.mtimeMs };
+                        return { name: fileName, type: 'image', src: `assets/${service}/${file}${cacheBuster}`, timestamp: fileStat.mtimeMs };
                     }
                     return null;
                 });
@@ -104,14 +112,12 @@ async function buildInventory() {
             inventory.meta.services[service] = serviceData;
         }
 
-        // 4. Escrever JSON no fim
         await fsPromises.writeFile(outputFile, JSON.stringify(inventory, null, 2));
-        console.log(`✅ Inventário V3.1 Gerado de forma ultra-rápida (Assíncrona).`);
+        console.log(`✅ Inventário V3.2 Gerado (Alta Performance + Prevenção de Cache)`);
 
     } catch (error) {
         console.error(`❌ Erro Falso Pânico: ${error.message}`);
     }
 }
 
-// Em Módulos ES, podemos chamar e gerir promessas de raiz
 buildInventory();

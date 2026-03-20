@@ -14,8 +14,9 @@ export const MediaEngine = {
         container.style.webkitUserSelect = 'none';
         container.style.touchAction = 'none';
         
+        const cacheSuffix = data.cacheBuster || '';
         const img = document.createElement('img');
-        img.src = `${data.folder}${data.prefix}00${data.extension}`;
+        img.src = `${data.folder}${data.prefix}00${data.extension}${cacheSuffix}`;
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'contain';
@@ -44,7 +45,7 @@ export const MediaEngine = {
             if (isAborted) break;
             const f = new Image();
             const idx = i.toString().padStart(2, '0');
-            f.src = `${data.folder}${data.prefix}${idx}${data.extension}`;
+            f.src = `${data.folder}${data.prefix}${idx}${data.extension}${cacheSuffix}`;
             
             f.onload = () => {
                 if (isAborted) return;
