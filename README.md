@@ -58,16 +58,29 @@ Este é o repositório da plataforma digital da 4Winners, desenvolvida com uma a
 
 ---
 
-## 🛠 Guia de Atualização
+## 🛠 Guia de Atualização (Gestão de Media V3)
 
-### Como adicionar novos trabalhos:
-1.  **Imagens/Vídeos:** Arrastar para a pasta do serviço em `assets/[serviço]/`. Pode ter qualquer nome.
-2.  **Interação 360º:** Criar uma pasta que termine em `_360` (ex: `medalha_360/`) e colocar os frames lá dentro (`frame_00.webp`, `frame_01.webp`, etc.).
-3.  **Atualizar o Site:** No terminal, executar:
-    ```bash
-    node generate-inventory.mjs
-    ```
-    Isto gera o novo `inventory.json`. O site reflete as mudanças instantaneamente após o próximo refresh.
+O sistema deste site baseia-se num ficheiro de "mapa central" (`assets/inventory.json`). O site lê este ficheiro no arranque para não ter de bombardear o servidor lentamente a procurar que imagens existem ao longo da navegação. A reconstrução deste mapa é agora totalmente flexível e inteligente.
+
+### 1. Preparação da Media (Upload Múltiplo via FTP)
+*   **Capas Opcionais de Categoria (Globais):** Para mudar o vídeo ou imagem base *fullscreen* da secção a que o serviço pertence (ex: fundo global do Grupo *Design*), basta colocar o novo vídeo na pasta central **`assets/servicos/`** estritamente com o número da secção correspondente (ex: `01.mp4`, `02.mp4` para Manufatura Aditiva, etc.).
+*   **Capas Individuais de Sub-Serviços:** Para forçar a imagem de demonstração que aparece ao fazer 'hover' com o rato no nome de um sub-serviço e na capa do seu Portefólio Modal, o ficheiro deve ser arrastado para a pasta correspondente e chame-se **`00.webp`** (ou .mp4). Se não for fornecida a capa `00`, aplica-se o *Fallback Automático* e herda-se a "Capa Global" dessa Categoria.
+*   **Media Normais do Portefólio (Projetos):** Arrastar as peças de portefólio e fotografias finais diretamente para a pasta da categoria-base (ex: `assets/corte-laser/minha-peca-inox.jpg`). O nome não interessa. O sistema ordena sempre publicações baseadas na **Data de Criação do Ficheiro** (New-First).
+*   **Interações Dinâmicas 360º:** Criar obrigatoriamente uma pasta finalizada no sufixo `_360` (ex: `nova-medalha_360/`) e despejar sem interrupções os ficheiros iterativos base (desde `frame_00.webp`, `frame_01.webp`, etc.).
+
+### 2. Sincronizar Tudo (A Nova Arquitetura Automática)
+
+*(**Nota Ténica:** O robusto script sentinela `watch-assets.mjs` deve estar ativado 24h na máquina ou servidor de produção via Process Manager como o PM2.)*
+
+**A Magia Remota (Para quem apenas usa Clientes de FTP):**
+Quando acabares de deitar dezenas de ficheiros para dentro de diferentes pastas nas `assets/`, basta ires à raiz do teu projeto, copiares ou arrastares o pequeno ficheiro isco vazio chamado **`atualizar.now`** também para a pasta `assets/`.
+O sentinela furtivo do servidor repara, injeta preventivamente uma espera unificada (*Debounce* de 500ms para salvaguardar *uploads* arrastados intermitentes), corre o motor de processamento lógico subjacente ultra-rápido Assíncrono (`generate-inventory.mjs`), emite o novo site internamente e arruma o ficheiro `atualizar.now` atirando-o de volta à raiz para voltar a acionar este reset remotamente quando quiseres. Nunca necessitas de ver a consola do Windows ou do Linux.
+
+**Desenvolvedor Manual:**
+Podes reconstruir toda a árvore iterativa em qualquer altura forçando compilação com a consola de ambiente:
+```bash
+node generate-inventory.mjs
+```
 
 ---
 
