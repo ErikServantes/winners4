@@ -33,7 +33,7 @@ export const MediaEngine = {
         let isDragging = false;
         let startX = 0;
         let currentIndex = 0;
-        let rotateInterval;
+        let rotateFrameId;
         let resumeTimeout;
         let interactionEnabled = false;
 
@@ -65,18 +65,30 @@ export const MediaEngine = {
             };
         }
 
+        let lastRotateTime = 0;
+        const rotateDelay = 143;
+
         function startAutoRotate() {
             if (isAborted) return;
-            clearInterval(rotateInterval);
-            rotateInterval = setInterval(() => {
-                if (!isDragging && interactionEnabled) {
-                    const nextIndex = (currentIndex + 1) % totalFrames;
-                    if (frames[nextIndex]) {
-                        currentIndex = nextIndex;
-                        img.src = frames[currentIndex].src;
+            cancelAnimationFrame(rotateFrameId);
+            
+            function rotateLoop(timestamp) {
+                if (isAborted) return;
+                
+                if (timestamp - lastRotateTime >= rotateDelay) {
+                    if (!isDragging && interactionEnabled) {
+                        const nextIndex = (currentIndex + 1) % totalFrames;
+                        if (frames[nextIndex]) {
+                            currentIndex = nextIndex;
+                            img.src = frames[currentIndex].src;
+                        }
                     }
+                    lastRotateTime = timestamp;
                 }
-            }, 143); 
+                rotateFrameId = requestAnimationFrame(rotateLoop);
+            }
+            
+            rotateFrameId = requestAnimationFrame(rotateLoop);
         }
 
         function setupEvents() {
@@ -89,7 +101,7 @@ export const MediaEngine = {
                 startX = x;
                 container.style.cursor = 'grabbing';
                 hint.style.opacity = '0';
-                clearInterval(rotateInterval);
+                cancelAnimationFrame(rotateFrameId);
                 clearTimeout(resumeTimeout);
                 document.body.style.userSelect = 'none';
                 document.body.style.webkitUserSelect = 'none';
@@ -135,7 +147,7 @@ export const MediaEngine = {
 
         return () => {
             isAborted = true;
-            clearInterval(rotateInterval);
+            cancelAnimationFrame(rotateFrameId);
             clearTimeout(resumeTimeout);
             frames.forEach(f => { if(f) { f.src = ''; f.onload = null; f.onerror = null; } });
             frames = [];
