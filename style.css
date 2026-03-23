@@ -1394,27 +1394,27 @@ html.modal-open, body.modal-open {
         left: auto;
         right: 36px;
         bottom: 15%; 
-        width: 60px; /* Volta a um formato regular limpo de círculo perfeito (60x60) */
-        height: 60px; 
-        border-radius: 30px; 
+        width: 40px; /* Volta a um formato regular limpo de círculo perfeito (40x40) */
+        height: 40px; 
+        border-radius: 20px; 
         background: rgba(10, 10, 10, 0.85);
         border: 1px solid rgba(212, 175, 55, 0.3);
         border-top: 1px solid rgba(212, 175, 55, 0.3);
         justify-content: flex-end; /* ANCORAGEM CRÍTICA: o conteúdo é atirado para a direita da caixa */
         box-shadow: 0 4px 25px rgba(0,0,0,0.6);
-        padding-right: 5px; /* Empurra o ícone os exactos 5px para o colocar no centro matemático de 60px! */
+        padding-right: 3px; /* Empurra o ícone os exactos 3px para o colocar no centro matemático de 40px! */
     }
     
     #smart-contact-bar.active,
     #smart-contact-bar:hover {
-        width: 295px; /* Aumentado ligeiramente para comportar o novo padding sem esmagar o texto */
-        height: 60px;
-        border-radius: 30px;
+        width: 197px; /* Aumentado ligeiramente para comportar o novo padding sem esmagar o texto */
+        height: 40px;
+        border-radius: 20px;
         background: rgba(10, 10, 10, 0.95);
         border: 1px solid #25D366; 
         border-top: 1px solid #25D366;
-        padding-right: 5px; 
-        padding-left: 25px; /* Cria uma "parede" de proteção para a esquerda do texto */
+        padding-right: 3px; 
+        padding-left: 17px; /* Cria uma "parede" de proteção para a esquerda do texto */
     }
     
     .contact-bar-content {
@@ -1424,19 +1424,21 @@ html.modal-open, body.modal-open {
     }
 
     .contact-icon-btn {
-        width: 50px; /* Escala Jumbo do Ícone apenas no Desktop */
-        height: 50px;
+        width: 33px; /* Escala Jumbo do Ícone apenas no Desktop */
+        height: 33px;
     }
 
     .contact-icon-btn svg {
-        width: 50px; 
-        height: 50px;
+        width: 33px; 
+        height: 33px;
     }
 
     .contact-label {
-        margin: 0 15px 0 0; /* Aplica o espaço que afasta o texto do ícone! */
+        margin: 0 10px 0 0; /* Aplica o espaço que afasta o texto do ícone! */
         text-align: right;
         transform: translateX(10px); 
+        font-size: 0.55rem; /* Escala a fonte para 2/3 do original (0.8rem) */
+        letter-spacing: 1.5px; /* Reduz o espaçamento das letras para caber perfeitamente */
     }
 
     #smart-contact-bar.active .contact-label,

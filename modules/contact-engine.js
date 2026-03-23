@@ -5,7 +5,7 @@
 
 // Dados encofidados em Base64 para total ofuscação no código fonte
 const _vault = {
-    e: 'Z2VyYWxANGlubmVycy5jb20ucHQ=',
+    e: 'Z2VyYWxANHdpbm5lcnMuY29tLnB0',
     p1: 'MzUxMjUzNTc2MjUx',
     p2: 'MzUxOTM1MTg3NDk5',
     m: 'T2zDoSwgZ29zdGFyaWEgZGUgc2FiZXIgbWFpcyBzb2JyZSBvcyB2b3Nzb3Mgc2VydmnDp29zLg=='
